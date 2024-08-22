@@ -1,5 +1,6 @@
+"use client";
+
 import Link from "next/link";
-import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faClipboard,
@@ -7,8 +8,76 @@ import {
   faSignOutAlt,
   faUser
 } from "@fortawesome/free-solid-svg-icons";
+import { signOut } from "firebase/auth";
+import React, { useState, useEffect } from "react";
+import { auth, provider } from "../../../firebaseConfig";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../../firebaseConfig";
+import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
+import { onAuthStateChanged } from "firebase/auth";
+import "react-toastify/dist/ReactToastify.css";
+import firebase from "firebase/app";
+import "firebase/firestore";
 
 export default function page() {
+  const route = useRouter();
+  const [ville, setVille] = useState("");
+  const [quartier, setQuartier] = useState("");
+  const [typeLocation, setTypeLocation] = useState("");
+  const [loyer, setLoyer] = useState("");
+  const [disponibilite, setDisponibilite] = useState("");
+  const [description, setDescription] = useState("");
+  const [conditionLocation, setConditionLocation] = useState("");
+  const [image, setImage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  // const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Récupérer l'utilisateur connecté
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        route.push("/acceuil"); // Rediriger vers la page de connexion si non connecté
+      }
+    });
+  }, [route]);
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      if (!userId) {
+        throw new Error("Utilisateur non authentifié.");
+      }
+
+      const locationRef = collection(db, "locations");
+      const response = await addDoc(locationRef, {
+        formVille: ville,
+        formQuartier: quartier,
+        formTypeLocation: typeLocation,
+        formLoyer: loyer,
+        formDisponibilite: disponibilite,
+        formDescription: description,
+        formConditionLocation: conditionLocation,
+        formImage: image,
+        userId: userId, // Ajouter l'ID de l'utilisateur connecté
+        submittedAt: new Date().toISOString() // Ajouter la date de soumission
+      });
+
+      console.log("Document ajouté avec ID: ", response.id);
+      toast.success("Location ajoutée avec succès !");
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de la location: ", error);
+      toast.error("Erreur lors de l'ajout de la location.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <main className="flex min-h-screen bg-slate-900 flex-col items-center font-sans">
       <div className="h-auto w-3/4 sm:w-3/4 my-10 lg:w-1/2  flex flex-col gap-5">
@@ -49,6 +118,8 @@ export default function page() {
                         className="w-full rounded border border-stroke bg-gray-300 py-3 px-4  text-black focus:border-blue-500 focus-visible:outline-none"
                         type="text"
                         name="ville"
+                        value={ville}
+                        onChange={(e) => setVille(e.target.value)}
                         id="ville"
                         placeholder="Abomey-Calavi"
                       />
@@ -66,6 +137,8 @@ export default function page() {
                       className="w-full rounded border border-stroke bg-gray-300 px-4 py-3 text-black focus:border-blue-500 focus-visible:outline-none "
                       type="text"
                       name="quartier"
+                      value={quartier}
+                      onChange={(e) => setQuartier(e.target.value)}
                       id="quartier"
                       placeholder="Bidossessi"
                     />
@@ -82,6 +155,8 @@ export default function page() {
                     <div className="relative">
                       <select
                         name="typeLocation"
+                        value={typeLocation}
+                        onChange={(e) => setTypeLocation(e.target.value)}
                         className="w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-black focus:border-blue-500 focus-visible:outline-none"
                         id=""
                       >
@@ -128,6 +203,8 @@ export default function page() {
                       className="w-full rounded border border-stroke bg-gray-300 px-4 py-3 text-black focus:border-blue-500 focus-visible:outline-none "
                       type="number"
                       name="loyer"
+                      value={loyer}
+                      onChange={(e) => setLoyer(e.target.value)}
                       id="loyer"
                       placeholder="100.000"
                     />
@@ -143,8 +220,10 @@ export default function page() {
                   </label>
                   <select
                     name="typeLocation"
+                    value={typeLocation}
+                    onChange={(e) => setTypeLocation(e.target.value)}
                     className="w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-black focus:border-blue-500 focus-visible:outline-none "
-                    id=""
+                    id="typeLocation"
                   >
                     <option value="1.000">1.000</option>
                     <option value="1.500">1.500</option>
@@ -177,6 +256,8 @@ export default function page() {
                   <div className="relative">
                     <select
                       name="disponibilite"
+                      value={disponibilite}
+                      onChange={(e) => setDisponibilite(e.target.value)}
                       className="w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-black focus:border-blue-500 focus-visible:outline-none "
                       id="disponibilite"
                     >
@@ -195,6 +276,8 @@ export default function page() {
                   <div className="relative">
                     <textarea
                       name="description"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
                       className="w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-black focus:border-blue-500 focus-visible:outline-none "
                       rows={3}
                       id="description"
@@ -213,6 +296,8 @@ export default function page() {
                   <div className="relative">
                     <textarea
                       name="conditionLocation"
+                      value={conditionLocation}
+                      onChange={(e) => setConditionLocation(e.target.value)}
                       className="w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-black focus:border-blue-500 focus-visible:outline-none "
                       rows={3}
                       id="conditionLocation"
@@ -232,6 +317,8 @@ export default function page() {
                     <input
                       className="w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-black focus:border-blue-500 focus-visible:outline-none "
                       type="file"
+                      value={image}
+                      onChange={(e) => setImage(e.target.value)}
                       name="image"
                       id="image"
                       placeholder="image"
@@ -244,9 +331,8 @@ export default function page() {
                   <button
                     className="flex justify-center rounded bg-blue-600 text-white px-6 py-2 font-medium text-gray hover:bg-opacity-90"
                     type="submit"
-                  >
-                    Enrégistrer
-                  </button>
+                    value={isLoading ? "Chargement..." : "Ajouter location"}
+                  ></button>
                 </div>
               </form>
             </div>

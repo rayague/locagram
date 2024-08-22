@@ -1,5 +1,4 @@
 import Link from "next/link";
-import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faClipboard,
@@ -7,8 +6,34 @@ import {
   faSignOutAlt,
   faUser
 } from "@fortawesome/free-solid-svg-icons";
+import { signOut } from "firebase/auth";
+import React, { useState } from "react";
+import { auth } from "../../../../firebaseConfig";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../../../firebaseConfig";
+import { useRouter } from "next/navigation";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function page() {
+  const route = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+  const [userId, setUserId] = useState(null);
+  const handleSignOut = async () => {
+    setIsLoading(true);
+
+    try {
+      await signOut(auth);
+      toast.success("Déconnexion réussie");
+      route.push("/acceuil");
+    } catch (error) {
+      console.error("Error signing out: ", error);
+      toast.error("erreur lors de la déconnexion");
+    }
+    setIsLoading(false);
+  };
+
   return (
     <main className="flex min-h-screen bg-slate-900 flex-col items-center font-sans">
       <div className="h-auto w-3/4 sm:w-3/4 lg:w-1/2 my-10 flex flex-col gap-5">

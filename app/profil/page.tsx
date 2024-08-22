@@ -1,5 +1,5 @@
+"use client";
 import Link from "next/link";
-import React from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,8 +8,48 @@ import {
   faSignOutAlt,
   faUser
 } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect } from "react";
+import { auth, provider } from "../../firebaseConfig";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
+import { useRouter } from "next/navigation";
+import { signOut, onAuthStateChanged, User } from "firebase/auth";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function page() {
+  const router = useRouter();
+  const [user, setUser] = useState(null);
+  const [userId, setUserId] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUserId(currentUser);
+      } else {
+        router.push("/acceuil");
+        toast.error("Vous n'êtes pas connecté");
+      }
+    });
+    return () => unsubscribe();
+  }, [router]);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      toast.success("Déconnexion réussie");
+      router.push("/acceuil");
+    } catch (error) {
+      console.error("Erreur lors de la déconnexion :", error);
+      toast.error("Erreur lors de la déconnexion");
+    }
+  };
+
+  if (!user) {
+    return null; // Empêche le rendu de l'écran tant que l'utilisateur n'est pas vérifié
+  }
+
   return (
     <main className="flex min-h-screen bg-slate-900 flex-col items-center font-sans">
       <div className="h-auto w-3/4 sm:w-3/4 my-10 lg:w-1/2 flex flex-col gap-5">
@@ -40,39 +80,39 @@ export default function page() {
               <form action="#">
                 <div className="mb-5 flex flex-col gap-5 sm:flex-row">
                   <div className="w-full sm:w-1/2">
-                    <div className=" w-full rounded border border-stroke text-gray-600 bg-gray-300 py-3 px-4 focus:border-blue-500 focus-visible:outline-none ">
-                      <h3>Nom</h3>
+                    <div className="w-full rounded border border-stroke text-gray-600 bg-gray-300 py-3 px-4 focus:border-blue-500 focus-visible:outline-none ">
+                      <h3>{user.displayName}</h3>
                     </div>
                   </div>
 
                   <div className="w-full sm:w-1/2">
-                    <div className=" w-full rounded border border-stroke text-gray-600 bg-gray-300 py-3 px-4 focus:border-blue-500 focus-visible:outline-none ">
-                      <h3>Prénom</h3>
+                    <div className="w-full rounded border border-stroke text-gray-600 bg-gray-300 py-3 px-4 focus:border-blue-500 focus-visible:outline-none ">
+                      <h3>{user.email}</h3>
                     </div>
                   </div>
                 </div>
                 <div className="mb-5 flex flex-col gap-5 sm:flex-row">
                   <div className="w-full sm:w-1/2">
-                    <div className=" w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-gray-600 focus:border-blue-500 focus-visible:outline-none">
+                    <div className="w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-gray-600 focus:border-blue-500 focus-visible:outline-none">
                       <h3>+990 3343 7865</h3>
                     </div>
                   </div>
 
                   <div className="w-full sm:w-1/2">
-                    <div className=" w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-gray-600 focus:border-blue-500 focus-visible:outline-none ">
+                    <div className="w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-gray-600 focus:border-blue-500 focus-visible:outline-none ">
                       <h3>Nom de l'agence</h3>
                     </div>
                   </div>
                 </div>
 
                 <div className="mb-5">
-                  <div className=" w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-gray-600 focus:border-blue-500 focus-visible:outline-none">
-                    <h3>Email</h3>
+                  <div className="w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-gray-600 focus:border-blue-500 focus-visible:outline-none">
+                    <h3>{user.email}</h3>
                   </div>
                 </div>
 
                 <div className="mb-5">
-                  <div className=" w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-gray-600 focus:border-blue-500 focus-visible:outline-none">
+                  <div className="w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-gray-600 focus:border-blue-500 focus-visible:outline-none">
                     <h3>Mot de passe</h3>
                   </div>
                 </div>

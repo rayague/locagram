@@ -1,16 +1,76 @@
+"use client";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword
+} from "firebase/auth";
+import { auth, provider } from "../../firebaseConfig";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
 
 export default function page() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [mot_de_passe, setMot_de_passe] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const validateEmail = (email: string) => {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    // Validation des champs
+    if (!validateEmail(email) || !email || !mot_de_passe) {
+      toast.error(
+        "Le format de l'email est invalide ou les champs sont vides."
+      );
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        mot_de_passe
+      );
+      const response = userCredential.user;
+      const userEmail = userCredential.user.email;
+
+      console.log("Utilisateur connecté :", response, userEmail);
+      toast.success("Connexion réussie !");
+      router.push("/dashboard");
+    } catch (error) {
+      // Gérer l'erreur ici et afficher un message avec toastify
+      toast.error("Erreur de connexion. Veuillez vérifier vos informations.");
+      console.error("Erreur de connexion :", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <main className="flex min-h-screen bg-slate-900 flex-col items-center justify-center font-sans">
       <h1 className="text-5xl text-white mb-10">Connexion</h1>
-      <form className="w-3/4 lg:w-1/4 sm:w-2/4 md:w-2/4 mx-auto">
+      <form
+        className="w-3/4 lg:w-1/4 sm:w-2/4 md:w-2/4 mx-auto"
+        onSubmit={handleSubmit}
+      >
         <div className="relative z-0 w-full mb-5 group">
           <input
             type="email"
-            name="floating_email"
-            id="floating_email"
+            name="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=" "
             required
@@ -25,8 +85,11 @@ export default function page() {
         <div className="relative z-0 w-full mb-5 group">
           <input
             type="password"
-            name="floating_password"
-            id="floating_password"
+            name="mot_de_passe"
+            id="mot_de_passe"
+            min={8}
+            value={mot_de_passe}
+            onChange={(e) => setMot_de_passe(e.target.value)}
             className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=" "
             required
@@ -41,9 +104,10 @@ export default function page() {
 
         <button
           type="submit"
+          disabled={isLoading}
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
-          Envoyer
+          {isLoading ? "Chargement..." : "Se connecter"}
         </button>
       </form>
       <h2 className="text-white my-5">
@@ -52,6 +116,9 @@ export default function page() {
           M'inscrire
         </Link>
       </h2>
+      <ToastContainer />
     </main>
   );
 }
+
+// https://theswissbay.ch/pdf/Books/Linguistics/Mega%20linguistics%20pack/Austronesian/Tagalog%2C%20Basic%20%28Aspillera%29.pdf
