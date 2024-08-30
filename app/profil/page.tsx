@@ -9,18 +9,15 @@ import {
   faUser
 } from "@fortawesome/free-solid-svg-icons";
 import React, { useState, useEffect } from "react";
-import { auth, provider } from "../../firebaseConfig";
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "../../firebaseConfig";
+import { auth } from "../../firebaseConfig";
 import { useRouter } from "next/navigation";
 import { signOut, onAuthStateChanged, User } from "firebase/auth";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function page() {
+export default function Page() {
   const router = useRouter();
-  const [user, setUser] = useState(null);
   const [userId, setUserId] = useState<User | null>(null);
 
   useEffect(() => {
@@ -46,7 +43,7 @@ export default function page() {
     }
   };
 
-  if (!user) {
+  if (!userId) {
     return null; // Empêche le rendu de l'écran tant que l'utilisateur n'est pas vérifié
   }
 
@@ -67,12 +64,11 @@ export default function page() {
           rendre visibles pour les locataires potentiels.
         </p>
       </div>
-
       <div className="grid grid-cols w-3/4 mx-5 sm:w-1/2 gap-8 mt-10 mb-5">
         <div className="col-span-5 xl:col-span-3">
           <div className="rounded-sm border border-stroke bg-white shadow-default shadow-lg shadow-slate-950">
             <div className="border-b border-stroke px-7 py-4">
-              <h3 className="font-medium text-black  ">
+              <h3 className="font-medium text-black">
                 Informations Personnelles
               </h3>
             </div>
@@ -81,13 +77,13 @@ export default function page() {
                 <div className="mb-5 flex flex-col gap-5 sm:flex-row">
                   <div className="w-full sm:w-1/2">
                     <div className="w-full rounded border border-stroke text-gray-600 bg-gray-300 py-3 px-4 focus:border-blue-500 focus-visible:outline-none ">
-                      <h3>{user.displayName}</h3>
+                      <h3>{userId.displayName}</h3>
                     </div>
                   </div>
 
                   <div className="w-full sm:w-1/2">
                     <div className="w-full rounded border border-stroke text-gray-600 bg-gray-300 py-3 px-4 focus:border-blue-500 focus-visible:outline-none ">
-                      <h3>{user.email}</h3>
+                      <h3>{userId.email}</h3>
                     </div>
                   </div>
                 </div>
@@ -107,7 +103,7 @@ export default function page() {
 
                 <div className="mb-5">
                   <div className="w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-gray-600 focus:border-blue-500 focus-visible:outline-none">
-                    <h3>{user.email}</h3>
+                    <h3>{userId.email}</h3>
                   </div>
                 </div>
 
@@ -130,6 +126,7 @@ export default function page() {
           </div>
         </div>
       </div>
+
       <div className="grid grid-col w-3/4 mx-5 sm:w-1/2 gap-8 mt-5 mb-24">
         <div className="col-span-5 xl:col-span-3">
           <div className="rounded-sm border border-stroke bg-white shadow-default shadow-lg shadow-slate-950">
@@ -221,24 +218,28 @@ export default function page() {
         </div>
       </div>
 
-      <div className="flex flex-row gap-8 backdrop-blur-sm backdrop-brightness-50 cursor-pointer justify-evenly py-4 px-10 rounded-3xl fixed bottom-2">
-        <span className="text-3xl text-white">
-          <Link href="/dashboard">
+      <div className="flex flex-row gap-4 lg:gap-8 md:gap-6 backdrop-blur-xl backdrop-brightness-200 cursor-pointer justify-evenly py-6 px-4 rounded-3xl fixed bottom-2">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link href="/dashboard" className="bg-white p-3 rounded-full ">
             <FontAwesomeIcon icon={faHome} />
           </Link>
         </span>
-        <span className="text-3xl text-white">
-          <Link href="/postes">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link href="/postes" className="bg-white p-3 rounded-full">
             <FontAwesomeIcon icon={faClipboard} />
           </Link>
         </span>
-        <span className="text-3xl text-white">
-          <Link href="/profil">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link href="/profil" className="bg-white p-3 rounded-full">
             <FontAwesomeIcon icon={faUser} />
           </Link>
         </span>
-        <span className="text-3xl text-white">
-          <Link href="">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link
+            href=""
+            onClick={handleSignOut}
+            className="bg-white p-3 rounded-full"
+          >
             <FontAwesomeIcon icon={faSignOutAlt} />
           </Link>
         </span>

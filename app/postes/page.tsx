@@ -9,9 +9,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import React, { useState, useEffect } from "react";
 import { collection, onSnapshot, deleteDoc, doc } from "firebase/firestore";
-import { db } from "../../firebaseConfig";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
+import { signOut, onAuthStateChanged } from "firebase/auth";
+import { auth, storage, db } from "../../firebaseConfig";
 
 type Location = {
   id: string;
@@ -28,6 +31,21 @@ type Location = {
 
 export default function Page() {
   const [locations, setLocations] = useState<Location[]>([]);
+  const route = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleSignOut = async () => {
+    setIsLoading(true);
+    try {
+      await signOut(auth);
+      toast.success("Déconnexion réussie");
+      route.push("/acceuil");
+    } catch (error) {
+      console.error("Error signing out: ", error);
+      toast.error("Erreur lors de la déconnexion");
+    }
+    setIsLoading(false);
+  };
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "locations"), (snapshot) => {
@@ -40,14 +58,14 @@ export default function Page() {
       });
 
       setLocations(locationsData);
+      setIsLoading(false);
     });
 
-    return () => unsubscribe(); // Clean up the listener on unmount
+    return () => unsubscribe();
   }, []);
 
   const handleEdit = (id: string) => {
-    // Implement edit functionality
-    console.log(`Edit location with ID: ${id}`);
+    route.push(`/postes/modifier?id=${id}`);
   };
 
   const handleDelete = async (id: string) => {
@@ -63,6 +81,19 @@ export default function Page() {
       }
     }
   };
+
+  if (isLoading) {
+    return (
+      <main className="flex min-h-screen bg-slate-900 flex-col items-center justify-center font-sans">
+        <div className="flex flex-col items-center">
+          <div className="loader"></div>
+          <p className="text-white text-4xl tracking-tighter font-extrabold flex flex-wrap mt-4">
+            Chargement des données...
+          </p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="flex min-h-screen bg-slate-900 flex-col items-center font-sans">
@@ -110,13 +141,12 @@ export default function Page() {
               <th className="min-w-[300px] px-6 py-4 font-medium text-black">
                 Condition de location
               </th>
-              <th className="min-w-[150px] px-6 py-4 font-medium text-black">
+              <th className="min-w-[500px] px-6 py-4 font-medium text-black">
                 Images
               </th>
               <th className="min-w-[150px] px-6 py-4 font-medium text-black">
                 Actions
-              </th>{" "}
-              {/* New Actions Column */}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -162,7 +192,8 @@ export default function Page() {
                       ))}
                   </div>
                 </td>
-                <td className="border-b border flex flex-col justify-center items-center gap-2   text-black px-6 py-5">
+
+                <td className="border-b border flex flex-col justify-center items-center gap-2 text-black px-6 py-5">
                   <button
                     onClick={() => handleEdit(location.id)}
                     className="text-white hover:underline bg-blue-500 font-semibold p-2 rounded-md"
@@ -182,24 +213,28 @@ export default function Page() {
         </table>
       </div>
 
-      <div className="flex flex-row gap-8 backdrop-blur-sm backdrop-brightness-50 cursor-pointer justify-evenly py-4 px-10 rounded-3xl fixed bottom-2">
-        <span className="text-3xl text-white">
-          <Link href="/dashboard">
+      <div className="flex flex-row gap-4 lg:gap-8 md:gap-6 backdrop-blur-xl backdrop-brightness-200 cursor-pointer justify-evenly py-6 px-4 rounded-3xl fixed bottom-2">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link href="/dashboard" className="bg-white p-3 rounded-full ">
             <FontAwesomeIcon icon={faHome} />
           </Link>
         </span>
-        <span className="text-3xl text-white">
-          <Link href="/postes">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link href="/postes" className="bg-white p-3 rounded-full">
             <FontAwesomeIcon icon={faClipboard} />
           </Link>
         </span>
-        <span className="text-3xl text-white">
-          <Link href="/profil">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link href="/profil" className="bg-white p-3 rounded-full">
             <FontAwesomeIcon icon={faUser} />
           </Link>
         </span>
-        <span className="text-3xl text-white">
-          <Link href="">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link
+            href=""
+            onClick={handleSignOut}
+            className="bg-white p-3 rounded-full"
+          >
             <FontAwesomeIcon icon={faSignOutAlt} />
           </Link>
         </span>

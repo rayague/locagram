@@ -31,6 +31,20 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
 
+  const handleSignOut = async () => {
+    setIsLoading(true);
+
+    try {
+      await signOut(auth);
+      toast.success("Déconnexion réussie");
+      route.push("/acceuil");
+    } catch (error) {
+      console.error("Error signing out: ", error);
+      toast.error("erreur lors de la déconnexion");
+    }
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -62,6 +76,7 @@ export default function Page() {
     return imageUrls.filter((url) => url !== null);
   };
 
+  //
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -80,6 +95,11 @@ export default function Page() {
       toast.warning("Veuillez remplir tous les champs.");
       console.log("Veuillez remplir tous les champs.");
       return; // Interrompre la soumission du formulaire
+    }
+
+    if (images.length > 6) {
+      toast.warning("Vous ne pouvez télécharger que jusqu'à 6 images.");
+      return; // Interrompre la soumission du formulaire si plus de 6 images
     }
 
     setIsLoading(true);
@@ -376,6 +396,7 @@ export default function Page() {
                       className="w-full rounded border border-stroke bg-gray-300 px-4 py-3 text-black focus:border-blue-500 focus-visible:outline-none"
                       type="file"
                       multiple
+                      accept="image/*"
                       onChange={(e) => setImages(e.target.files)}
                       id="images"
                     />
@@ -402,29 +423,32 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="flex flex-row gap-8 backdrop-blur-sm backdrop-brightness-50 cursor-pointer justify-evenly py-4 px-10 rounded-3xl fixed bottom-2">
-        <span className="text-3xl text-white">
-          <Link href="/dashboard">
+      <div className="flex flex-row gap-4 lg:gap-8 md:gap-6 backdrop-blur-xl backdrop-brightness-200 cursor-pointer justify-evenly py-6 px-4 rounded-3xl fixed bottom-2">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link href="/dashboard" className="bg-white p-3 rounded-full ">
             <FontAwesomeIcon icon={faHome} />
           </Link>
         </span>
-        <span className="text-3xl text-white">
-          <Link href="/postes">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link href="/postes" className="bg-white p-3 rounded-full">
             <FontAwesomeIcon icon={faClipboard} />
           </Link>
         </span>
-        <span className="text-3xl text-white">
-          <Link href="/profil">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link href="/profil" className="bg-white p-3 rounded-full">
             <FontAwesomeIcon icon={faUser} />
           </Link>
         </span>
-        <span className="text-3xl text-white">
-          <Link href="">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link
+            href=""
+            onClick={handleSignOut}
+            className="bg-white p-3 rounded-full"
+          >
             <FontAwesomeIcon icon={faSignOutAlt} />
           </Link>
         </span>
       </div>
-      <ToastContainer />
     </main>
   );
 }

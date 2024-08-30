@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -51,7 +52,7 @@ export default function page() {
         </p>
       </div>
 
-      <div className="grid grid-col gap-8 mt-10 mb-24">
+      <div className="grid grid-col gap-8 mt-10 mb-24 bg-white">
         <div className="col-span-5 xl:col-span-3">
           <div className="rounded-sm border border-stroke bg-white shadow-default shadow-lg shadow-slate-950">
             <div className="border-b border-stroke px-7 py-4">
@@ -59,7 +60,7 @@ export default function page() {
                 Informations Personnelles
               </h3>
             </div>
-            <div className="p-7">
+            <div className="p-7 bg-white">
               <form action="#">
                 <div className="mb-5 flex flex-col gap-5 sm:flex-row">
                   <div className="w-full sm:w-1/2">
@@ -182,24 +183,28 @@ export default function page() {
         </div>
       </div>
 
-      <div className="flex flex-row gap-8 backdrop-blur-sm backdrop-brightness-50 cursor-pointer justify-evenly py-4 px-10 rounded-3xl fixed bottom-2">
-        <span className="text-3xl text-white">
-          <Link href="/dashboard">
+      <div className="flex flex-row gap-4 lg:gap-8 md:gap-6 backdrop-blur-xl backdrop-brightness-200 cursor-pointer justify-evenly py-6 px-4 rounded-3xl fixed bottom-2">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link href="/dashboard" className="bg-white p-3 rounded-full ">
             <FontAwesomeIcon icon={faHome} />
           </Link>
         </span>
-        <span className="text-3xl text-white">
-          <Link href="/postes">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link href="/postes" className="bg-white p-3 rounded-full">
             <FontAwesomeIcon icon={faClipboard} />
           </Link>
         </span>
-        <span className="text-3xl text-white">
-          <Link href="/profil">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link href="/profil" className="bg-white p-3 rounded-full">
             <FontAwesomeIcon icon={faUser} />
           </Link>
         </span>
-        <span className="text-3xl text-white">
-          <Link href="">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link
+            href=""
+            onClick={handleSignOut}
+            className="bg-white p-3 rounded-full"
+          >
             <FontAwesomeIcon icon={faSignOutAlt} />
           </Link>
         </span>
