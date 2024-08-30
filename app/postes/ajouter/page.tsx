@@ -8,19 +8,16 @@ import {
   faSignOutAlt,
   faUser
 } from "@fortawesome/free-solid-svg-icons";
-import { signOut } from "firebase/auth";
-import React, { useState, useEffect } from "react";
-import { auth, provider } from "../../../firebaseConfig";
+import { signOut, onAuthStateChanged } from "firebase/auth";
+import React, { useRef, useState, useEffect } from "react";
+import { auth, storage, db } from "../../../firebaseConfig"; // Assurez-vous que ces importations sont correctes
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "../../../firebaseConfig";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
-import { onAuthStateChanged } from "firebase/auth";
 import "react-toastify/dist/ReactToastify.css";
-import firebase from "firebase/app";
-import "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-export default function page() {
+export default function Page() {
   const route = useRouter();
   const [ville, setVille] = useState("");
   const [quartier, setQuartier] = useState("");
@@ -28,30 +25,73 @@ export default function page() {
   const [loyer, setLoyer] = useState("");
   const [disponibilite, setDisponibilite] = useState("");
   const [description, setDescription] = useState("");
+  const [fraisVisite, setFraisVisite] = useState("");
   const [conditionLocation, setConditionLocation] = useState("");
-  const [image, setImage] = useState("");
+  const [images, setImages] = useState<FileList | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  // const [userId, setUserId] = useState(null);
   const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Récupérer l'utilisateur connecté
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUserId(user.uid);
       } else {
-        route.push("/acceuil"); // Rediriger vers la page de connexion si non connecté
+        route.push("/acceuil");
       }
     });
+    return () => unsubscribe();
   }, [route]);
 
-  const handleSubmit = async (e: any) => {
+  const handleImagesUpload = async () => {
+    if (!images) return [];
+
+    const uploadPromises = Array.from(images).map(async (image) => {
+      try {
+        const imageRef = ref(storage, `images/${Date.now()}-${image.name}`);
+        await uploadBytes(imageRef, image);
+        const imageUrl = await getDownloadURL(imageRef);
+        return imageUrl;
+      } catch (error) {
+        console.error("Erreur lors du téléchargement de l'image: ", error);
+        toast.error("Erreur lors du téléchargement de l'image.");
+        return null;
+      }
+    });
+
+    const imageUrls = await Promise.all(uploadPromises);
+    return imageUrls.filter((url) => url !== null);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Vérifier si tous les champs sont remplis
+    if (
+      !ville ||
+      !quartier ||
+      !typeLocation ||
+      !loyer ||
+      !disponibilite ||
+      !description ||
+      !fraisVisite ||
+      !conditionLocation ||
+      !images
+    ) {
+      toast.warning("Veuillez remplir tous les champs.");
+      console.log("Veuillez remplir tous les champs.");
+      return; // Interrompre la soumission du formulaire
+    }
+
     setIsLoading(true);
 
     try {
       if (!userId) {
         throw new Error("Utilisateur non authentifié.");
+      }
+
+      const imageUrls = await handleImagesUpload();
+      if (imageUrls.length === 0) {
+        throw new Error("Les URLs des images sont manquantes.");
       }
 
       const locationRef = collection(db, "locations");
@@ -62,14 +102,26 @@ export default function page() {
         formLoyer: loyer,
         formDisponibilite: disponibilite,
         formDescription: description,
+        formFraisVisite: fraisVisite,
         formConditionLocation: conditionLocation,
-        formImage: image,
-        userId: userId, // Ajouter l'ID de l'utilisateur connecté
-        submittedAt: new Date().toISOString() // Ajouter la date de soumission
+        formImages: imageUrls, // Utiliser le tableau d'URLs des images
+        userId: userId,
+        submittedAt: new Date().toISOString()
       });
 
       console.log("Document ajouté avec ID: ", response.id);
       toast.success("Location ajoutée avec succès !");
+
+      // Réinitialiser les champs du formulaire
+      setVille("");
+      setQuartier("");
+      setTypeLocation("");
+      setLoyer("");
+      setDisponibilite("");
+      setDescription("");
+      setFraisVisite("");
+      setConditionLocation("");
+      setImages(null);
     } catch (error) {
       console.error("Erreur lors de l'ajout de la location: ", error);
       toast.error("Erreur lors de l'ajout de la location.");
@@ -104,7 +156,7 @@ export default function page() {
               </h3>
             </div>
             <div className="p-7">
-              <form action="#">
+              <form onSubmit={handleSubmit}>
                 <div className="mb-5 flex flex-col gap-5 sm:flex-row">
                   <div className="w-full sm:w-1/2">
                     <label
@@ -219,9 +271,9 @@ export default function page() {
                     Frais de Visite
                   </label>
                   <select
-                    name="typeLocation"
-                    value={typeLocation}
-                    onChange={(e) => setTypeLocation(e.target.value)}
+                    name="fraisVisite"
+                    value={fraisVisite}
+                    onChange={(e) => setFraisVisite(e.target.value)}
                     className="w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-black focus:border-blue-500 focus-visible:outline-none "
                     id="typeLocation"
                   >
@@ -261,6 +313,10 @@ export default function page() {
                       className="w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-black focus:border-blue-500 focus-visible:outline-none "
                       id="disponibilite"
                     >
+                      <option value="">--Choisir--</option>
+                      <option value="Immédiate">Immédiate</option>
+                      <option value="Sous 1 mois">Sous 1 mois</option>
+                      <option value="Sous 3 mois">Sous 3 mois</option>
                       <option value="disponible">Disponible</option>
                       <option value="indisponible">Non disponible</option>
                     </select>
@@ -317,8 +373,7 @@ export default function page() {
                     <input
                       className="w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-black focus:border-blue-500 focus-visible:outline-none "
                       type="file"
-                      value={image}
-                      onChange={(e) => setImage(e.target.value)}
+                      onChange={(e) => setImages(e.target.files)}
                       name="image"
                       id="image"
                       placeholder="image"
@@ -329,10 +384,17 @@ export default function page() {
 
                 <div className="flex flex-row justify-end gap-4">
                   <button
-                    className="flex justify-center rounded bg-blue-600 text-white px-6 py-2 font-medium text-gray hover:bg-opacity-90"
                     type="submit"
-                    value={isLoading ? "Chargement..." : "Ajouter location"}
-                  ></button>
+                    className={`mt-4 w-full flex justify-center bg-blue-500 text-white py-3 rounded-md 
+                    ${
+                      isLoading
+                        ? "cursor-not-allowed opacity-50"
+                        : "hover:bg-blue-600"
+                    }`}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "En cours..." : "Ajouter"}
+                  </button>
                 </div>
               </form>
             </div>
@@ -362,6 +424,7 @@ export default function page() {
           </Link>
         </span>
       </div>
+      <ToastContainer />
     </main>
   );
 }
