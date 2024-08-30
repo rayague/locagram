@@ -160,24 +160,28 @@ export default function Page() {
         </motion.div>
       </div>
 
-      <div className="flex flex-row gap-8 backdrop-blur-sm backdrop-brightness-50 cursor-pointer justify-evenly py-4 px-10 rounded-3xl fixed bottom-2">
-        <span className="text-3xl text-white">
-          <Link href="/dashboard">
+      <div className="flex flex-row gap-4 lg:gap-8 md:gap-6 backdrop-blur-xl backdrop-brightness-200 cursor-pointer justify-evenly py-6 px-4 rounded-3xl fixed bottom-2">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link href="/dashboard" className="bg-white p-3 rounded-full ">
             <FontAwesomeIcon icon={faHome} />
           </Link>
         </span>
-        <span className="text-3xl text-white">
-          <Link href="/postes">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link href="/postes" className="bg-white p-3 rounded-full">
             <FontAwesomeIcon icon={faClipboard} />
           </Link>
         </span>
-        <span className="text-3xl text-white">
-          <Link href="/profil">
+        <span className="text-3xl text-black hover:scale-110">
+          <Link href="/profil" className="bg-white p-3 rounded-full">
             <FontAwesomeIcon icon={faUser} />
           </Link>
         </span>
-        <span className="text-3xl text-white">
-          <Link href="" onClick={handleSignOut}>
+        <span className="text-3xl text-black hover:scale-110">
+          <Link
+            href=""
+            onClick={handleSignOut}
+            className="bg-white p-3 rounded-full"
+          >
             <FontAwesomeIcon icon={faSignOutAlt} />
           </Link>
         </span>

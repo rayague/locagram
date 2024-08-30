@@ -111,6 +111,7 @@ export default function Page() {
 
       console.log("Document ajouté avec ID: ", response.id);
       toast.success("Location ajoutée avec succès !");
+      route.push("/postes");
 
       // Réinitialiser les champs du formulaire
       setVille("");
@@ -277,6 +278,7 @@ export default function Page() {
                     className="w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-black focus:border-blue-500 focus-visible:outline-none "
                     id="typeLocation"
                   >
+                    <option value="">--Choisir--</option>
                     <option value="1.000">1.000</option>
                     <option value="1.500">1.500</option>
                     <option value="2.000">2.000</option>
@@ -371,13 +373,11 @@ export default function Page() {
                   </label>
                   <div className="relative">
                     <input
-                      className="w-full rounded border border-stroke bg-gray-300 py-3 px-4 text-black focus:border-blue-500 focus-visible:outline-none "
+                      className="w-full rounded border border-stroke bg-gray-300 px-4 py-3 text-black focus:border-blue-500 focus-visible:outline-none"
                       type="file"
-                      onChange={(e) => setImages(e.target.files)}
-                      name="image"
-                      id="image"
-                      placeholder="image"
                       multiple
+                      onChange={(e) => setImages(e.target.files)}
+                      id="images"
                     />
                   </div>
                 </div>
