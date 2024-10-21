@@ -23,19 +23,22 @@ export default function Home() {
           </p>
           <div className="relative my-4">
             <div className="relative flex items-center py-1">
-              <div className="grow border-t border border-zinc-700"></div>
-              <div className="grow border-t border border-zinc-700"></div>
+              <div className="grow border-t border border-slate-500"></div>
+              <div className="grow border-t border border-slate-500"></div>
             </div>
           </div>
           <div>
             <form className="mb-4">
               <div className="grid gap-2">
                 <div className="grid gap-1">
-                  <label className="text-zinc-950" htmlFor="nomAgence">
+                  <label
+                    className="text-slate-800 font-semibold"
+                    htmlFor="nomAgence"
+                  >
                     Nom de l&apos;agence
                   </label>
                   <input
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-600 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-500 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     id="nomAgence"
                     placeholder="Agence Locagram"
                     type="text"
@@ -44,7 +47,10 @@ export default function Home() {
                     autoCorrect="off"
                     name="nomAgence"
                   />
-                  <label className="text-zinc-950 mt-2" htmlFor="nomGerant">
+                  <label
+                    className="text-slate-800 font-semibold mt-2"
+                    htmlFor="nomGerant"
+                  >
                     Nom du Gérant
                   </label>
                   <input
@@ -52,16 +58,19 @@ export default function Home() {
                     placeholder="Agent Gerant"
                     type="text"
                     autoComplete="nomGerant"
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-600 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-500 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     name="nomGerant"
                   />
                 </div>
                 <div className="grid gap-1">
-                  <label className="text-zinc-950 " htmlFor="numeroIFU">
+                  <label
+                    className="text-slate-800 font-semibold "
+                    htmlFor="numeroIFU"
+                  >
                     Numéro IFU
                   </label>
                   <input
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-500 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     id="numeroIFU"
                     placeholder="123456789AB12"
                     type="text"
@@ -70,7 +79,10 @@ export default function Home() {
                     autoCorrect="off"
                     name="numeroIFU"
                   />
-                  <label className="text-zinc-950 mt-2" htmlFor="password">
+                  <label
+                    className="text-slate-800 font-semibold mt-2"
+                    htmlFor="password"
+                  >
                     Numéro de Téléphone
                   </label>
                   <input
@@ -78,16 +90,19 @@ export default function Home() {
                     placeholder="00098909876"
                     type="text"
                     autoComplete="telephone"
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-600 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-500 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     name="telephone"
                   />
                 </div>
                 <div className="grid gap-1">
-                  <label className="text-zinc-950 " htmlFor="email">
+                  <label
+                    className="text-slate-800 font-semibold "
+                    htmlFor="email"
+                  >
                     Email
                   </label>
                   <input
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-600 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-500 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     id="email"
                     placeholder="gerant@locagram.com"
                     type="email"
@@ -96,7 +111,10 @@ export default function Home() {
                     autoCorrect="off"
                     name="email"
                   />
-                  <label className="text-zinc-950 mt-2" htmlFor="password">
+                  <label
+                    className="text-slate-800 font-semibold"
+                    htmlFor="password"
+                  >
                     Mot de passe
                   </label>
                   <input
