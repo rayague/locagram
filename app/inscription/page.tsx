@@ -1,215 +1,150 @@
-"use client";
+import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
-import { auth, provider } from "../../firebaseConfig";
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "../../firebaseConfig";
-import { useRouter } from "next/navigation";
 
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword
-} from "firebase/auth";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { EmailAuthProvider } from "firebase/auth/web-extension";
-
-export default function page() {
-  const router = useRouter();
-  const [prenom, setPrenom] = useState("");
-  const [nom, setNom] = useState("");
-  const [agence, setAgence] = useState("");
-  const [telephone, setTelephone] = useState("");
-  const [email, setEmail] = useState("");
-  const [mot_de_passe, setMot_de_passe] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    setIsLoading(true);
-    const validateEmail = (email: string) => {
-      const re = /\S+@\S+\.\S+/;
-      return re.test(email);
-    };
-    if (!email || !mot_de_passe || !prenom || !nom || !agence || !telephone) {
-      toast.error("Tous les champs sont obligatoires.");
-      return;
-    }
-    // Vérification des champs avant toute action
-    if (!validateEmail(email)) {
-      toast.error("Le format de l'email est invalide.");
-      return;
-    }
-
-    if (mot_de_passe.length < 8) {
-      toast.error("Le mot de passe doit contenir au moins 8 caractères.");
-      return;
-    }
-
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        mot_de_passe
-      );
-
-      const Users = collection(db, "user");
-      const response = await addDoc(Users, {
-        formPrenom: prenom,
-        formNom: nom,
-        formAgence: agence,
-        formEmail: email,
-        formTelephone: telephone,
-        uid: userCredential.user.uid, // Stocker uniquement l'UID, pas l'objet entier
-        formMotDePasse: mot_de_passe
-      });
-      console.log(response);
-      router.push("/dashboard");
-      toast.success("Inscription réussie.");
-    } catch (error) {
-      console.log(error);
-      toast.error("Erreur lors de l'inscription. Veuillez réessayer.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+export default function Home() {
   return (
-    <main className="flex min-h-screen bg-slate-900 flex-col items-center justify-center font-sans">
-      <h1 className="text-5xl text-white mb-10">Inscription</h1>
-      <form
-        className="w-3/4 lg:w-2/4 sm:w-3/4 md:w-3/4 mx-auto"
-        onClick={handleSubmit}
-      >
-        <div className="grid md:grid-cols-2 md:gap-6">
-          <div className="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
-              name="prenom"
-              id="nom"
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              onChange={(e) => setPrenom(e.target.value)}
-              value={prenom}
-              required
-            />
-            <label
-              htmlFor="floating_first_name"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Prénom
-            </label>
-          </div>
-          <div className="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
-              name="nom"
-              onChange={(e) => setNom(e.target.value)}
-              value={nom}
-              id="floating_last_name"
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              required
-            />
-            <label
-              htmlFor="floating_last_name"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Nom
-            </label>
-          </div>
-        </div>
-        <div className="grid md:grid-cols-2 md:gap-6">
-          <div className="relative z-0 w-full mb-5 group">
-            <input
-              type="tel"
-              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-              name="telephone"
-              onChange={(e) => setTelephone(e.target.value)}
-              value={telephone}
-              id="floating_phone"
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              required
-            />
-            <label
-              htmlFor="floating_phone"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Téléphone
-            </label>
-          </div>
-          <div className="relative z-0 w-full mb-5 group">
-            <input
-              type="text"
-              name="agence"
-              onChange={(e) => setAgence(e.target.value)}
-              value={agence}
-              id="agence"
-              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              required
-            />
-            <label
-              htmlFor="agence"
-              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-            >
-              Agence
-            </label>
-          </div>
-        </div>
-        <div className="relative z-0 w-full mb-5 group">
-          <input
-            type="email"
-            name="email"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-            id="floating_email"
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-            required
+    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-green-300">
+      <div className="flex flex-col md:flex-row justify-center items-center w-full rounded-2xl bg-white shadow-xl">
+        <div className="h-full w-full md:w-0 lg:w-full ">
+          <Image
+            src="/images/landing.WEBP"
+            width={500}
+            height={500}
+            alt={"Image"}
+            className="w-full h-full hidden lg:block rounded-tl-xl-none rounded-bl-none "
           />
-          <label
-            htmlFor="email"
-            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >
-            Email
-          </label>
         </div>
-        <div className="relative z-0 w-full mb-5 group">
-          <input
-            type="password"
-            name="mot_de_passe"
-            onChange={(e) => setMot_de_passe(e.target.value)}
-            value={mot_de_passe}
-            id="floating_password"
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
-            required
-          />
-          <label
-            htmlFor="floating_password"
-            className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-          >
-            Mot de passe
-          </label>
+        <div className="my-auto mb-auto flex flex-col  w-full p-10">
+          <p className="text-5xl font-bold text-zinc-950 dark:text-white">
+            Inscription
+          </p>
+          <p className="mb-2.5 mt-2.5 font-normal text-zinc-950 dark:text-zinc-400">
+            Entrer vos identifiants pour vous inscrire!
+          </p>
+          <div className="relative my-4">
+            <div className="relative flex items-center py-1">
+              <div className="grow border-t border-zinc-200 dark:border-zinc-700"></div>
+              <div className="grow border-t border-zinc-200 dark:border-zinc-700"></div>
+            </div>
+          </div>
+          <div>
+            <form className="mb-4">
+              <div className="grid gap-2">
+                <div className="grid gap-1">
+                  <label
+                    className="text-zinc-950 dark:text-white"
+                    htmlFor="email"
+                  >
+                    Nom de l&apos;agence
+                  </label>
+                  <input
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
+                    id="email"
+                    placeholder="gerant@locagram.com"
+                    type="email"
+                    autoCapitalize="none"
+                    autoComplete="email"
+                    autoCorrect="off"
+                    name="email"
+                  />
+                  <label
+                    className="text-zinc-950 dark:text-white"
+                    htmlFor="email"
+                  >
+                    Nom du gérant
+                  </label>
+                  <input
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
+                    id="email"
+                    placeholder="gerant@locagram.com"
+                    type="email"
+                    autoCapitalize="none"
+                    autoComplete="email"
+                    autoCorrect="off"
+                    name="email"
+                  />
+                  <label
+                    className="text-zinc-950 dark:text-white"
+                    htmlFor="email"
+                  >
+                    Numéro UFU
+                  </label>
+                  <input
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
+                    id="email"
+                    placeholder="gerant@locagram.com"
+                    type="email"
+                    autoCapitalize="none"
+                    autoComplete="email"
+                    autoCorrect="off"
+                    name="email"
+                  />
+                  <label
+                    className="text-zinc-950 dark:text-white"
+                    htmlFor="email"
+                  >
+                    Numéro de Téléphone
+                  </label>
+                  <input
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
+                    id="email"
+                    placeholder="gerant@locagram.com"
+                    type="email"
+                    autoCapitalize="none"
+                    autoComplete="email"
+                    autoCorrect="off"
+                    name="email"
+                  />
+                  <label
+                    className="text-zinc-950 dark:text-white"
+                    htmlFor="email"
+                  >
+                    Email
+                  </label>
+                  <input
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
+                    id="email"
+                    placeholder="gerant@locagram.com"
+                    type="email"
+                    autoCapitalize="none"
+                    autoComplete="email"
+                    autoCorrect="off"
+                    name="email"
+                  />
+                  <label
+                    className="text-zinc-950 mt-2 dark:text-white"
+                    htmlFor="password"
+                  >
+                    Mot de passe
+                  </label>
+                  <input
+                    id="password"
+                    placeholder="Mot de passe"
+                    type="password"
+                    autoComplete="current-password"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
+                    name="password"
+                  />
+                </div>
+                <button
+                  className="whitespace-nowrap ring-offset-background bg-green-500 text-white text-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-white-foreground hover:bg-green-700 mt-2 flex h-[unset] w-full items-center justify-center rounded-lg px-4 py-4 text-sm font-medium"
+                  type="submit"
+                >
+                  Se connecter
+                </button>
+              </div>
+            </form>
+            <p>
+              <Link
+                href="/"
+                className="font-medium text-blue-500 underline dark:text-white text-sm"
+              >
+                J&apos;ai déjà un compte? Me connecter
+              </Link>
+            </p>
+          </div>
         </div>
-
-        <button
-          type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xl w-full sm:w-full px-5 py-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          disabled={isLoading}
-        >
-          {isLoading ? "Chargement..." : "S'inscrire"}
-        </button>
-      </form>
-      <h2 className="text-white my-5">
-        J'ai déjà un compte{" "}
-        <Link href="connexion" className="text-sky-400">
-          Me connecter
-        </Link>
-      </h2>
-      <ToastContainer />
+      </div>
     </main>
   );
 }
