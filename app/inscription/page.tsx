@@ -23,8 +23,8 @@ export default function Home() {
           </p>
           <div className="relative my-4">
             <div className="relative flex items-center py-1">
-              <div className="grow border-t border-zinc-200 dark:border-zinc-700"></div>
-              <div className="grow border-t border-zinc-200 dark:border-zinc-700"></div>
+              <div className="grow border-t border border-zinc-700"></div>
+              <div className="grow border-t border border-zinc-700"></div>
             </div>
           </div>
           <div>
@@ -38,7 +38,7 @@ export default function Home() {
                     Nom de l&apos;agence
                   </label>
                   <input
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-600 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     id="nomAgence"
                     placeholder="Agence Locagram"
                     type="text"
@@ -47,10 +47,7 @@ export default function Home() {
                     autoCorrect="off"
                     name="nomAgence"
                   />
-                  <label
-                    className="text-zinc-950 mt-2 dark:text-white"
-                    htmlFor="nomGerant"
-                  >
+                  <label className="text-zinc-950 mt-2" htmlFor="nomGerant">
                     Nom du Gérant
                   </label>
                   <input
@@ -58,15 +55,12 @@ export default function Home() {
                     placeholder="Agent Gerant"
                     type="text"
                     autoComplete="nomGerant"
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-600 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     name="nomGerant"
                   />
                 </div>
                 <div className="grid gap-1">
-                  <label
-                    className="text-zinc-950 dark:text-white"
-                    htmlFor="numeroIFU"
-                  >
+                  <label className="text-zinc-950 " htmlFor="numeroIFU">
                     Numéro IFU
                   </label>
                   <input
@@ -90,7 +84,7 @@ export default function Home() {
                     placeholder="00098909876"
                     type="text"
                     autoComplete="telephone"
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-600 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     name="telephone"
                   />
                 </div>
@@ -102,7 +96,7 @@ export default function Home() {
                     Email
                   </label>
                   <input
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-600 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     id="email"
                     placeholder="gerant@locagram.com"
                     type="email"
@@ -122,7 +116,7 @@ export default function Home() {
                     placeholder="Mot de passe"
                     type="password"
                     autoComplete="current-password"
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-600 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     name="password"
                   />
                 </div>
