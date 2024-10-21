@@ -131,7 +131,7 @@ export default function Home() {
                   className="whitespace-nowrap ring-offset-background bg-green-500 text-white text-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-white-foreground hover:bg-green-700 mt-2 flex h-[unset] w-full items-center justify-center rounded-lg px-4 py-4 text-sm font-medium"
                   type="submit"
                 >
-                  Se connecter
+                  S&apos;inscrire
                 </button>
               </div>
             </form>
