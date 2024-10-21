@@ -4,18 +4,18 @@ import Link from "next/link";
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-green-300">
-      <div className="flex flex-col md:flex-row justify-center items-center w-full rounded-2xl bg-white shadow-xl">
-        <div className="h-full w-full md:w-0 lg:w-full ">
+      <div className="flex flex-col md:flex-row w-full h-full rounded-2xl bg-white shadow-xl">
+        <div className="relative w-full hidden h-[300px] lg:h-auto lg:block  lg:w-1/2">
           <Image
-            src="/images/landing.WEBP"
-            width={500}
-            height={500}
-            alt={"Image"}
+            src="/images/town.JPG"
+            layout="fill"
+            alt="Image"
             objectFit="cover"
-            className="w-full h-full hidden lg:block rounded-tl-xl-none rounded-bl-none "
+            className="rounded-tl-2xl md:rounded-bl-2xl"
           />
         </div>
-        <div className="my-auto mb-auto flex flex-col  w-full p-10">
+
+        <div className="flex flex-col justify-center w-full p-10 lg:w-1/2">
           <p className="text-5xl font-bold text-zinc-950 dark:text-white">
             Connexion
           </p>
