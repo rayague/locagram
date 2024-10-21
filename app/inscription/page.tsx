@@ -31,10 +31,7 @@ export default function Home() {
             <form className="mb-4">
               <div className="grid gap-2">
                 <div className="grid gap-1">
-                  <label
-                    className="text-zinc-950 dark:text-white"
-                    htmlFor="nomAgence"
-                  >
+                  <label className="text-zinc-950" htmlFor="nomAgence">
                     Nom de l&apos;agence
                   </label>
                   <input
@@ -73,10 +70,7 @@ export default function Home() {
                     autoCorrect="off"
                     name="numeroIFU"
                   />
-                  <label
-                    className="text-zinc-950 mt-2 dark:text-white"
-                    htmlFor="password"
-                  >
+                  <label className="text-zinc-950 mt-2" htmlFor="password">
                     Numéro de Téléphone
                   </label>
                   <input
@@ -89,10 +83,7 @@ export default function Home() {
                   />
                 </div>
                 <div className="grid gap-1">
-                  <label
-                    className="text-zinc-950 dark:text-white"
-                    htmlFor="email"
-                  >
+                  <label className="text-zinc-950 " htmlFor="email">
                     Email
                   </label>
                   <input
@@ -105,10 +96,7 @@ export default function Home() {
                     autoCorrect="off"
                     name="email"
                   />
-                  <label
-                    className="text-zinc-950 mt-2 dark:text-white"
-                    htmlFor="password"
-                  >
+                  <label className="text-zinc-950 mt-2" htmlFor="password">
                     Mot de passe
                   </label>
                   <input
@@ -132,7 +120,7 @@ export default function Home() {
             <p>
               <Link
                 href="/"
-                className="font-medium text-blue-500 underline dark:text-white text-sm"
+                className="font-medium text-blue-500 underline text-sm"
               >
                 J&apos;ai déjà un compte? Me connecter
               </Link>

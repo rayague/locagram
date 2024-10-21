@@ -32,14 +32,11 @@ export default function Home() {
             <form className="mb-4">
               <div className="grid gap-2">
                 <div className="grid gap-1">
-                  <label
-                    className="text-zinc-950 dark:text-white"
-                    htmlFor="email"
-                  >
+                  <label className="text-zinc-950" htmlFor="email">
                     Email
                   </label>
                   <input
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-600 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-500 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     id="email"
                     placeholder="gerant@locagram.com"
                     type="email"
@@ -48,10 +45,7 @@ export default function Home() {
                     autoCorrect="off"
                     name="email"
                   />
-                  <label
-                    className="text-zinc-950 mt-2 dark:text-white"
-                    htmlFor="password"
-                  >
+                  <label className="text-zinc-950 mt-2 " htmlFor="password">
                     Mot de passe
                   </label>
                   <input
@@ -59,7 +53,7 @@ export default function Home() {
                     placeholder="Mot de passe"
                     type="password"
                     autoComplete="current-password"
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-600 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-500 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     name="password"
                   />
                 </div>
@@ -74,7 +68,7 @@ export default function Home() {
             <p>
               <Link
                 href="/dashboard/signin/forgot_password"
-                className="font-medium text-blue-500 underline dark:text-white text-sm"
+                className="font-medium text-blue-500 underline text-sm"
               >
                 Mot de passe oublié?
               </Link>
@@ -82,7 +76,7 @@ export default function Home() {
             <p>
               <Link
                 href="/inscription"
-                className="font-medium text-blue-500 underline dark:text-white text-sm"
+                className="font-medium text-blue-500 underline text-sm"
               >
                 Je n&apos;ai pas de compte? M&apos;inscrire
               </Link>
