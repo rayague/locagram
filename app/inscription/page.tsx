@@ -35,7 +35,7 @@ export default function Home() {
                     className="text-zinc-950 dark:text-white"
                     htmlFor="email"
                   >
-                    Email
+                    Nom de l&apos;agence
                   </label>
                   <input
                     className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
@@ -51,7 +51,7 @@ export default function Home() {
                     className="text-zinc-950 mt-2 dark:text-white"
                     htmlFor="password"
                   >
-                    Mot de passe
+                    Nom du Gérant
                   </label>
                   <input
                     id="password"
@@ -67,7 +67,7 @@ export default function Home() {
                     className="text-zinc-950 dark:text-white"
                     htmlFor="email"
                   >
-                    Email
+                    Numéro IFU
                   </label>
                   <input
                     className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
@@ -83,7 +83,7 @@ export default function Home() {
                     className="text-zinc-950 mt-2 dark:text-white"
                     htmlFor="password"
                   >
-                    Mot de passe
+                    Numéro de Téléphone
                   </label>
                   <input
                     id="password"
