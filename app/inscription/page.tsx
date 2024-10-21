@@ -23,8 +23,8 @@ export default function Home() {
           </p>
           <div className="relative my-4">
             <div className="relative flex items-center py-1">
-              <div className="grow border-t border border-slate-500"></div>
-              <div className="grow border-t border border-slate-500"></div>
+              <div className="grow border-t border border-slate-300"></div>
+              <div className="grow border-t border border-slate-300"></div>
             </div>
           </div>
           <div>
@@ -38,7 +38,7 @@ export default function Home() {
                     Nom de l&apos;agence
                   </label>
                   <input
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-500 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-300 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     id="nomAgence"
                     placeholder="Agence Locagram"
                     type="text"
@@ -58,7 +58,7 @@ export default function Home() {
                     placeholder="Agent Gerant"
                     type="text"
                     autoComplete="nomGerant"
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-500 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-300 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     name="nomGerant"
                   />
                 </div>
@@ -70,7 +70,7 @@ export default function Home() {
                     Numéro IFU
                   </label>
                   <input
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-500 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-300 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     id="numeroIFU"
                     placeholder="123456789AB12"
                     type="text"
@@ -90,7 +90,7 @@ export default function Home() {
                     placeholder="00098909876"
                     type="text"
                     autoComplete="telephone"
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-500 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-300 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     name="telephone"
                   />
                 </div>
@@ -102,7 +102,7 @@ export default function Home() {
                     Email
                   </label>
                   <input
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-500 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-300 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     id="email"
                     placeholder="gerant@locagram.com"
                     type="email"
@@ -122,7 +122,7 @@ export default function Home() {
                     placeholder="Mot de passe"
                     type="password"
                     autoComplete="current-password"
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-600 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-300 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     name="password"
                   />
                 </div>

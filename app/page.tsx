@@ -24,8 +24,8 @@ export default function Home() {
           </p>
           <div className="relative my-4">
             <div className="relative flex items-center py-1">
-              <div className="grow border-t border border-slate-500"></div>
-              <div className="grow border-t border border-slate-500"></div>
+              <div className="grow border-t border border-slate-300"></div>
+              <div className="grow border-t border border-slate-300"></div>
             </div>
           </div>
           <div>
