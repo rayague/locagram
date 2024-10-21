@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-5 lg:p-24 md:p-16 sm:p-8 bg-green-300">
+    <main className="flex min-h-screen flex-col items-center justify-center p-5 lg:p-24 md:p-16 sm:p-8 bg-green-300">
       <div className="flex flex-col md:flex-row w-full h-full rounded-2xl bg-white shadow-xl">
         <div className="relative w-full hidden h-[300px] lg:h-auto lg:block  lg:w-1/2">
           <Image
@@ -16,7 +16,7 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col justify-center w-full p-10 lg:w-1/2">
-          <p className="text-2xl md:text-4xl lg:text-3xl sm:text-3xl font-bold text-zinc-950 dark:text-white">
+          <p className="text-3xl md:text-4xl lg:text-5xl font-bold">
             Connexion
           </p>
           <p className="mb-2.5 mt-2.5 font-normal text-zinc-950 dark:text-zinc-400">
@@ -59,7 +59,7 @@ export default function Home() {
                     placeholder="Mot de passe"
                     type="password"
                     autoComplete="current-password"
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
                     name="password"
                   />
                 </div>
