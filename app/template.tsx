@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import animation from "./utils/animation";
 
 export default function template({ children }: { children: React.ReactNode }) {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     animation();
   }, []);
