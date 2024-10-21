@@ -19,13 +19,13 @@ export default function Home() {
           <p className="text-3xl md:text-4xl lg:text-5xl font-bold">
             Connexion
           </p>
-          <p className="mb-2.5 mt-2.5 font-normal text-slate-700 dark:text-zinc-400">
+          <p className="mb-2.5 mt-2.5 font-normal text-slate-700">
             Entrer votre email et votre mot de passe pour vous connecter!
           </p>
           <div className="relative my-4">
             <div className="relative flex items-center py-1">
-              <div className="grow border-t border-zinc-200 dark:border-slate-700"></div>
-              <div className="grow border-t border-zinc-200 dark:border-slate-700"></div>
+              <div className="grow border-t border border-slate-500"></div>
+              <div className="grow border-t border border-slate-500"></div>
             </div>
           </div>
           <div>
@@ -39,7 +39,7 @@ export default function Home() {
                     Email
                   </label>
                   <input
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-500 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-300 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     id="email"
                     placeholder="gerant@locagram.com"
                     type="email"
@@ -59,7 +59,7 @@ export default function Home() {
                     placeholder="Mot de passe"
                     type="password"
                     autoComplete="current-password"
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-500 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
+                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-300 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
                     name="password"
                   />
                 </div>
