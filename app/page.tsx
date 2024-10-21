@@ -7,7 +7,7 @@ export default function Home() {
       <div className="flex flex-col md:flex-row w-full h-full rounded-2xl bg-white shadow-xl">
         <div className="relative w-full hidden h-[300px] lg:h-auto lg:block  lg:w-1/2">
           <Image
-            src="/images/town.JPG"
+            src="/images/town.jpg"
             layout="fill"
             alt="Image"
             objectFit="cover"
