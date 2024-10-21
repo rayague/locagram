@@ -33,51 +33,51 @@ export default function Home() {
                 <div className="grid gap-1">
                   <label
                     className="text-zinc-950 dark:text-white"
-                    htmlFor="email"
+                    htmlFor="nomAgence"
                   >
                     Nom de l&apos;agence
                   </label>
                   <input
                     className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
-                    id="email"
-                    placeholder="gerant@locagram.com"
-                    type="email"
+                    id="nomAgence"
+                    placeholder="Agence Locagram"
+                    type="text"
                     autoCapitalize="none"
-                    autoComplete="email"
+                    autoComplete=" nomAgence"
                     autoCorrect="off"
-                    name="email"
+                    name="nomAgence"
                   />
                   <label
                     className="text-zinc-950 mt-2 dark:text-white"
-                    htmlFor="password"
+                    htmlFor="nomGerant"
                   >
                     Nom du Gérant
                   </label>
                   <input
-                    id="password"
-                    placeholder="Mot de passe"
-                    type="password"
-                    autoComplete="current-password"
+                    id="nomGerant"
+                    placeholder="Agent Gerant"
+                    type="text"
+                    autoComplete="nomGerant"
                     className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
-                    name="password"
+                    name="nomGerant"
                   />
                 </div>
                 <div className="grid gap-1">
                   <label
                     className="text-zinc-950 dark:text-white"
-                    htmlFor="email"
+                    htmlFor="numeroIFU"
                   >
                     Numéro IFU
                   </label>
                   <input
                     className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
-                    id="email"
-                    placeholder="gerant@locagram.com"
-                    type="email"
+                    id="numeroIFU"
+                    placeholder="123456789AB12"
+                    type="text"
                     autoCapitalize="none"
-                    autoComplete="email"
+                    autoComplete="numeroIFU"
                     autoCorrect="off"
-                    name="email"
+                    name="numeroIFU"
                   />
                   <label
                     className="text-zinc-950 mt-2 dark:text-white"
@@ -86,12 +86,12 @@ export default function Home() {
                     Numéro de Téléphone
                   </label>
                   <input
-                    id="password"
-                    placeholder="Mot de passe"
-                    type="password"
-                    autoComplete="current-password"
+                    id="telephone"
+                    placeholder="00098909876"
+                    type="text"
+                    autoComplete="telephone"
                     className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-950 placeholder:text-zinc-400 focus:outline-0 dark:border-zinc-800 dark:bg-transparent dark:text-white dark:placeholder:text-zinc-400"
-                    name="password"
+                    name="telephone"
                   />
                 </div>
                 <div className="grid gap-1">
