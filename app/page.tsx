@@ -1,95 +1,74 @@
-import Image from "next/image";
+"use client";
+
+import { motion } from "framer-motion";
 import Link from "next/link";
 
 export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-5 lg:p-24 md:p-16 sm:p-8 bg-green-300">
-      <div className="flex flex-col md:flex-row w-full h-full rounded-2xl bg-white shadow-xl">
-        <div className="relative w-full hidden h-[300px] lg:h-auto lg:block  lg:w-1/2">
-          <Image
-            src="/images/town.jpg"
-            layout="fill"
-            alt="Image"
-            objectFit="cover"
-            className="rounded-tl-2xl md:rounded-bl-2xl"
-          />
-        </div>
+  // Variants pour les animations
+  const titleVariant = {
+    hidden: { opacity: 0, y: -50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 1, delay: 0.2 } }
+  };
 
-        <div className="flex flex-col justify-center w-full p-10 lg:w-1/2">
-          <p className="text-3xl md:text-4xl lg:text-5xl font-bold">
-            Connexion
-          </p>
-          <p className="mb-2.5 mt-2.5 font-normal text-slate-700">
-            Entrer votre email et votre mot de passe pour vous connecter!
-          </p>
-          <div className="relative my-4">
-            <div className="relative flex items-center py-1">
-              <div className="grow border-t border border-slate-300"></div>
-              <div className="grow border-t border border-slate-300"></div>
-            </div>
-          </div>
-          <div>
-            <form className="mb-4">
-              <div className="grid gap-2">
-                <div className="grid gap-1">
-                  <label
-                    className="text-slate-800 font-semibold"
-                    htmlFor="email"
-                  >
-                    Email
-                  </label>
-                  <input
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-300 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
-                    id="email"
-                    placeholder="gerant@locagram.com"
-                    type="email"
-                    autoCapitalize="none"
-                    autoComplete="email"
-                    autoCorrect="off"
-                    name="email"
-                  />
-                  <label
-                    className="text-slate-800 font-semibold mt-2 "
-                    htmlFor="password"
-                  >
-                    Mot de passe
-                  </label>
-                  <input
-                    id="password"
-                    placeholder="Mot de passe"
-                    type="password"
-                    autoComplete="current-password"
-                    className="mr-2.5 mb-2 h-full min-h-[44px] w-full rounded-lg border border-slate-300 bg-slate-200 px-4 py-3 text-sm font-medium text-zinc-950 focus:outline-0"
-                    name="password"
-                  />
-                </div>
-                <button
-                  className="whitespace-nowrap ring-offset-background bg-green-500 text-white text-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-white-foreground hover:bg-green-700 mt-2 flex h-[unset] w-full items-center justify-center rounded-lg px-4 py-4 text-sm font-medium"
-                  type="submit"
-                >
-                  Se connecter
-                </button>
-              </div>
-            </form>
-            <p>
-              <Link
-                href="/dashboard/signin/forgot_password"
-                className="font-medium text-blue-500 underline text-sm"
-              >
-                Mot de passe oublié?
-              </Link>
-            </p>
-            <p>
-              <Link
-                href="/inscription"
-                className="font-medium text-blue-500 underline text-sm"
-              >
-                Je n&apos;ai pas de compte? M&apos;inscrire
-              </Link>
-            </p>
-          </div>
-        </div>
-      </div>
+  const textVariant = {
+    hidden: { opacity: 0, x: -50 },
+    visible: { opacity: 1, x: 0, transition: { duration: 1, delay: 0.4 } }
+  };
+
+  const buttonVariant = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 1, delay: 0.6 } }
+  };
+
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center p-5 lg:p-24 md:p-16 sm:p-8 bg-slate-600">
+      {/* Animation du titre */}
+      <motion.h1
+        className="font-black tracking-tighter text-6xl lg:text-9xl md:text-8xl sm:text-7xl"
+        variants={titleVariant}
+        initial="hidden"
+        animate="visible"
+      >
+        <span className="text-green-200">L</span>
+        <span className="text-green-300">o</span>
+        <span className="text-green-400">c</span>
+        <span className="text-green-500">a</span>
+        <span className="text-green-600">g</span>
+        <span className="text-green-700">r</span>
+        <span className="text-green-800">a</span>
+        <span className="text-green-900">m</span>
+        <span className="text-green-900">.</span>
+      </motion.h1>
+
+      {/* Animation du texte descriptif */}
+      <motion.div
+        className="flex flex-col mt-4 w-11/12 lg:w-2/3 md:w-2/3 items-center justify-center"
+        variants={textVariant}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.p
+          className="text-center font-normal text-white"
+          variants={textVariant}
+        >
+          Bienvenue sur Locagram, votre plateforme pour trouver des locations
+          rapidement et simplement. Comparez, explorez, et réservez
+          l’hébergement qui vous convient en un clic.
+        </motion.p>
+
+        {/* Animation du bouton */}
+        <motion.div
+          variants={buttonVariant}
+          className="w-full flex items-center justify-center"
+        >
+          <Link
+            href=""
+            className="w-full lg:w-1/2 md:w-1/3 sm:w-2/3 mx-auto rounded-md bg-sky-500 mt-8 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-sky-600 focus:shadow-none active:bg-sky-600 hover:bg-sky-600 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+          >
+            Parcourir
+          </Link>
+        </motion.div>
+      </motion.div>
     </main>
   );
 }
