@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Home() {
   // Variants pour les animations
@@ -19,6 +21,8 @@ export default function Home() {
     hidden: { opacity: 0, scale: 0.8 },
     visible: { opacity: 1, scale: 1, transition: { duration: 1, delay: 0.6 } }
   };
+
+  const notify = () => toast("Cette Page n'est pas encore disponible!");
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-5 lg:p-24 md:p-16 sm:p-8 bg-slate-600">
@@ -63,12 +67,14 @@ export default function Home() {
         >
           <Link
             href=""
+            onClick={notify}
             className="w-full lg:w-1/2 md:w-1/3 sm:w-2/3 mx-auto rounded-md bg-sky-500 mt-8 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-sky-600 focus:shadow-none active:bg-sky-600 hover:bg-sky-600 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
           >
             Parcourir
           </Link>
         </motion.div>
       </motion.div>
+      <ToastContainer />
     </main>
   );
 }
