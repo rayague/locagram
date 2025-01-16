@@ -13,17 +13,24 @@ import {
 import { JSXElementConstructor } from "react";
 import { HiOutlineMapPin } from "react-icons/hi2";
 import Image from "next/image";
+import {
+  FaFacebookF,
+  FaTwitter,
+  FaInstagram,
+  FaLinkedinIn
+} from "react-icons/fa";
 
 export default function Page() {
   return (
     <main className="relative flex min-h-screen flex-col items-center p-3 lg:p-10 md:p-16 sm:p-6 bg-slate-600">
-      <div className="w-full">
+      <div className="w-full rounded-t-xl bg-gradient-to-r from-slate-700 to-slate-900 h-auto p-3">
         <h3 className="text-white font-black text-6xl lg:text-9xl md:text-8xl sm:text-7xl tracking-tighter">
           Découvrez
         </h3>
         <p className="text-white font-normal">
-          les locations les plus récentes qui ont été publiés et faites votre
-          choix.
+          Explorez les locations les plus récentes, découvrez des offres
+          uniques, et trouvez l&apos;endroit parfait qui répond à toutes vos
+          attentes et envies de confort.
         </p>
       </div>
       <hr className="bg-green-500 border border-green-500 w-full mt-4 mb-8" />
@@ -56,7 +63,7 @@ export default function Page() {
             </Link>
           </div>
         </div>
-        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto">
+        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto hover:border-x-green-500 transition-all hover:drop-shadow-2xl">
           <Image
             className="w-full"
             src="/images/house2.jpg"
@@ -84,7 +91,7 @@ export default function Page() {
             </Link>
           </div>
         </div>
-        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto">
+        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto hover:border-x-green-500 transition-all hover:drop-shadow-2xl">
           <Image
             className="w-full"
             src="/images/house3.jpg"
@@ -112,7 +119,7 @@ export default function Page() {
             </Link>
           </div>
         </div>
-        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto">
+        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto hover:border-x-green-500 transition-all hover:drop-shadow-2xl">
           <Image
             className="w-full"
             src="/images/house4.jpg"
@@ -130,7 +137,6 @@ export default function Page() {
             <p className="text-gray-700 text-base">
               Lorem ipsum dolor sit amet, consectetur adipisicing elit.
               Voluptatibus quia, nulla! Maiores et perferendis eaque,
-              exercitationem praesentium nihil.
             </p>
             <Link
               href=""
@@ -140,7 +146,7 @@ export default function Page() {
             </Link>
           </div>
         </div>
-        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto">
+        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto hover:border-x-green-500 transition-all hover:drop-shadow-2xl">
           <Image
             className="w-full"
             src="/images/house5.jpg"
@@ -168,7 +174,7 @@ export default function Page() {
             </Link>
           </div>
         </div>{" "}
-        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto">
+        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto hover:border-x-green-500 transition-all hover:drop-shadow-2xl">
           <Image
             className="w-full"
             src="/images/house6.jpg"
@@ -196,7 +202,7 @@ export default function Page() {
             </Link>
           </div>
         </div>
-        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto">
+        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto hover:border-x-green-500 transition-all hover:drop-shadow-2xl">
           <Image
             className="w-full"
             src="/images/house7.jpg"
@@ -222,6 +228,37 @@ export default function Page() {
             >
               Détails
             </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="w-full bg-gradient-to-r from-slate-700 to-slate-900 h-auto py-8 rounded-b-xl mt-8 mb-20">
+        <div className="container mx-auto text-center text-white">
+          <div className="flex flex-col justify-center items-center space-y-4 lg:space-y-0 lg:space-x-8">
+            <div className="text-5xl font-bold mb-4">
+              <span className="text-green-500 tracking-tighter font-black">
+                Locagram
+              </span>
+            </div>
+
+            <div className="flex space-x-4">
+              <a href="#" aria-label="Facebook">
+                <FaFacebookF className="text-2xl hover:text-green-500 transition-colors" />
+              </a>
+              <a href="#" aria-label="Twitter">
+                <FaTwitter className="text-2xl hover:text-green-500 transition-colors" />
+              </a>
+              <a href="#" aria-label="Instagram">
+                <FaInstagram className="text-2xl hover:text-green-500 transition-colors" />
+              </a>
+              <a href="#" aria-label="LinkedIn">
+                <FaLinkedinIn className="text-2xl hover:text-green-500 transition-colors" />
+              </a>
+            </div>
+          </div>
+
+          <div className="text-sm mt-6">
+            © 2025 locagram. Tous droits réservés.
           </div>
         </div>
       </div>
