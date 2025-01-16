@@ -66,7 +66,7 @@ export default function page() {
           className="w-full flex items-center justify-center"
         >
           <Link
-            href="/categories"
+            href="/home"
             // onClick={notify}
             className="w-full lg:w-1/2 md:w-1/3 sm:w-2/3 mx-auto rounded-md bg-green-500 mt-8 py-3 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-green-600 focus:shadow-none active:bg-green-600 hover:bg-green-600 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
           >
