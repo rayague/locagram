@@ -28,7 +28,7 @@ export default function Page() {
       </div>
       <hr className="bg-green-500 border border-green-500 w-full mt-4 mb-8" />
       <div className="w-full h-auto p-4 grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 lg:grid-cols-4 gap-4 items-center justify-center p-auto">
-        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-800 mx-auto">
+        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto hover:border-x-green-500 transition-all hover:drop-shadow-2xl">
           <Image
             className="w-full"
             src="/images/house1.jpg"
@@ -50,13 +50,13 @@ export default function Page() {
             </p>
             <Link
               href=""
-              className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md"
+              className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md hover:bg-green-600 transition-all active:outline-1 outline-offset-2 outline-green-600 "
             >
               Détails
             </Link>
           </div>
         </div>
-        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-800 mx-auto">
+        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto">
           <Image
             className="w-full"
             src="/images/house2.jpg"
@@ -78,13 +78,13 @@ export default function Page() {
             </p>
             <Link
               href=""
-              className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md"
+              className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md hover:bg-green-600 transition-all active:outline-1 outline-offset-2 outline-green-600"
             >
               Détails
             </Link>
           </div>
         </div>
-        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-800 mx-auto">
+        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto">
           <Image
             className="w-full"
             src="/images/house3.jpg"
@@ -106,13 +106,13 @@ export default function Page() {
             </p>
             <Link
               href=""
-              className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md"
+              className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md hover:bg-green-600 transition-all active:outline-1 outline-offset-2 outline-green-600"
             >
               Détails
             </Link>
           </div>
         </div>
-        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-800 mx-auto">
+        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto">
           <Image
             className="w-full"
             src="/images/house4.jpg"
@@ -134,13 +134,13 @@ export default function Page() {
             </p>
             <Link
               href=""
-              className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md"
+              className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md hover:bg-green-600 transition-all active:outline-1 outline-offset-2 outline-green-600"
             >
               Détails
             </Link>
           </div>
         </div>
-        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-800 mx-auto">
+        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto">
           <Image
             className="w-full"
             src="/images/house5.jpg"
@@ -162,13 +162,13 @@ export default function Page() {
             </p>
             <Link
               href=""
-              className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md"
+              className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md hover:bg-green-600 transition-all active:outline-1 outline-offset-2 outline-green-600"
             >
               Détails
             </Link>
           </div>
         </div>{" "}
-        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-800 mx-auto">
+        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto">
           <Image
             className="w-full"
             src="/images/house6.jpg"
@@ -190,13 +190,13 @@ export default function Page() {
             </p>
             <Link
               href=""
-              className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md"
+              className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md hover:bg-green-600 transition-all active:outline-1 outline-offset-2 outline-green-600"
             >
               Détails
             </Link>
           </div>
         </div>
-        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-800 mx-auto">
+        <div className=" bg-white max-w-sm rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto">
           <Image
             className="w-full"
             src="/images/house7.jpg"
@@ -218,7 +218,7 @@ export default function Page() {
             </p>
             <Link
               href=""
-              className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md"
+              className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md hover:bg-green-600 transition-all active:outline-1 outline-offset-2 outline-green-600"
             >
               Détails
             </Link>

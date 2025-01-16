@@ -68,7 +68,7 @@ export default function page() {
           <Link
             href="/categories"
             // onClick={notify}
-            className="w-full lg:w-1/2 md:w-1/3 sm:w-2/3 mx-auto rounded-md bg-sky-500 mt-8 py-3 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-sky-600 focus:shadow-none active:bg-sky-600 hover:bg-sky-600 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            className="w-full lg:w-1/2 md:w-1/3 sm:w-2/3 mx-auto rounded-md bg-green-500 mt-8 py-3 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-green-600 focus:shadow-none active:bg-green-600 hover:bg-green-600 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
           >
             Parcourir
           </Link>
