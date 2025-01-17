@@ -272,7 +272,7 @@ export default function Page() {
         >
           <HiOutlineHome
             size={24}
-            className="text-white hover:text-green-300 transition-all"
+            className="text-green-500 hover:text-green-300 transition-all"
           />
         </Link>
         {/* Icône pour les catégories */}

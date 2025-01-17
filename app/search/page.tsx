@@ -60,11 +60,11 @@ export default function Page() {
             onChange={handleInputChange}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            className="w-full px-4 py-2 text-white bg-transparent outline-none placeholder-slate-400 border border-green-500 rounded-l-lg"
+            className="w-full px-4 py-4 text-white bg-transparent outline-none placeholder-slate-400 border border-green-500 rounded-l-lg"
           />
           <button
             onClick={handleSearch}
-            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 transition-colors duration-300"
+            className="bg-green-500 hover:bg-green-600 text-white px-4 py-4 transition-colors duration-300"
           >
             Rechercher
           </button>
@@ -100,7 +100,7 @@ export default function Page() {
         >
           <HiOutlineSearch
             size={24}
-            className="text-white hover:text-green-300 transition-all"
+            className="text-green-500 hover:text-green-300 transition-all"
           />
         </Link>
       </div>
