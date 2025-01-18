@@ -20,7 +20,10 @@ import {
   FaBoxOpen,
   FaHome,
   FaMobileAlt,
-  FaMapMarkedAlt
+  FaMapMarkedAlt,
+  FaCaravan,
+  FaCity,
+  FaBuilding
 } from "react-icons/fa"; // Icônes pour chaque type de maison
 
 import Image from "next/image";
@@ -171,6 +174,67 @@ export default function Page() {
           <p className="text-white text-center text-sm mt-2">
             Un appartement entièrement meublé, prêt à être habité, pour des
             séjours temporaires ou flexibles.
+          </p>
+        </Link>
+
+        {/* Nouveaux types de logements */}
+        <Link
+          href=""
+          className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-center shadow-lg hover:bg-green-500 bg-white/40 hover:-translate-y-1 transition-all"
+        >
+          <FaBuilding size={30} className="text-green-500 mb-2" />
+          <span className="font-bold text-white text-center">Duplex</span>
+          <p className="text-white text-center text-sm mt-2">
+            Un appartement à deux niveaux reliés par un escalier interne,
+            offrant plus d'espace et d'intimité.
+          </p>
+        </Link>
+        <Link
+          href=""
+          className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-center shadow-lg hover:bg-green-500 bg-white/40 hover:-translate-y-1 transition-all"
+        >
+          <FaCity size={30} className="text-green-500 mb-2" />
+          <span className="font-bold text-white text-center">Penthouse</span>
+          <p className="text-white text-center text-sm mt-2">
+            Un appartement de luxe situé au dernier étage d'un immeuble, souvent
+            avec une vue panoramique et des équipements haut de gamme.
+          </p>
+        </Link>
+        <Link
+          href=""
+          className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-center shadow-lg hover:bg-green-500 bg-white/40 hover:-translate-y-1 transition-all"
+        >
+          <FaBed size={30} className="text-green-500 mb-2" />
+          <span className="font-bold text-white text-center">
+            Chambre d'hôtel
+          </span>
+          <p className="text-white text-center text-sm mt-2">
+            Un espace privatif dans un hôtel, généralement avec des services de
+            nettoyage et de restauration.
+          </p>
+        </Link>
+        <Link
+          href=""
+          className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-center shadow-lg hover:bg-green-500 bg-white/40 hover:-translate-y-1 transition-all"
+        >
+          <FaWarehouse size={30} className="text-green-500 mb-2" />
+          <span className="font-bold text-white text-center">
+            Loft industriel
+          </span>
+          <p className="text-white text-center text-sm mt-2">
+            Un espace moderne avec de hauts plafonds et une ambiance
+            industrielle, souvent situé dans des anciens bâtiments.
+          </p>
+        </Link>
+        <Link
+          href=""
+          className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-center shadow-lg hover:bg-green-500 bg-white/40 hover:-translate-y-1 transition-all"
+        >
+          <FaCaravan size={30} className="text-green-500 mb-2" />
+          <span className="font-bold text-white text-center">Caravane</span>
+          <p className="text-white text-center text-sm mt-2">
+            Un véhicule conçu pour être un logement mobile, idéal pour les
+            voyages ou le camping.
           </p>
         </Link>
       </div>
