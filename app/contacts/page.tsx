@@ -46,13 +46,13 @@ export default function Page() {
   };
   return (
     <main className="flex min-h-screen flex-col items-center p-5 lg:p-24 md:p-16 sm:p-8 bg-slate-950 relative">
-      <div className="fixed top-4 flex flex-row items-center justify-between w-[95%]  rounded-xl p-4 backdrop-blur-lg backdrop-brightness-200">
-        <strong className="text-white text-5xl tracking-tighter font-black">
+      <div className="fixed top-3 flex flex-row items-center justify-between w-[95%]  rounded-xl p-2 backdrop-blur-lg backdrop-brightness-200 z-10">
+        <strong className="text-white text-3xl tracking-tighter font-black">
           Loca<span className="text-green-500">gram</span>
         </strong>
         <div className="flex flex-row gap-6">
           <button>
-            <FaSearch size={38} color="white" />
+            <FaSearch size={28} color="white" />
           </button>
 
           <button onClick={openModal} className="p-4 bg-green-500 rounded-full">

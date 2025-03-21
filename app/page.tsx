@@ -47,13 +47,13 @@ export default function Section() {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-5 lg:p-24 md:p-16 sm:p-8 bg-slate-950 relative">
-      <div className="fixed top-4 flex flex-row items-center justify-between w-[95%]  rounded-xl p-4 backdrop-blur-lg backdrop-brightness-200 z-10">
-        <strong className="text-white text-5xl tracking-tighter font-black">
+      <div className="fixed top-3 flex flex-row items-center justify-between w-[95%]  rounded-xl p-2 backdrop-blur-lg backdrop-brightness-200 z-10">
+        <strong className="text-white text-3xl tracking-tighter font-black">
           Loca<span className="text-green-500">gram</span>
         </strong>
         <div className="flex flex-row gap-6">
           <button>
-            <FaSearch size={38} color="white" />
+            <FaSearch size={28} color="white" />
           </button>
 
           <button onClick={openModal} className="p-4 bg-green-500 rounded-full">
@@ -148,20 +148,20 @@ export default function Section() {
 
         {/* Le séparateur */}
         <div className="bg-slate-900 backdrop-blur-md backdrop-brightness-50 w-full px-4 py-10 rounded-lg shadow-lg shadow-green-950">
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6 justify-center items-center">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-6 justify-center items-center">
             <div className="flex flex-col items-center text-center text-white">
               <FaUserTie size={40} className="text-green-500 mb-3" />
               <h3 className="text-2xl lg:text-3xl md:text-3xl sm:text-3xl font-bold">
                 Postes
               </h3>
-              <p className="text-3xl font-bold mt-2">1,245</p>
+              <p className="text-3xl font-bold mt-2">1000+</p>
             </div>
             <div className="flex flex-col items-center text-center text-white">
               <FaTag size={40} className="text-green-500 mb-3" />
               <h3 className="text-2xl lg:text-3xl md:text-3xl sm:text-3xl font-bold">
                 Catégories
               </h3>
-              <p className="text-3xl font-bold mt-2">12</p>
+              <p className="text-3xl font-bold mt-2">20+</p>
             </div>
             <div className="flex flex-col items-center text-center text-white">
               <FaUserFriends size={40} className="text-green-500 mb-3" />
@@ -169,13 +169,6 @@ export default function Section() {
                 Visiteurs
               </h3>
               <p className="text-3xl font-bold mt-2">50,000+</p>
-            </div>
-            <div className="flex flex-col items-center text-center text-white">
-              <FaHandshake size={40} className="text-green-500 mb-3" />
-              <h3 className="text-3xl lg:text-3xl md:text-3xl sm:text-3xl font-bold">
-                Démarcheurs
-              </h3>
-              <p className="text-3xl font-bold mt-2">900</p>
             </div>
           </div>
         </div>
