@@ -126,204 +126,409 @@ export default function Page() {
           Est, blanditiis nesciunt adipisci alias eligendi beatae et, libero
           corrupti cumque, inventore error mollitia amet veniam.
         </p>
-        <div className="w-full h-auto p-4 grid md:grid-cols-2 mt-4 sm:grid-cols-1 grid-cols-1 lg:grid-cols-3 gap-4 items-center justify-center ">
-          <div className=" bg-white w-full rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto hover:border-x-green-500 transition-all hover:drop-shadow-2xl max-w-xl">
-            <Image
-              className="w-full"
-              src="/images/house1.jpg"
-              height={500}
-              width={500}
-              alt="Sunset in the mountains"
-            />
-            <div className="px-6 py-4">
-              <div className="font-bold text-xl mb-2">Maison à louer </div>
-              <var>
-                <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                  publié le : 09/01/2025
-                </span>
-              </var>
-              <p className="text-gray-700 text-base">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                exercitationem praesentium nihil.
-              </p>
-              <Link
-                href=""
-                className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md hover:bg-green-600 transition-all active:outline-1 outline-offset-2 outline-green-600 "
-              >
-                Détails
-              </Link>
-            </div>
-          </div>
-          <div className=" bg-white w-full rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto hover:border-x-green-500 transition-all hover:drop-shadow-2xl max-w-xl">
-            <Image
-              className="w-full"
-              src="/images/house2.jpg"
-              height={500}
-              width={500}
-              alt="Sunset in the mountains"
-            />
-            <div className="px-6 py-4">
-              <div className="font-bold text-xl mb-2">Appartement </div>
-              <var>
-                <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                  publié le : 09/01/2025
-                </span>
-              </var>
-              <p className="text-gray-700 text-base">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                exercitationem praesentium nihil.
-              </p>
-              <Link
-                href=""
-                className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md hover:bg-green-600 transition-all active:outline-1 outline-offset-2 outline-green-600"
-              >
-                Détails
-              </Link>
-            </div>
-          </div>
-          <div className=" bg-white w-full rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto hover:border-x-green-500 transition-all hover:drop-shadow-2xl max-w-xl">
-            <Image
-              className="w-full"
-              src="/images/house3.jpg"
-              height={500}
-              width={500}
-              alt="Sunset in the mountains"
-            />
-            <div className="px-6 py-4">
-              <div className="font-bold text-xl mb-2">Auberge </div>
-              <var>
-                <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                  publié le : 09/01/2025
-                </span>
-              </var>
-              <p className="text-gray-700 text-base">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                exercitationem praesentium nihil.
-              </p>
-              <Link
-                href=""
-                className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md hover:bg-green-600 transition-all active:outline-1 outline-offset-2 outline-green-600"
-              >
-                Détails
-              </Link>
-            </div>
-          </div>
-          <div className=" bg-white w-full rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto hover:border-x-green-500 transition-all hover:drop-shadow-2xl max-w-xl">
+        <div className="my-6"></div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 justify-evenly items-center gap-8">
+          {/* Post 6 */}
+          <div className="max-w-xl rounded overflow-hidden shadow-lg shadow-green-800 mx-auto">
             <Image
               className="w-full"
               src="/images/house4.jpg"
+              alt="Voyage au cœur des montagnes"
               height={500}
               width={500}
-              alt="Sunset in the mountains"
             />
             <div className="px-6 py-4">
-              <div className="font-bold text-xl mb-2">Maison à louer </div>
-              <var>
-                <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                  publié le : 09/01/2025
-                </span>
-              </var>
-              <p className="text-gray-700 text-base">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptatibus quia, nulla! Maiores et perferendis eaque,
+              <div className="font-bold text-xl mb-2">
+                Voyage au cœur des montagnes
+              </div>
+              <p className="text-white text-base">
+                Partez à l'aventure dans les montagnes les plus reculées, où
+                l'air pur et les paysages impressionnants vous laissent sans
+                voix.
               </p>
-              <Link
-                href=""
-                className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md hover:bg-green-600 transition-all active:outline-1 outline-offset-2 outline-green-600"
-              >
-                Détails
-              </Link>
             </div>
+            <div className="px-6 pt-4 pb-2">
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Aventure
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Thomas Lefevre
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #16 mars 2025
+              </span>
+            </div>
+            <Link
+              href=""
+              className="focus:outline-none text-center flex w-11/12 mx-auto my-6 items-center justify-center font-bold text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-lg px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            >
+              Détails
+            </Link>
           </div>
-          <div className=" bg-white w-full rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto hover:border-x-green-500 transition-all hover:drop-shadow-2xl max-w-xl">
+
+          {/* Post 7 */}
+          <div className="max-w-xl rounded overflow-hidden shadow-lg shadow-green-800 mx-auto">
             <Image
               className="w-full"
-              src="/images/house5.jpg"
+              src="/images/house4.jpg"
+              alt="Au matin dans les bois"
               height={500}
               width={500}
-              alt="Sunset in the mountains"
             />
             <div className="px-6 py-4">
-              <div className="font-bold text-xl mb-2">Appartement </div>
-              <var>
-                <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                  publié le : 09/01/2025
-                </span>
-              </var>
-              <p className="text-gray-700 text-base">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                exercitationem praesentium nihil.
+              <div className="font-bold text-xl mb-2">
+                Au matin dans les bois
+              </div>
+              <p className="text-white text-base">
+                Le matin dans la forêt, un spectacle naturel incroyable où la
+                brume s'élève lentement, et chaque feuille semble vivre à son
+                propre rythme.
               </p>
-              <Link
-                href=""
-                className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md hover:bg-green-600 transition-all active:outline-1 outline-offset-2 outline-green-600"
-              >
-                Détails
-              </Link>
             </div>
-          </div>{" "}
-          <div className=" bg-white w-full rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto hover:border-x-green-500 transition-all hover:drop-shadow-2xl max-w-xl">
-            <Image
-              className="w-full"
-              src="/images/house6.jpg"
-              height={500}
-              width={500}
-              alt="Sunset in the mountains"
-            />
-            <div className="px-6 py-4">
-              <div className="font-bold text-xl mb-2">Maison à louer </div>
-              <var>
-                <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                  publié le : 09/01/2025
-                </span>
-              </var>
-              <p className="text-gray-700 text-base">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                exercitationem praesentium nihil.
-              </p>
-              <Link
-                href=""
-                className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md hover:bg-green-600 transition-all active:outline-1 outline-offset-2 outline-green-600"
-              >
-                Détails
-              </Link>
+            <div className="px-6 pt-4 pb-2">
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Nature
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Isabelle Dufresne
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #15 mars 2025
+              </span>
             </div>
+            <Link
+              href=""
+              className="focus:outline-none text-center flex w-11/12 mx-auto my-6 items-center justify-center font-bold text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-lg px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            >
+              Détails
+            </Link>
           </div>
-          <div className=" bg-white w-full rounded-lg overflow-hidden shadow-lg border border-green-700 mx-auto hover:border-x-green-500 transition-all hover:drop-shadow-2xl max-w-xl">
+
+          {/* Post 8 */}
+          <div className="max-w-xl rounded overflow-hidden shadow-lg shadow-green-800 mx-auto">
             <Image
               className="w-full"
-              src="/images/house7.jpg"
+              src="/images/house4.jpg"
+              alt="Architecture d'antan"
               height={500}
               width={500}
-              alt="Sunset in the mountains"
             />
             <div className="px-6 py-4">
-              <div className="font-bold text-xl mb-2">Auberge</div>
-              <var>
-                <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                  publié le : 09/01/2025
-                </span>
-              </var>
-              <p className="text-gray-700 text-base">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Voluptatibus quia, nulla! Maiores et perferendis eaque,
-                exercitationem praesentium nihil.
+              <div className="font-bold text-xl mb-2">Architecture d'antan</div>
+              <p className="text-white text-base">
+                Un regard sur l'architecture ancienne de notre époque, où chaque
+                pierre et chaque détail raconte une histoire fascinante.
               </p>
-              <Link
-                href=""
-                className="bg-green-500 flex w-full text-center items-center justify-center p-2 my-4 text-white font-bold rounded-md hover:bg-green-600 transition-all active:outline-1 outline-offset-2 outline-green-600"
-              >
-                Détails
-              </Link>
             </div>
+            <div className="px-6 pt-4 pb-2">
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Architecture
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Pierre Gauthier
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #14 mars 2025
+              </span>
+            </div>
+            <Link
+              href=""
+              className="focus:outline-none text-center flex w-11/12 mx-auto my-6 items-center justify-center font-bold text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-lg px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            >
+              Détails
+            </Link>
+          </div>
+
+          {/* Post 9 */}
+          <div className="max-w-xl rounded overflow-hidden shadow-lg shadow-green-800 mx-auto">
+            <Image
+              className="w-full"
+              src="/images/house4.jpg"
+              alt="Soleil couchant sur la mer"
+              height={500}
+              width={500}
+            />
+            <div className="px-6 py-4">
+              <div className="font-bold text-xl mb-2">
+                Soleil couchant sur la mer
+              </div>
+              <p className="text-white text-base">
+                Le spectacle magique d'un coucher de soleil sur la mer, où le
+                ciel et l'eau se mélangent dans une explosion de couleurs.
+              </p>
+            </div>
+            <div className="px-6 pt-4 pb-2">
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Paysage
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Clara Durand
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #13 mars 2025
+              </span>
+            </div>
+            <Link
+              href=""
+              className="focus:outline-none text-center flex w-11/12 mx-auto my-6 items-center justify-center font-bold text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-lg px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            >
+              Détails
+            </Link>
+          </div>
+
+          {/* Post 10 */}
+          <div className="max-w-xl rounded overflow-hidden shadow-lg shadow-green-800 mx-auto">
+            <Image
+              className="w-full"
+              src="/images/house4.jpg"
+              alt="Mystères des cavernes sous-marines"
+              height={500}
+              width={500}
+            />
+            <div className="px-6 py-4">
+              <div className="font-bold text-xl mb-2">
+                Mystères des cavernes sous-marines
+              </div>
+              <p className="text-white text-base">
+                Exploration sous-marine dans les cavernes profondes, où le
+                silence règne et où les formes et couleurs des roches forment un
+                monde à part.
+              </p>
+            </div>
+            <div className="px-6 pt-4 pb-2">
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Aventure
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Alain Rousseau
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #12 mars 2025
+              </span>
+            </div>
+            <Link
+              href=""
+              className="focus:outline-none text-center flex w-11/12 mx-auto my-6 items-center justify-center font-bold text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-lg px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            >
+              Détails
+            </Link>
+          </div>
+
+          {/* Post 11 */}
+          <div className="max-w-xl rounded overflow-hidden shadow-lg shadow-green-800 mx-auto">
+            <Image
+              className="w-full"
+              src="/images/house4.jpg"
+              alt="Sous l’ombre des oliviers"
+              height={500}
+              width={500}
+            />
+            <div className="px-6 py-4">
+              <div className="font-bold text-xl mb-2">
+                Sous l’ombre des oliviers
+              </div>
+              <p className="text-white text-base">
+                Détente et calme sous les ombres des oliviers centenaires, une
+                expérience apaisante au cœur de la nature méditerranéenne.
+              </p>
+            </div>
+            <div className="px-6 pt-4 pb-2">
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Nature
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Aurélie Morel
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #11 mars 2025
+              </span>
+            </div>
+            <Link
+              href=""
+              className="focus:outline-none text-center flex w-11/12 mx-auto my-6 items-center justify-center font-bold text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-lg px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            >
+              Détails
+            </Link>
+          </div>
+          <div className="max-w-xl rounded overflow-hidden shadow-lg shadow-green-800 mx-auto">
+            <Image
+              className="w-full"
+              src="/images/house4.jpg"
+              alt="Le coucher du soleil glacé"
+              height={500}
+              width={500}
+            />
+            <div className="px-6 py-4">
+              <div className="font-bold text-xl mb-2">
+                Le coucher du soleil glacé
+              </div>
+              <p className="text-white text-base">
+                Découvrez la beauté des couchers de soleil glacés qui peignent
+                le ciel de couleurs vibrantes, créant des paysages
+                époustouflants.
+              </p>
+            </div>
+            <div className="px-6 pt-4 pb-2">
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #22 mars 2025
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Jean Dupont
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Photographie
+              </span>
+            </div>
+            <Link
+              href=""
+              className="focus:outline-none text-center flex w-11/12 mx-auto my-6 items-center justify-center font-bold text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-lg px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            >
+              Détails
+            </Link>
+          </div>
+
+          {/* Post 2 */}
+          <div className="max-w-xl rounded overflow-hidden shadow-lg shadow-green-800 mx-auto">
+            <Image
+              className="w-full"
+              src="/images/house4.jpg"
+              alt="Perdu dans la brume"
+              height={500}
+              width={500}
+            />
+            <div className="px-6 py-4">
+              <div className="font-bold text-xl mb-2">Perdu dans la brume</div>
+              <p className="text-white text-base">
+                Une aventure captivante à travers des paysages brumeux, où tout
+                semble mystérieux et serein.
+              </p>
+            </div>
+            <div className="px-6 pt-4 pb-2">
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #20 mars 2025
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Marie Lambert
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Nature
+              </span>
+            </div>
+            <Link
+              href=""
+              className="focus:outline-none text-center flex w-11/12 mx-auto my-6 items-center justify-center font-bold text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-lg px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            >
+              Détails
+            </Link>
+          </div>
+
+          {/* Post 3 */}
+          <div className="max-w-xl rounded overflow-hidden shadow-lg shadow-green-800 mx-auto">
+            <Image
+              className="w-full"
+              src="/images/house4.jpg"
+              alt="Retraite en montagne"
+              height={500}
+              width={500}
+            />
+            <div className="px-6 py-4">
+              <div className="font-bold text-xl mb-2">Retraite en montagne</div>
+              <p className="text-white text-base">
+                Un trésor caché dans les montagnes, offrant tranquillité et
+                l'évasion parfaite du tumulte de la vie.
+              </p>
+            </div>
+            <div className="px-6 pt-4 pb-2">
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #19 mars 2025
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Lucas Martin
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Architecture
+              </span>
+            </div>
+            <Link
+              href=""
+              className="focus:outline-none text-center flex w-11/12 mx-auto my-6 items-center justify-center font-bold text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-lg px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            >
+              Détails
+            </Link>
+          </div>
+
+          {/* Post 4 */}
+          <div className="max-w-xl rounded overflow-hidden shadow-lg shadow-green-800 mx-auto">
+            <Image
+              className="w-full"
+              src="/images/house4.jpg"
+              alt="L'heure dorée"
+              height={500}
+              width={500}
+            />
+            <div className="px-6 py-4">
+              <div className="font-bold text-xl mb-2">L'heure dorée</div>
+              <p className="text-white text-base">
+                Capturez la beauté éphémère de l'heure dorée, lorsque le monde
+                est baigné dans une lumière douce et chaleureuse.
+              </p>
+            </div>
+            <div className="px-6 pt-4 pb-2">
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #18 mars 2025
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Sophie Moreau
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Paysage
+              </span>
+            </div>
+            <Link
+              href=""
+              className="focus:outline-none text-center flex w-11/12 mx-auto my-6 items-center justify-center font-bold text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-lg px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            >
+              Détails
+            </Link>
+          </div>
+
+          {/* Post 5 */}
+          <div className="max-w-xl rounded overflow-hidden shadow-lg shadow-green-800 mx-auto">
+            <Image
+              className="w-full"
+              src="/images/house4.jpg"
+              alt="Nuit dans la forêt"
+              height={500}
+              width={500}
+            />
+            <div className="px-6 py-4">
+              <div className="font-bold text-xl mb-2">Nuit dans la forêt</div>
+              <p className="text-white text-base">
+                Plongez dans le mystère de la forêt la nuit, où les sons et les
+                ombres prennent vie sous la lumière de la lune.
+              </p>
+            </div>
+            <div className="px-6 pt-4 pb-2">
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #17 mars 2025
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Clara Béatrice
+              </span>
+              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                #Aventure
+              </span>
+            </div>
+            <Link
+              href=""
+              className="focus:outline-none text-center flex w-11/12 mx-auto my-6 items-center justify-center font-bold text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 rounded-lg text-lg px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            >
+              Détails
+            </Link>
           </div>
         </div>
-        <div className="my-4"></div>
+        <div className="my-10"></div>
         <Link
           href=""
           className="my-4 text-white flex flex-row border border-slate-600 items-center justify-between p-8 rounded-lg bg-slate-900 backdrop-blur-md backdrop-brightness-75"

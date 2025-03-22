@@ -113,113 +113,29 @@ export default function Page() {
           </div>
         )}
       </div>
-      <div className="flex flex-col justify-center lg:w-11/12 w-full md:w-11/12 lg:p-4 md:p-4 p-0 mt-32">
+      <div className=" flex flex-col justify-center lg:w-11/12 w-full md:w-11/12 lg:p-4 md:p-4 p-0 mt-32">
         <h3 className="text-6xl lg:text-8xl text-green-500 font-black tracking-tighter mb-8">
-          Contacts,
+          Détails,
         </h3>
 
-        <div className=" mx-auto mt-10 flex flex-col gap-6">
-          <p className="text-white text-xl font-normal">
-            Nous sommes à votre écoute et prêts à répondre à toutes vos
-            questions. Que vous soyez à la recherche de plus d'informations sur
-            nos services, que vous souhaitiez prendre contact pour une
-            collaboration, ou simplement pour en savoir plus, n'hésitez pas à
-            nous contacter. Notre équipe de professionnels se tient à votre
-            disposition pour vous offrir toute l'aide et les conseils dont vous
-            avez besoin. Nous sommes engagés à offrir une expérience
-            transparente et efficace à chacun de nos clients et partenaires.
+        <div className="bg-slatne-700 mx-auto mt-10 flex flex-col gap-6">
+          <p className="text-white text-lg font-normal">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Error sed
+            cumque dolorem assumenda ut hic rem magni accusamus placeat libero
+            tenetur fuga quae delectus, enim beatae. Optio suscipit fugiat
+            consectetur. Lorem ipsum dolor sit amet, consectetur adipisicing
+            elit. Est, blanditiis nesciunt adipisci alias eligendi beatae et,
+            libero corrupti cumque, inventore error mollitia amet veniam. Non
+            maiores similique at excepturi perspiciatis. Lorem ipsum dolor sit
+            amet consectetur adipisicing elit. Aliquid dolor quidem placeat sed?
+            Odit quo, ipsa hic repudiandae, non consequuntur, vel unde minima
+            accusantium est obcaecati optio facere magnam exercitationem?
           </p>
         </div>
         {/* Le séparateur */}
         <div className="my-10"></div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 gap-4 w-full mx-auto">
-          <div className="rounded-md border border-slate-600 p-4 flex flex-col gap-4 justify-center items-start shadow-lg hover:bg-green-500/10 bg-slate-500/15 hover:-translate-y-1 transition-all">
-            <Image
-              src="/images/house2.jpg"
-              alt="Contact Image"
-              height={500}
-              width={500}
-              className="h-32 w-32 rounded-full"
-            />
-            <span className="font-black text-xl text-white text-start">
-              Administrateur
-            </span>
-            <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaListAlt className="inline mr-2" />
-              <span>Email : email@gmail.com</span>
-            </div>
-            <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaListAlt className="inline mr-2" />
-              <span> Téléphone : +22998765645</span>
-            </div>
-          </div>
-
-          <div className="rounded-md border border-slate-600 p-4 flex flex-col gap-4 justify-center items-start shadow-lg hover:bg-green-500/10 bg-slate-500/15 hover:-translate-y-1 transition-all">
-            <Image
-              src="/images/house5.jpg"
-              alt="Contact Image"
-              height={500}
-              width={500}
-              className="h-32 w-32 rounded-full"
-            />
-            <span className="font-black text-xl text-white text-start">
-              Administrateur
-            </span>
-            <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaListAlt className="inline mr-2" />
-              <span>Email : email@gmail.com</span>
-            </div>
-            <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaListAlt className="inline mr-2" />
-              <span> Téléphone : +22998765645</span>
-            </div>
-          </div>
-
-          <div className="rounded-md border border-slate-600 p-4 flex flex-col gap-4 justify-center items-start shadow-lg hover:bg-green-500/10 bg-slate-500/15 hover:-translate-y-1 transition-all">
-            <Image
-              src="/images/house7.jpg"
-              alt="Contact Image"
-              height={500}
-              width={500}
-              className="h-32 w-32 rounded-full"
-            />
-            <span className="font-black text-xl text-white text-start">
-              Administrateur
-            </span>
-            <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaListAlt className="inline mr-2" />
-              <span>Email : email@gmail.com</span>
-            </div>
-            <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaListAlt className="inline mr-2" />
-              <span> Téléphone : +22998765645</span>
-            </div>
-          </div>
-
-          <div className="rounded-md border border-slate-600 p-4 flex flex-col gap-4 justify-center items-start shadow-lg hover:bg-green-500/10 bg-slate-500/15 hover:-translate-y-1 transition-all">
-            <Image
-              src="/images/house6.jpg"
-              alt="Contact Image"
-              height={500}
-              width={500}
-              className="h-32 w-32 rounded-full"
-            />
-            <span className="font-black text-xl text-white text-start">
-              Administrateur
-            </span>
-            <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaListAlt className="inline mr-2" />
-              <span>Email : email@gmail.com</span>
-            </div>
-            <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaListAlt className="inline mr-2" />
-              <span> Téléphone : +22998765645</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="my-10"></div>
+        <div className="my-4"></div>
         <Link
           href=""
           className="my-4 text-white flex flex-row border border-slate-600 items-center justify-between p-8 rounded-lg bg-slate-900 backdrop-blur-md backdrop-brightness-75"
@@ -227,7 +143,10 @@ export default function Page() {
           <span className="tracking-tighter md:text-6xl lg:text-8xl sm:text-6xl text-4xl font-black">
             DÉMARCHEURS
           </span>
-          <FaLink className="text-white mb-2 md:text-6xl lg:text-8xl sm:text-6xl text-4xl" />
+          <FaLink
+            // size={60}
+            className="text-white mb-2 md:text-6xl lg:text-8xl sm:text-6xl text-4xl"
+          />
         </Link>
       </div>
 

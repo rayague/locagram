@@ -31,6 +31,7 @@ import {
   FaTimes,
   FaLink,
   FaListAlt,
+  FaPodcast,
 } from "react-icons/fa"; // Icônes pour chaque type de maison
 
 import Image from "next/image";
@@ -109,22 +110,27 @@ export default function Page() {
               </h2>
               <ul className="mt-4 text-center flex flex-col gap-4 w-full font-bold  ">
                 <Link href="/">
-                  <li className="bg-slate-700 flex-row w-full  p-5 rounded-lg  hover:bg-green-500 transition duration-200 flex items-center justify-center gap-2">
+                  <li className="bg-slate-700 flex-row w-full  p-5 rounded-lg  hover:bg-green-500 transition duration-200 flex items-center justify-center gap-4">
                     <FaHome size={20} className="text-green-500" /> Acceuil
                   </li>
                 </Link>
                 <Link href="/categories">
-                  <li className="bg-slate-700 flex-row w-full  p-5 rounded-lg  hover:bg-green-500 transition duration-200 flex items-center justify-center gap-2">
+                  <li className="bg-slate-700 flex-row w-full  p-5 rounded-lg  hover:bg-green-500 transition duration-200 flex items-center justify-center gap-4">
                     <FaTag size={20} className="text-green-500" /> Catégories
                   </li>
                 </Link>
                 <Link href="/postes">
-                  <li className="bg-slate-700 flex-row w-full  p-5 rounded-lg  hover:bg-green-500 transition duration-200 flex items-center justify-center gap-2">
+                  <li className="bg-slate-700 flex-row w-full  p-5 rounded-lg  hover:bg-green-500 transition duration-200 flex items-center justify-center gap-4">
+                    <FaListAlt size={20} className="text-green-500" /> Postes
+                  </li>
+                </Link>
+                <Link href="/postes">
+                  <li className="bg-slate-700 flex-row w-full  p-5 rounded-lg  hover:bg-green-500 transition duration-200 flex items-center justify-center gap-4">
                     <FaSearch size={20} className="text-green-500" /> Rechercher
                   </li>
                 </Link>
                 <Link href="/contacts">
-                  <li className="bg-slate-700 flex-row w-full  p-5 rounded-lg  hover:bg-green-500 transition duration-200 flex items-center justify-center gap-2">
+                  <li className="bg-slate-700 flex-row w-full  p-5 rounded-lg  hover:bg-green-500 transition duration-200 flex items-center justify-center gap-4">
                     <FaEnvelope size={20} className="text-green-500" /> Contacts
                   </li>
                 </Link>
@@ -140,20 +146,43 @@ export default function Page() {
           Découvrez,
         </h3>
         <p className="text-white text-lg font-normal">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Error sed
-          cumque dolorem assumenda ut hic rem magni accusamus placeat libero
-          tenetur fuga quae delectus, enim beatae. Optio suscipit fugiat
-          consectetur. Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-          Est, blanditiis nesciunt adipisci alias eligendi beatae et, libero
-          corrupti cumque, inventore error mollitia amet veniam.
+          Chez <span className="text-green-500">Locagram</span>, nous vous
+          offrons une{" "}
+          <span className="text-green-500">
+            expérience de recherche simplifiée
+          </span>{" "}
+          grâce à nos différentes catégories de locations. Que vous soyez à la
+          recherche d'une{" "}
+          <span className="text-green-500">maison spacieuse</span> pour votre
+          famille, d'un{" "}
+          <span className="text-green-500">appartement moderne</span> pour votre
+          prochain séjour, ou d'une{" "}
+          <span className="text-green-500">chambre cosy</span> pour un séjour
+          temporaire, notre plateforme vous permet de trouver rapidement ce que
+          vous cherchez. Nous proposons plusieurs options pour affiner vos
+          recherches : - <span className="text-green-500">Maisons</span> pour un
+          confort optimal et plus d’espace -{" "}
+          <span className="text-green-500">Appartements</span> modernes et
+          pratiques - <span className="text-green-500">Villas</span> luxueuses
+          avec des équipements premium -{" "}
+          <span className="text-green-500">Chambres</span> pour une solution
+          économique Grâce à notre filtre de recherche,{" "}
+          <span className="text-green-500">Locagram</span> vous permet de
+          trouver exactement ce que vous recherchez, que ce soit par{" "}
+          <span className="text-green-500">prix</span>,{" "}
+          <span className="text-green-500">emplacement</span>, ou{" "}
+          <span className="text-green-500">type de bien</span>.
         </p>
+
         <div className="w-full rounded-xl my-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 md:grid-cols-3 gap-4">
           <Link
             href=""
             className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
           >
             <FaBed size={30} className="text-green-500 mb-2" />
-            <span className="font-bold text-white text-center">Auberge</span>
+            <span className="font-black text-xl text-white text-start">
+              Auberge
+            </span>
             <p className="text-white text-sm mt-2">
               Un hébergement collectif, souvent utilisé pour des séjours courts.
               Les auberges sont idéales pour les voyageurs dans des zones
@@ -165,7 +194,7 @@ export default function Page() {
             className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
           >
             <FaHouseUser size={30} className="text-green-500 mb-2" />
-            <span className="font-bold text-white text-center">
+            <span className="font-black text-xl text-white text-start">
               Maison à louer
             </span>
             <p className="text-white text-sm mt-2">
@@ -178,7 +207,9 @@ export default function Page() {
             className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
           >
             <FaPaste size={30} className="text-green-500 mb-2" />
-            <span className="font-bold text-white text-center">Manoir</span>
+            <span className="font-black text-xl text-white text-start">
+              Manoir
+            </span>
             <p className="text-white text-sm mt-2">
               Une grande maison historique ou luxueuse, souvent avec un grand
               terrain, idéale pour des événements ou des séjours de luxe.
@@ -189,7 +220,9 @@ export default function Page() {
             className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
           >
             <FaHammer size={30} className="text-green-500 mb-2" />
-            <span className="font-bold text-white text-center">Atelier</span>
+            <span className="font-black text-xl text-white text-start">
+              Atelier
+            </span>
             <p className="text-white text-sm mt-2">
               Un espace destiné à la création ou à l'artisanat, souvent loué
               pour des événements ou des sessions de travail.
@@ -200,7 +233,9 @@ export default function Page() {
             className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
           >
             <FaSwimmer size={30} className="text-green-500 mb-2" />
-            <span className="font-bold text-white text-center">Villa</span>
+            <span className="font-black text-xl text-white text-start">
+              Villa
+            </span>
             <p className="text-white text-sm mt-2">
               Une maison luxueuse avec des équipements haut de gamme comme une
               piscine, un jardin ou une vue imprenable.
@@ -211,7 +246,9 @@ export default function Page() {
             className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
           >
             <FaMountain size={30} className="text-green-500 mb-2" />
-            <span className="font-bold text-white text-center">Chalet</span>
+            <span className="font-black text-xl text-white text-start">
+              Chalet
+            </span>
             <p className="text-white text-sm mt-2">
               Un logement généralement situé dans les montagnes ou à la
               campagne, parfait pour des vacances, souvent en région skiable.
@@ -222,7 +259,9 @@ export default function Page() {
             className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
           >
             <FaWarehouse size={30} className="text-green-500 mb-2" />
-            <span className="font-bold text-white text-center">Loft</span>
+            <span className="font-black text-xl text-white text-start">
+              Loft
+            </span>
             <p className="text-white text-sm mt-2">
               Un grand espace ouvert, souvent dans un bâtiment réaménagé, avec
               une ambiance industrielle et moderne.
@@ -233,7 +272,9 @@ export default function Page() {
             className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
           >
             <FaBoxOpen size={30} className="text-green-500 mb-2" />
-            <span className="font-bold text-white text-center">Studio</span>
+            <span className="font-black text-xl text-white text-start">
+              Studio
+            </span>
             <p className="text-white text-sm mt-2">
               Un petit appartement d'une seule pièce, souvent idéal pour les
               étudiants ou les personnes seules.
@@ -244,7 +285,9 @@ export default function Page() {
             className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
           >
             <FaHome size={30} className="text-green-500 mb-2" />
-            <span className="font-bold text-white text-center">Pavillon</span>
+            <span className="font-black text-xl text-white text-start">
+              Pavillon
+            </span>
             <p className="text-white text-sm mt-2">
               Une petite maison souvent située dans un quartier résidentiel ou
               semi-urbain, idéale pour des séjours de courte ou longue durée.
@@ -255,7 +298,9 @@ export default function Page() {
             className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
           >
             <FaMobileAlt size={30} className="text-green-500 mb-2" />
-            <span className="font-bold text-white text-center">Mobil-home</span>
+            <span className="font-black text-xl text-white text-start">
+              Mobil-home
+            </span>
             <p className="text-white text-sm mt-2">
               Un logement mobile, souvent utilisé pour des vacances dans des
               campings ou des résidences de loisirs.
@@ -266,7 +311,7 @@ export default function Page() {
             className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
           >
             <FaMapMarkedAlt size={30} className="text-green-500 mb-2" />
-            <span className="font-bold text-white text-center">
+            <span className="font-black text-xl text-white text-start">
               Appartement meublé
             </span>
             <p className="text-white text-sm mt-2">
@@ -281,7 +326,9 @@ export default function Page() {
             className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
           >
             <FaBuilding size={30} className="text-green-500 mb-2" />
-            <span className="font-bold text-white text-center">Duplex</span>
+            <span className="font-black text-xl text-white text-start">
+              Duplex
+            </span>
             <p className="text-white text-sm mt-2">
               Un appartement à deux niveaux reliés par un escalier interne,
               offrant plus d'espace et d'intimité.
@@ -292,7 +339,9 @@ export default function Page() {
             className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
           >
             <FaCity size={30} className="text-green-500 mb-2" />
-            <span className="font-bold text-white text-center">Penthouse</span>
+            <span className="font-black text-xl text-white text-start">
+              Penthouse
+            </span>
             <p className="text-white text-sm mt-2">
               Un appartement de luxe situé au dernier étage d'un immeuble,
               souvent avec une vue panoramique et des équipements haut de gamme.
@@ -303,7 +352,7 @@ export default function Page() {
             className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
           >
             <FaBed size={30} className="text-green-500 mb-2" />
-            <span className="font-bold text-white text-center">
+            <span className="font-black text-xl text-white text-start">
               Chambre d'hôtel
             </span>
             <p className="text-white text-sm mt-2">
@@ -316,7 +365,7 @@ export default function Page() {
             className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
           >
             <FaWarehouse size={30} className="text-green-500 mb-2" />
-            <span className="font-bold text-white text-center">
+            <span className="font-black text-xl text-white text-start">
               Loft industriel
             </span>
             <p className="text-white text-sm mt-2">
@@ -329,7 +378,9 @@ export default function Page() {
             className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
           >
             <FaCaravan size={30} className="text-green-500 mb-2" />
-            <span className="font-bold text-white text-center">Caravane</span>
+            <span className="font-black text-xl text-white text-start">
+              Caravane
+            </span>
             <p className="text-white text-sm mt-2">
               Un véhicule conçu pour être un logement mobile, idéal pour les
               voyages ou le camping.
