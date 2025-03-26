@@ -115,17 +115,59 @@ export default function Page() {
       </div>
 
       <div className=" flex flex-col justify-center lg:w-11/12 w-full md:w-11/12 lg:p-4 md:p-4 p-0 mt-32">
-        <h3 className="text-6xl lg:text-8xl text-green-500 font-black tracking-tighter mb-8">
-          Découvrez,
-        </h3>
-        <p className="text-white text-lg font-normal">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Error sed
-          cumque dolorem assumenda ut hic rem magni accusamus placeat libero
-          tenetur fuga quae delectus, enim beatae. Optio suscipit fugiat
-          consectetur. Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-          Est, blanditiis nesciunt adipisci alias eligendi beatae et, libero
-          corrupti cumque, inventore error mollitia amet veniam.
-        </p>
+        <div className="flex flex-col justify-center lg:w-11/12 w-full md:w-11/12 lg:p-4 md:p-4 p-0 mt-32">
+          <h3 className="text-6xl lg:text-8xl text-green-500 font-black tracking-tighter mb-8">
+            Explorez,
+          </h3>
+          <p className="text-white text-lg font-normal">
+            Chez <span className="text-green-500">Locagram</span>, nous
+            transformons la recherche de votre futur lieu de vie en une
+            expérience fluide et agréable. Que vous soyez à la recherche d'un{" "}
+            <span className="text-green-500">appartement moderne</span> pour un
+            séjour confortable, d'une{" "}
+            <span className="text-green-500">maison familiale</span> spacieuse
+            pour créer des souvenirs, ou d'une{" "}
+            <span className="text-green-500">villa luxueuse</span> pour une
+            escapade haut de gamme,{" "}
+            <span className="text-green-500">Locagram</span> vous offre une
+            multitude d'options pour répondre à tous vos besoins.
+          </p>
+          <p className="text-white text-lg font-normal my-4">
+            Grâce à nos fonctionnalités de recherche avancées, vous pouvez
+            affiner vos critères pour trouver exactement ce que vous cherchez.
+            Découvrez des lieux qui correspondent parfaitement à vos envies, que
+            ce soit par <span className="text-green-500">prix</span>,{" "}
+            <span className="text-green-500">emplacement</span>, ou{" "}
+            <span className="text-green-500">type de bien</span>. Voici
+            quelques-unes des options que nous proposons :
+          </p>
+          <ul className="text-white text-lg font-normal list-disc pl-8">
+            <li>
+              <span className="text-green-500">Maisons</span> spacieuses et
+              conviviales pour toute la famille
+            </li>
+            <li>
+              <span className="text-green-500">Appartements</span> modernes et
+              pratiques pour un séjour confortable
+            </li>
+            <li>
+              <span className="text-green-500">Villas</span> luxueuses avec des
+              équipements premium pour un confort inégalé
+            </li>
+            <li>
+              <span className="text-green-500">Chambres</span> cosy et
+              accessibles pour un séjour économique
+            </li>
+          </ul>
+          <p className="text-white text-lg font-normal mt-4">
+            <span className="text-green-500">Locagram</span> simplifie votre
+            recherche pour que vous puissiez trouver rapidement et facilement
+            l’endroit parfait, et ce, en quelques clics. Rejoignez-nous
+            aujourd'hui et commencez à explorer des milliers de propriétés
+            exceptionnelles !
+          </p>
+        </div>
+
         <div className="my-6"></div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 justify-evenly items-center gap-8">
@@ -530,7 +572,8 @@ export default function Page() {
         </div>
         <div className="my-10"></div>
         <Link
-          href=""
+          href="https://rayague.github.io/locagram-demarcheurs/"
+          target="_blank"
           className="my-4 text-white flex flex-row border border-slate-600 items-center justify-between p-8 rounded-lg bg-slate-900 backdrop-blur-md backdrop-brightness-75"
         >
           <span className="tracking-tighter md:text-6xl lg:text-8xl sm:text-6xl text-4xl font-black">

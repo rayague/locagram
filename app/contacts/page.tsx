@@ -15,6 +15,8 @@ import {
   FaLink,
   FaListAlt,
   FaHome,
+  FaPhone,
+  FaWhatsapp,
 } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
@@ -143,15 +145,19 @@ export default function Page() {
               className="h-32 w-32 rounded-full"
             />
             <span className="font-black text-xl text-white text-start">
-              Administrateur
+              Administrateur : Bel-Ami Houédekoutin
             </span>
             <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaListAlt className="inline mr-2" />
-              <span>Email : email@gmail.com</span>
+              <FaEnvelope className="inline mr-2" />
+              <a href="mailto:houedekoutinbelami@gmail.com">
+                <span>Email : houedekoutinbelami@gmail.com</span>
+              </a>
             </div>
             <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaListAlt className="inline mr-2" />
-              <span> Téléphone : +22998765645</span>
+              <FaWhatsapp className="inline mr-2" />
+              <a href="https://wa.me/+22953444701" target="_blank">
+                <span>Téléphone : +229 53444701</span>
+              </a>{" "}
             </div>
           </div>
 
@@ -164,15 +170,19 @@ export default function Page() {
               className="h-32 w-32 rounded-full"
             />
             <span className="font-black text-xl text-white text-start">
-              Administrateur
+              Administrateur : Bel-Ami Houédekoutin
             </span>
             <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaListAlt className="inline mr-2" />
-              <span>Email : email@gmail.com</span>
+              <FaEnvelope className="inline mr-2" />
+              <a href="mailto:houedekoutinbelami@gmail.com">
+                <span>Email : houedekoutinconfiance@gmail.com</span>
+              </a>
             </div>
             <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaListAlt className="inline mr-2" />
-              <span> Téléphone : +22998765645</span>
+              <FaWhatsapp className="inline mr-2" />
+              <a href="https://wa.me/+22958845258" target="_blank">
+                <span>Téléphone : +229 58845258</span>
+              </a>{" "}
             </div>
           </div>
 
@@ -185,15 +195,19 @@ export default function Page() {
               className="h-32 w-32 rounded-full"
             />
             <span className="font-black text-xl text-white text-start">
-              Administrateur
+              Administrateur : Ray Ague
             </span>
             <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaListAlt className="inline mr-2" />
-              <span>Email : email@gmail.com</span>
+              <FaEnvelope className="inline mr-2" />
+              <a href="mailto:rayague03@gmail.com">
+                <span>Email : rayague03@gmail.com</span>
+              </a>
             </div>
             <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaListAlt className="inline mr-2" />
-              <span> Téléphone : +22998765645</span>
+              <FaWhatsapp className="inline mr-2" />
+              <a href="https://wa.me/+22960932967" target="_blank">
+                <span>Téléphone : +229 60932967</span>
+              </a>{" "}
             </div>
           </div>
 
@@ -206,22 +220,27 @@ export default function Page() {
               className="h-32 w-32 rounded-full"
             />
             <span className="font-black text-xl text-white text-start">
-              Administrateur
+              Administrateur : Ray Ague
             </span>
             <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaListAlt className="inline mr-2" />
-              <span>Email : email@gmail.com</span>
+              <FaEnvelope className="inline mr-2" />
+              <a href="mailto:ray.ague22@gmail.com">
+                <span>Email : ray.ague22@gmail.com</span>
+              </a>
             </div>
             <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaListAlt className="inline mr-2" />
-              <span> Téléphone : +22998765645</span>
+              <FaPhone className="inline mr-2" />
+              <a href="tel:+22959891655">
+                <span>Téléphone : +229 59891655</span>
+              </a>
             </div>
           </div>
         </div>
 
         <div className="my-10"></div>
         <Link
-          href=""
+          href="https://rayague.github.io/locagram-demarcheurs/"
+          target="_blank"
           className="my-4 text-white flex flex-row border border-slate-600 items-center justify-between p-8 rounded-lg bg-slate-900 backdrop-blur-md backdrop-brightness-75"
         >
           <span className="tracking-tighter md:text-6xl lg:text-8xl sm:text-6xl text-4xl font-black">

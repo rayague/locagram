@@ -389,7 +389,8 @@ export default function Page() {
         </div>
         <div className="my-4"></div>
         <Link
-          href=""
+          href="https://rayague.github.io/locagram-demarcheurs/"
+          target="_blank"
           className="my-4 text-white flex flex-row border border-slate-600 items-center justify-between p-8 rounded-lg bg-slate-900 backdrop-blur-md backdrop-brightness-75"
         >
           <span className="tracking-tighter md:text-6xl lg:text-8xl sm:text-6xl text-4xl font-black">
