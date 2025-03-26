@@ -73,14 +73,12 @@ export default function Page() {
   return (
     <main className="flex min-h-screen flex-col items-center p-5 lg:p-24 md:p-16 sm:p-8 bg-slate-950 relative">
       <div className="fixed top-3 flex flex-row items-center justify-between w-[95%]  rounded-xl p-2 backdrop-blur-lg backdrop-brightness-200 z-10">
-        <strong className="text-white text-3xl tracking-tighter font-black">
-          Loca<span className="text-green-500">gram</span>
-        </strong>
+        <Link href="/">
+          <strong className="text-white text-3xl tracking-tighter font-black">
+            Loca<span className="text-green-500">gram</span>
+          </strong>
+        </Link>
         <div className="flex flex-row gap-6">
-          <button>
-            <FaSearch size={28} color="white" />
-          </button>
-
           <button onClick={openModal} className="p-4 bg-green-500 rounded-full">
             <FaBars size={24} color="white" />
           </button>
@@ -124,7 +122,7 @@ export default function Page() {
                     <FaListAlt size={20} className="text-green-500" /> Postes
                   </li>
                 </Link>
-                <Link href="/postes">
+                <Link href="/search">
                   <li className="bg-slate-700 flex-row w-full  p-5 rounded-lg  hover:bg-green-500 transition duration-200 flex items-center justify-center gap-4">
                     <FaSearch size={20} className="text-green-500" /> Rechercher
                   </li>

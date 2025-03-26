@@ -17,6 +17,7 @@ import {
   FaHome,
   FaPhone,
   FaWhatsapp,
+  FaUser,
 } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
@@ -49,14 +50,12 @@ export default function Page() {
   return (
     <main className="flex min-h-screen flex-col items-center p-5 lg:p-24 md:p-16 sm:p-8 bg-slate-950 relative">
       <div className="fixed top-3 flex flex-row items-center justify-between w-[95%]  rounded-xl p-2 backdrop-blur-lg backdrop-brightness-200 z-10">
-        <strong className="text-white text-3xl tracking-tighter font-black">
-          Loca<span className="text-green-500">gram</span>
-        </strong>
+        <Link href="/">
+          <strong className="text-white text-3xl tracking-tighter font-black">
+            Loca<span className="text-green-500">gram</span>
+          </strong>
+        </Link>
         <div className="flex flex-row gap-6">
-          <button>
-            <FaSearch size={28} color="white" />
-          </button>
-
           <button onClick={openModal} className="p-4 bg-green-500 rounded-full">
             <FaBars size={24} color="white" />
           </button>
@@ -100,7 +99,7 @@ export default function Page() {
                     <FaListAlt size={20} className="text-green-500" /> Postes
                   </li>
                 </Link>
-                <Link href="/postes">
+                <Link href="/search">
                   <li className="bg-slate-700 flex-row w-full  p-5 rounded-lg  hover:bg-green-500 transition duration-200 flex items-center justify-center gap-4">
                     <FaSearch size={20} className="text-green-500" /> Rechercher
                   </li>
@@ -145,13 +144,28 @@ export default function Page() {
               className="h-32 w-32 rounded-full"
             />
             <span className="font-black text-xl text-white text-start">
-              Administrateur : Bel-Ami Houédekoutin
+              Bel-Ami Confiance Houédekoutin :{" "}
+              <span className="font-bold text-green-500 text-2xl">
+                Administrateur
+              </span>
             </span>
+            <div className="flex flex-row justify-center items-center text-white font-normal">
+              <FaEnvelope className="inline mr-2" />
+              <Link href="mailto:houedekoutinbelami@gmail.com">
+                <span>Email : houedekoutinconfiance@gmail.com</span>
+              </Link>
+            </div>
             <div className="flex flex-row justify-center items-center text-white font-normal">
               <FaEnvelope className="inline mr-2" />
               <a href="mailto:houedekoutinbelami@gmail.com">
                 <span>Email : houedekoutinbelami@gmail.com</span>
               </a>
+            </div>
+            <div className="flex flex-row justify-center items-center text-white font-normal">
+              <FaWhatsapp className="inline mr-2" />
+              <Link href="https://wa.me/+22958845258" target="_blank">
+                <span>Téléphone : +229 58845258</span>
+              </Link>{" "}
             </div>
             <div className="flex flex-row justify-center items-center text-white font-normal">
               <FaWhatsapp className="inline mr-2" />
@@ -170,32 +184,10 @@ export default function Page() {
               className="h-32 w-32 rounded-full"
             />
             <span className="font-black text-xl text-white text-start">
-              Administrateur : Bel-Ami Houédekoutin
-            </span>
-            <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaEnvelope className="inline mr-2" />
-              <a href="mailto:houedekoutinbelami@gmail.com">
-                <span>Email : houedekoutinconfiance@gmail.com</span>
-              </a>
-            </div>
-            <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaWhatsapp className="inline mr-2" />
-              <a href="https://wa.me/+22958845258" target="_blank">
-                <span>Téléphone : +229 58845258</span>
-              </a>{" "}
-            </div>
-          </div>
-
-          <div className="rounded-md border border-slate-600 p-4 flex flex-col gap-4 justify-center items-start shadow-lg hover:bg-green-500/10 bg-slate-500/15 hover:-translate-y-1 transition-all">
-            <Image
-              src="/images/avatar.png"
-              alt="Contact Image"
-              height={500}
-              width={500}
-              className="h-32 w-32 rounded-full"
-            />
-            <span className="font-black text-xl text-white text-start">
-              Administrateur : Ray Ague
+              Ray Ague :{" "}
+              <span className="font-bold text-green-500 text-2xl">
+                Développeur
+              </span>
             </span>
             <div className="flex flex-row justify-center items-center text-white font-normal">
               <FaEnvelope className="inline mr-2" />
@@ -204,35 +196,22 @@ export default function Page() {
               </a>
             </div>
             <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaWhatsapp className="inline mr-2" />
-              <a href="https://wa.me/+22960932967" target="_blank">
-                <span>Téléphone : +229 60932967</span>
-              </a>{" "}
+              <FaUser className="inline mr-2" />
+              <Link href="https://portofolio-cnkp.vercel.app">
+                <span>Portfolio : https://portofolio-cnkp.vercel.app</span>
+              </Link>
             </div>
-          </div>
-
-          <div className="rounded-md border border-slate-600 p-4 flex flex-col gap-4 justify-center items-start shadow-lg hover:bg-green-500/10 bg-slate-500/15 hover:-translate-y-1 transition-all">
-            <Image
-              src="/images/avatar.png"
-              alt="Contact Image"
-              height={500}
-              width={500}
-              className="h-32 w-32 rounded-full"
-            />
-            <span className="font-black text-xl text-white text-start">
-              Administrateur : Ray Ague
-            </span>
             <div className="flex flex-row justify-center items-center text-white font-normal">
-              <FaEnvelope className="inline mr-2" />
-              <a href="mailto:ray.ague22@gmail.com">
-                <span>Email : ray.ague22@gmail.com</span>
-              </a>
+              <FaWhatsapp className="inline mr-2" />
+              <Link href="https://wa.me/+22960932967" target="_blank">
+                <span>Téléphone : +229 60932967</span>
+              </Link>{" "}
             </div>
             <div className="flex flex-row justify-center items-center text-white font-normal">
               <FaPhone className="inline mr-2" />
-              <a href="tel:+22959891655">
+              <Link href="tel:+22959891655">
                 <span>Téléphone : +229 59891655</span>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
