@@ -115,7 +115,7 @@ export default function Page() {
       </div>
 
       <div className=" flex flex-col justify-center lg:w-11/12 w-full md:w-11/12 lg:p-4 md:p-4 p-0 mt-32">
-        <div className="flex flex-col justify-center lg:w-11/12 w-full md:w-11/12 lg:p-4 md:p-4 p-0 mt-32">
+        <div className="flex flex-col justify-center lg:w-11/12 w-full md:w-11/12 lg:p-4 md:p-4 p-0">
           <h3 className="text-6xl lg:text-8xl text-green-500 font-black tracking-tighter mb-8">
             Explorez,
           </h3>

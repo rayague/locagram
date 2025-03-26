@@ -142,18 +142,41 @@ export default function Section() {
       <div className=" flex flex-col justify-center lg:w-11/12 w-full md:w-11/12 lg:p-4 md:p-4 p-0 mt-32">
         <div className="border-y-4 border-green-500 p-4 overflow-hidden">
           <motion.div
-            className="text-white font-black text-7xl whitespace-nowrap uppercase tracking-tighter ease-linear"
-            animate={{
-              x: ["100%", "-100%"], // Déplace de droite à gauche
-            }}
-            transition={{
-              repeat: Infinity, // Répète l'animation à l'infini
-              duration: 25, // Durée de l'animation
-              ease: "linear", // Animation fluide
+            className="relative w-full overflow-x-hidden py-4"
+            style={{
+              WebkitMaskImage:
+                "linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%)",
             }}
           >
-            Retrouvez avec aisance et rapidité les logements qui répondent
-            précisément à vos attentes.
+            <motion.div
+              className="text-white font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl uppercase tracking-tight"
+              animate={{
+                x: ["100vw", "-100%"], // Utilise les viewport units pour une meilleure adaptation
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: 20, // Durée unique ajustée
+                ease: "linear",
+              }}
+              style={{
+                whiteSpace: "nowrap",
+                position: "relative",
+                display: "inline-block",
+                paddingRight: "200px", // Crée un espace entre les répétitions
+              }}
+            >
+              {typeof window !== "undefined" && window.innerWidth <= 768 ? (
+                // Version courte pour mobile
+                <span className="inline md:hidden">
+                  Trouvez rapidement vos logements idéaux.
+                </span> // Version complète pour desktop
+              ) : (
+                <span className="hidden md:inline">
+                  Retrouvez avec aisance et rapidité les logements qui répondent
+                  à vos attentes.
+                </span>
+              )}
+            </motion.div>
           </motion.div>
         </div>
 

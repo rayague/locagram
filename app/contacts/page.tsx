@@ -138,7 +138,7 @@ export default function Page() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 gap-4 w-full mx-auto">
           <div className="rounded-md border border-slate-600 p-4 flex flex-col gap-4 justify-center items-start shadow-lg hover:bg-green-500/10 bg-slate-500/15 hover:-translate-y-1 transition-all">
             <Image
-              src="/images/house2.jpg"
+              src="/images/avatar.png"
               alt="Contact Image"
               height={500}
               width={500}
@@ -163,7 +163,7 @@ export default function Page() {
 
           <div className="rounded-md border border-slate-600 p-4 flex flex-col gap-4 justify-center items-start shadow-lg hover:bg-green-500/10 bg-slate-500/15 hover:-translate-y-1 transition-all">
             <Image
-              src="/images/house5.jpg"
+              src="/images/avatar.png"
               alt="Contact Image"
               height={500}
               width={500}
@@ -188,7 +188,7 @@ export default function Page() {
 
           <div className="rounded-md border border-slate-600 p-4 flex flex-col gap-4 justify-center items-start shadow-lg hover:bg-green-500/10 bg-slate-500/15 hover:-translate-y-1 transition-all">
             <Image
-              src="/images/house7.jpg"
+              src="/images/avatar.png"
               alt="Contact Image"
               height={500}
               width={500}
@@ -213,7 +213,7 @@ export default function Page() {
 
           <div className="rounded-md border border-slate-600 p-4 flex flex-col gap-4 justify-center items-start shadow-lg hover:bg-green-500/10 bg-slate-500/15 hover:-translate-y-1 transition-all">
             <Image
-              src="/images/house6.jpg"
+              src="/images/avatar.png"
               alt="Contact Image"
               height={500}
               width={500}
