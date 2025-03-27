@@ -137,7 +137,7 @@ export default function Page() {
           rapidement ce que vous cherchez.
           <br /> <br />
           Nous proposons plusieurs options pour affiner vos recherches :
-          <li className="list-disc list-inside text-white">
+          <p className="list-disc list-inside text-white">
             <li>
               <span className="text-green-500">Maisons</span> pour un confort
               optimal et plus d’espace
@@ -154,7 +154,7 @@ export default function Page() {
               <span className="text-green-500">Chambres</span> pour une solution
               économique
             </li>
-          </li>
+          </p>
           <br />
           Grâce à notre filtre de recherche,{" "}
           <span className="text-green-500 font-bold">Locagram</span> vous permet
