@@ -384,6 +384,35 @@ export default function Page() {
               voyages ou le camping.
             </p>
           </Link>
+          {/* Nouvelle catégorie: Hôtel de ville */}
+          <Link
+            href=""
+            className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
+          >
+            <FaBed size={30} className="text-green-500 mb-2" />
+            <span className="font-black text-xl text-white text-start">
+              Hôtel de ville
+            </span>
+            <p className="text-white text-sm mt-2">
+              Un hôtel situé en ville, souvent utilisé pour des séjours urbains.
+              Idéal pour les voyages d'affaires ou les visites de courte durée.
+            </p>
+          </Link>
+
+          {/* Nouvelle catégorie: Parcelle à vendre */}
+          <Link
+            href=""
+            className="rounded-md border border-green-500 p-4 flex flex-col justify-center items-start shadow-lg hover:bg-green-500/10 bg-green-300/15 hover:-translate-y-1 transition-all"
+          >
+            <FaMapMarkedAlt size={30} className="text-green-500 mb-2" />
+            <span className="font-black text-xl text-white text-start">
+              Parcelle à vendre
+            </span>
+            <p className="text-white text-sm mt-2">
+              Une parcelle de terrain disponible à la vente, idéale pour
+              construire ou investir dans un projet immobilier.
+            </p>
+          </Link>
         </div>
         <div className="my-4"></div>
         <Link

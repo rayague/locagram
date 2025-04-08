@@ -187,10 +187,24 @@ export default function Page() {
                   name="categorie"
                   className="w-full p-3 mt-2 border border-gray-300 rounded-md"
                 >
-                  <option value="maison">Maison</option>
-                  <option value="appartement">Appartement</option>
+                  <option value="auberge">Auberge</option>
+                  <option value="maison">Maison à louer</option>
+                  <option value="manoir">Manoir</option>
+                  <option value="atelier">Atelier</option>
                   <option value="villa">Villa</option>
-                  <option value="chambre">Chambre</option>
+                  <option value="chalet">Chalet</option>
+                  <option value="loft">Loft</option>
+                  <option value="studio">Studio</option>
+                  <option value="pavillon">Pavillon</option>
+                  <option value="mobilhome">Mobil-home</option>
+                  <option value="appartement-meuble">Appartement meublé</option>
+                  <option value="duplex">Duplex</option>
+                  <option value="penthouse">Penthouse</option>
+                  <option value="chambre-hotel">Chambre d'hôtel</option>
+                  <option value="loft-industriel">Loft industriel</option>
+                  <option value="caravane">Caravane</option>
+                  <option value="hotel-ville">Hôtel de ville</option>
+                  <option value="parcelle-vendre">Parcelle à vendre</option>
                 </select>
               </div>
             </div>
