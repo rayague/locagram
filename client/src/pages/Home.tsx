@@ -47,6 +47,9 @@ export default function HomePage() {
     setEmail('');
   };
 
+  // Ajout d'une variable pour la couleur de fond principale
+  const mainBg = "bg-white dark:bg-gray-900 transition-colors duration-300";
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -58,7 +61,7 @@ export default function HomePage() {
       <HeroSection />
 
       {/* Featured properties */}
-      <section id="featured" className="py-20 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
+      <section id="featured" className={`py-20 ${mainBg}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading 
             title="Propriétés en vedette" 
@@ -87,11 +90,10 @@ export default function HomePage() {
           
           <div className="text-center mt-12">
             <Button
-              asChild
               size="lg"
-              className="inline-flex items-center justify-center px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-display font-medium rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105"
+              className="bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-lg px-6 py-3 border border-green-700 transition-all duration-300"
             >
-              <Link href="/properties">
+              <Link href="/acheter">
                 <span>Voir toutes les propriétés</span>
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
@@ -107,11 +109,11 @@ export default function HomePage() {
         subtitle="Notre mission"
         description="Chez Locagram, nous vous proposons les meilleures propriétés du Bénin avec un service personnalisé et des outils numériques innovants pour faciliter votre investissement."
         buttonText="Découvrir notre histoire"
-        buttonLink="#about"
+        buttonLink="/about"
       />
 
       {/* Categories */}
-      <section className="py-20 bg-white dark:bg-gray-900 transition-colors duration-300">
+      <section className={`py-20 ${mainBg}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading 
             title="Explorez par catégorie" 
@@ -127,7 +129,7 @@ export default function HomePage() {
       </section>
 
       {/* Benefits */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
+      <section className={`py-20 bg-gray-50 dark:bg-gray-800 transition-colors duration-300`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading 
             title="Pourquoi choisir Locagram" 
@@ -143,7 +145,7 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 bg-white dark:bg-gray-900 transition-colors duration-300">
+      <section className={`py-20 ${mainBg}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading 
             title="Ce que disent nos clients" 
@@ -173,7 +175,7 @@ export default function HomePage() {
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-6">
+            <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 dark:text-white mb-6">
               Prêt à trouver votre propriété idéale ?
             </h2>
             <p className="text-lg text-primary-100 mb-8">
@@ -182,9 +184,8 @@ export default function HomePage() {
             
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
               <Button 
-                variant="secondary"
                 size="lg"
-                className="inline-flex items-center justify-center px-6 py-3 bg-white hover:bg-gray-100 text-primary-600 font-display font-medium rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105"
+                className="bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-lg px-6 py-3 border border-green-700 transition-all duration-300"
                 onClick={() => setContactModalOpen(true)}
               >
                 <Mail className="w-5 h-5 mr-2" />
@@ -192,11 +193,10 @@ export default function HomePage() {
               </Button>
               
               <Button 
-                asChild
                 size="lg"
-                className="inline-flex items-center justify-center px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-display font-medium rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105"
+                className="bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-lg px-6 py-3 border border-green-700 transition-all duration-300"
               >
-                <Link href="/properties">
+                <Link href="/louer" className="flex items-center">
                   <HomeIcon className="w-5 h-5 mr-2" />
                   <span>Explorer les propriétés</span>
                 </Link>
@@ -237,7 +237,7 @@ export default function HomePage() {
               
               <Button 
                 type="submit"
-                className="px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-display font-medium rounded-lg shadow transition-colors"
+                className="bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow px-6 py-3 border border-green-700 transition-colors"
               >
                 S'inscrire
               </Button>

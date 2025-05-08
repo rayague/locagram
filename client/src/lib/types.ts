@@ -61,3 +61,40 @@ export interface SearchParams {
   minBedrooms?: number;
   status?: PropertyStatus;
 }
+
+// Props pour PropertyCard
+export interface PropertyCardProps {
+  property: Property;
+  index?: number;
+}
+
+// Props pour CategoryCard
+export interface CategoryCardProps {
+  category: CategoryItem;
+  index?: number;
+}
+
+// Props pour BenefitCard
+export interface BenefitCardProps {
+  benefit: Benefit;
+  index?: number;
+}
+
+// Props pour TestimonialCard
+export interface TestimonialCardProps {
+  testimonial: Testimonial;
+  index?: number;
+}
+
+// Props pour SectionHeading
+export interface SectionHeadingProps {
+  title: string;
+  subtitle?: string;
+  className?: string;
+}
+
+// Props pour ContactModal
+export interface ContactModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
