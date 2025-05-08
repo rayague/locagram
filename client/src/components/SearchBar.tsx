@@ -24,7 +24,7 @@ export default function SearchBar() {
     // Build query string
     const queryParams = new URLSearchParams();
     if (searchParams.location) queryParams.set('location', searchParams.location);
-    if (searchParams.type) queryParams.set('type', searchParams.type);
+    if (searchParams.type && searchParams.type !== 'all') queryParams.set('type', searchParams.type);
     if (searchParams.maxPrice) queryParams.set('maxPrice', searchParams.maxPrice.toString());
     
     setLocation(`/properties?${queryParams.toString()}`);
@@ -71,7 +71,7 @@ export default function SearchBar() {
                 <SelectValue placeholder="Tous les types" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Tous les types</SelectItem>
+                <SelectItem value="all">Tous les types</SelectItem>
                 {PROPERTY_TYPES.map((type) => (
                   <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
                 ))}
@@ -85,7 +85,7 @@ export default function SearchBar() {
           <div className="relative">
             <Select
               value={searchParams.maxPrice?.toString()}
-              onValueChange={(value) => setSearchParams({ ...searchParams, maxPrice: value ? parseInt(value) : undefined })}
+              onValueChange={(value) => setSearchParams({ ...searchParams, maxPrice: value && value !== 'nomax' ? parseInt(value) : undefined })}
             >
               <SelectTrigger className="w-full pl-10">
                 <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />

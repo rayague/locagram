@@ -8,7 +8,7 @@ export const PROPERTY_TYPES = [
 ];
 
 export const PRICE_RANGES = [
-  { value: '', label: 'Budget max' },
+  { value: 'nomax', label: 'Budget max' },
   { value: '10000000', label: '10 000 000 FCFA' },
   { value: '50000000', label: '50 000 000 FCFA' },
   { value: '100000000', label: '100 000 000 FCFA' },

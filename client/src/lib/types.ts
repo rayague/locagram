@@ -20,7 +20,7 @@ export interface Property {
   updatedAt: string;
 }
 
-export type PropertyType = 'apartment' | 'house' | 'villa' | 'land';
+export type PropertyType = 'apartment' | 'house' | 'villa' | 'land' | 'all';
 export type PropertyStatus = 'for_sale' | 'for_rent';
 
 export interface CategoryItem {
