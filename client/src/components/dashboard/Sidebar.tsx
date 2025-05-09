@@ -12,6 +12,12 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
+  Bell,
+  BarChart2,
+  CreditCard,
+  Shield,
+  Mail,
+  AlertCircle,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -20,15 +26,31 @@ interface SidebarItem {
   href: string;
   icon: React.ElementType;
   adminOnly?: boolean;
+  demarcheurOnly?: boolean;
 }
 
 const sidebarItems: SidebarItem[] = [
+  // Éléments communs
   { name: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Annonces', href: '/dashboard/annonces', icon: Home },
   { name: 'Réservations', href: '/dashboard/reservations', icon: Package },
   { name: 'Messages', href: '/dashboard/messages', icon: MessageSquare },
-  { name: 'Catégories', href: '/dashboard/categories', icon: Tag },
+  { name: 'Notifications', href: '/dashboard/notifications', icon: Bell },
+  
+  // Éléments admin uniquement
   { name: 'Utilisateurs', href: '/dashboard/users', icon: Users, adminOnly: true },
+  { name: 'Statistiques', href: '/dashboard/stats', icon: BarChart2, adminOnly: true },
+  { name: 'Forfaits', href: '/dashboard/forfaits', icon: CreditCard, adminOnly: true },
+  { name: 'Catégories', href: '/dashboard/categories', icon: Tag, adminOnly: true },
+  { name: 'Signalements', href: '/dashboard/signalements', icon: AlertCircle, adminOnly: true },
+  { name: 'Contact', href: '/dashboard/contact', icon: Mail, adminOnly: true },
+  
+  // Éléments démarcheur uniquement
+  { name: 'Mon Profil', href: '/dashboard/profile', icon: Shield, demarcheurOnly: true },
+  { name: 'Mes Statistiques', href: '/dashboard/mes-stats', icon: BarChart2, demarcheurOnly: true },
+  { name: 'Mon Forfait', href: '/dashboard/mon-forfait', icon: CreditCard, demarcheurOnly: true },
+  
+  // Éléments communs
   { name: 'Paramètres', href: '/dashboard/settings', icon: Settings },
 ];
 
@@ -64,9 +86,11 @@ export default function Sidebar() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-2 py-4 space-y-1">
+        <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
           {sidebarItems.map((item) => {
+            // Filtrer les éléments selon le rôle
             if (item.adminOnly && user?.role !== 'admin') return null;
+            if (item.demarcheurOnly && user?.role !== 'demarcheur') return null;
             
             const isActive = location === item.href;
             return (

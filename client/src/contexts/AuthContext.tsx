@@ -1,41 +1,29 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 import { User, authenticateUser } from '@/lib/auth';
 
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
-  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Vérifier si l'utilisateur est déjà connecté
+  const [user, setUser] = useState<User | null>(() => {
+    // Vérifier si l'utilisateur est déjà connecté au chargement initial
     const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-    setIsLoading(false);
-  }, []);
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
   const login = async (email: string, password: string) => {
-    setIsLoading(true);
-    try {
-      const user = authenticateUser(email, password);
-      if (user) {
-        setUser(user);
-        localStorage.setItem('user', JSON.stringify(user));
-        return true;
-      }
-      return false;
-    } finally {
-      setIsLoading(false);
+    const user = authenticateUser(email, password);
+    if (user) {
+      setUser(user);
+      localStorage.setItem('user', JSON.stringify(user));
+      return true;
     }
+    return false;
   };
 
   const logout = () => {
@@ -44,7 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

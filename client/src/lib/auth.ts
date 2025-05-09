@@ -3,9 +3,8 @@ export type UserRole = 'admin' | 'demarcheur';
 export interface User {
   id: string;
   email: string;
-  role: UserRole;
   name: string;
-  status: 'active' | 'pending' | 'blocked';
+  role: UserRole;
 }
 
 // Mock users
@@ -13,27 +12,35 @@ export const MOCK_USERS: User[] = [
   {
     id: '1',
     email: 'admin@locagram.bj',
-    role: 'admin',
     name: 'Administrateur',
-    status: 'active'
+    role: 'admin'
   },
   {
     id: '2',
     email: 'demarcheur@locagram.bj',
-    role: 'demarcheur',
     name: 'Démarcheur Test',
-    status: 'active'
+    role: 'demarcheur'
   }
 ];
 
-// Mock authentication
+// Simulation d'authentification
 export const authenticateUser = (email: string, password: string): User | null => {
-  // Simuler une vérification des identifiants
+  // Simulation d'une vérification des identifiants
   if (email === 'admin@locagram.bj' && password === 'Admin@2024') {
-    return MOCK_USERS[0];
+    return {
+      id: '1',
+      email: 'admin@locagram.bj',
+      name: 'Administrateur',
+      role: 'admin'
+    };
   }
-  if (email === 'demarcheur@locagram.bj' && password === 'Demo@2024') {
-    return MOCK_USERS[1];
+  if (email === 'demarcheur@locagram.bj' && password === 'Demarcheur@2024') {
+    return {
+      id: '2',
+      email: 'demarcheur@locagram.bj',
+      name: 'Démarcheur Test',
+      role: 'demarcheur'
+    };
   }
   return null;
 }; 

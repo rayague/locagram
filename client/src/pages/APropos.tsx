@@ -1,7 +1,5 @@
 import { motion } from 'framer-motion';
 import { Building2, Users, Award, Heart } from 'lucide-react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 
 const stats = [
   { id: 1, name: 'Biens immobiliers', value: '1000+' },
@@ -40,7 +38,6 @@ const values = [
 export default function AProposPage() {
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
       <main className="flex-grow">
         {/* Hero section */}
         <section className="relative py-20 bg-gradient-to-r from-green-600 to-green-800">
@@ -195,7 +192,6 @@ export default function AProposPage() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 } 
