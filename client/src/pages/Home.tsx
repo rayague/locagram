@@ -1,50 +1,50 @@
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
-import { Link } from 'wouter';
-import { ArrowRight, Mail, Home as HomeIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
-import HeroSection from '@/components/HeroSection';
-import PropertyCard from '@/components/PropertyCard';
-import CategoryCard from '@/components/CategoryCard';
-import BenefitCard from '@/components/BenefitCard';
-import TestimonialCard from '@/components/TestimonialCard';
-import ParallaxSection from '@/components/ParallaxSection';
-import ContactModal from '@/components/ContactModal';
-import SectionHeading from '@/components/common/SectionHeading';
-import { CATEGORIES, BENEFITS, TESTIMONIALS } from '@/lib/constants';
-import { Property } from '@/lib/types';
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { Link } from "wouter";
+import { ArrowRight, Mail, Home as HomeIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import HeroSection from "@/components/HeroSection";
+import PropertyCard from "@/components/PropertyCard";
+import CategoryCard from "@/components/CategoryCard";
+import BenefitCard from "@/components/BenefitCard";
+import TestimonialCard from "@/components/TestimonialCard";
+import ParallaxSection from "@/components/ParallaxSection";
+import ContactModal from "@/components/ContactModal";
+import SectionHeading from "@/components/common/SectionHeading";
+import { CATEGORIES, BENEFITS, TESTIMONIALS } from "@/lib/constants";
+import { Property } from "@/lib/types";
 
 export default function HomePage() {
   const { toast } = useToast();
   const [contactModalOpen, setContactModalOpen] = useState(false);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
 
   // Fetch featured properties
   const { data: featuredProperties = [], isLoading } = useQuery<Property[]>({
-    queryKey: ['/api/properties/featured'],
+    queryKey: ["/api/properties/featured"],
   });
 
   const handleNewsletterSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email) {
       toast({
-        title: 'Erreur',
-        description: 'Veuillez entrer une adresse email valide',
-        variant: 'destructive',
+        title: "Erreur",
+        description: "Veuillez entrer une adresse email valide",
+        variant: "destructive",
       });
       return;
     }
-    
+
     // Would normally send this to an API
     toast({
-      title: 'Merci !',
-      description: 'Vous êtes maintenant inscrit à notre newsletter',
+      title: "Merci !",
+      description: "Vous êtes maintenant inscrit à notre newsletter",
     });
-    setEmail('');
+    setEmail("");
   };
 
   // Ajout d'une variable pour la couleur de fond principale
@@ -63,39 +63,47 @@ export default function HomePage() {
       {/* Featured properties */}
       <section id="featured" className={`py-20 ${mainBg}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading 
-            title="Propriétés en vedette" 
+          <SectionHeading
+            title="Propriétés en vedette"
             subtitle="Découvrez notre sélection de biens immobiliers d'exception à travers le Bénin."
           />
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {isLoading ? (
-              // Loading state with skeleton cards
-              [...Array(3)].map((_, i) => (
-                <div key={i} className="bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 animate-pulse">
-                  <div className="h-64 bg-gray-200 dark:bg-gray-700"></div>
-                  <div className="p-6">
-                    <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-4 w-2/3"></div>
-                    <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            {isLoading
+              ? // Loading state with skeleton cards
+                [...Array(3)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 animate-pulse"
+                  >
+                    <div className="h-64 bg-gray-200 dark:bg-gray-700"></div>
+                    <div className="p-6">
+                      <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-4 w-2/3"></div>
+                      <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    </div>
                   </div>
-                </div>
-              ))
-            ) : (
-              featuredProperties.map((property, index) => (
-                <PropertyCard key={property.id} property={property} index={index} />
-              ))
-            )}
+                ))
+              : featuredProperties.map((property, index) => (
+                  <PropertyCard
+                    key={property.id}
+                    property={property}
+                    index={index}
+                  />
+                ))}
           </div>
-          
+
           <div className="text-center mt-12">
             <Button
               size="lg"
               className="bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-lg px-6 py-3 border border-green-700 transition-all duration-300"
             >
-              <Link href="/acheter">
+              <Link
+                href="/acheter"
+                className="flex flex-row gap-2 items-center"
+              >
                 <span>Voir toutes les propriétés</span>
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="w-4 flex h-4 " />
               </Link>
             </Button>
           </div>
@@ -103,7 +111,7 @@ export default function HomePage() {
       </section>
 
       {/* Parallax mission section */}
-      <ParallaxSection 
+      <ParallaxSection
         backgroundImage="https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080"
         title="L'expérience immobilière redéfinie"
         subtitle="Notre mission"
@@ -115,27 +123,33 @@ export default function HomePage() {
       {/* Categories */}
       <section className={`py-20 ${mainBg}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading 
-            title="Explorez par catégorie" 
+          <SectionHeading
+            title="Explorez par catégorie"
             subtitle="Trouvez le bien immobilier qui correspond à votre style de vie et à vos besoins."
           />
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {CATEGORIES.map((category, index) => (
-              <CategoryCard key={category.id} category={category} index={index} />
+              <CategoryCard
+                key={category.id}
+                category={category}
+                index={index}
+              />
             ))}
           </div>
         </div>
       </section>
 
       {/* Benefits */}
-      <section className={`py-20 bg-gray-50 dark:bg-gray-800 transition-colors duration-300`}>
+      <section
+        className={`py-20 bg-gray-50 dark:bg-gray-800 transition-colors duration-300`}
+      >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading 
-            title="Pourquoi choisir Locagram" 
+          <SectionHeading
+            title="Pourquoi choisir Locagram"
             subtitle="Nous mettons tout en œuvre pour vous offrir une expérience immobilière exceptionnelle."
           />
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {BENEFITS.map((benefit, index) => (
               <BenefitCard key={benefit.id} benefit={benefit} index={index} />
@@ -147,14 +161,18 @@ export default function HomePage() {
       {/* Testimonials */}
       <section className={`py-20 ${mainBg}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading 
-            title="Ce que disent nos clients" 
+          <SectionHeading
+            title="Ce que disent nos clients"
             subtitle="Découvrez les expériences de ceux qui nous ont fait confiance."
           />
-          
+
           <div className="flex flex-col md:flex-row gap-6 overflow-x-auto pb-4">
             {TESTIMONIALS.map((testimonial, index) => (
-              <TestimonialCard key={testimonial.id} testimonial={testimonial} index={index} />
+              <TestimonialCard
+                key={testimonial.id}
+                testimonial={testimonial}
+                index={index}
+              />
             ))}
           </div>
         </div>
@@ -166,24 +184,25 @@ export default function HomePage() {
           <div className="absolute -right-64 -top-64 w-96 h-96 rounded-full bg-white/10 blur-3xl"></div>
           <div className="absolute -left-64 -bottom-64 w-96 h-96 rounded-full bg-white/10 blur-3xl"></div>
         </div>
-        
+
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <motion.div 
+          <motion.div
             className="max-w-3xl mx-auto text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8 }}
           >
             <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 dark:text-white mb-6">
               Prêt à trouver votre propriété idéale ?
             </h2>
             <p className="text-lg text-primary-100 mb-8">
-              Rejoignez-nous dès aujourd'hui et laissez-nous vous aider à trouver le bien immobilier parfait pour vous au Bénin.
+              Rejoignez-nous dès aujourd'hui et laissez-nous vous aider à
+              trouver le bien immobilier parfait pour vous au Bénin.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-              <Button 
+              <Button
                 size="lg"
                 className="bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-lg px-6 py-3 border border-green-700 transition-all duration-300"
                 onClick={() => setContactModalOpen(true)}
@@ -191,8 +210,8 @@ export default function HomePage() {
                 <Mail className="w-5 h-5 mr-2" />
                 <span>Nous contacter</span>
               </Button>
-              
-              <Button 
+
+              <Button
                 size="lg"
                 className="bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-lg px-6 py-3 border border-green-700 transition-all duration-300"
               >
@@ -209,21 +228,22 @@ export default function HomePage() {
       {/* Newsletter */}
       <section className="py-16 bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             className="max-w-2xl mx-auto text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8 }}
           >
             <h2 className="text-2xl md:text-3xl font-serif font-bold text-gray-900 dark:text-white mb-4">
               Restez informé
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-8">
-              Inscrivez-vous à notre newsletter pour recevoir en exclusivité nos dernières annonces et conseils immobiliers.
+              Inscrivez-vous à notre newsletter pour recevoir en exclusivité nos
+              dernières annonces et conseils immobiliers.
             </p>
-            
-            <form 
+
+            <form
               className="flex flex-col sm:flex-row max-w-lg mx-auto gap-3"
               onSubmit={handleNewsletterSignup}
             >
@@ -234,8 +254,8 @@ export default function HomePage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              
-              <Button 
+
+              <Button
                 type="submit"
                 className="bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow px-6 py-3 border border-green-700 transition-colors"
               >
@@ -247,9 +267,9 @@ export default function HomePage() {
       </section>
 
       {/* Contact modal */}
-      <ContactModal 
-        isOpen={contactModalOpen} 
-        onClose={() => setContactModalOpen(false)} 
+      <ContactModal
+        isOpen={contactModalOpen}
+        onClose={() => setContactModalOpen(false)}
       />
     </motion.div>
   );
