@@ -6,6 +6,7 @@ import AcheterPage from '@/pages/acheter';
 import LouerPage from '@/pages/louer';
 import VendrePage from '@/pages/vendre';
 import CategoriesPage from '@/pages/categories';
+import CategoryPage from '@/pages/category/[id]';
 import AProposPage from '@/pages/APropos';
 import ContactPage from '@/pages/contact';
 import DashboardPage from '@/pages/dashboard';
@@ -22,6 +23,7 @@ import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import { useAuth } from '@/contexts/AuthContext';
 import { Toaster } from "sonner";
+import PropertyDetailsPage from '@/pages/property/[id]';
 
 // Protected route component
 function ProtectedRoute({ component: Component, ...rest }: { component: React.ComponentType }) {
@@ -80,6 +82,11 @@ export default function App() {
                 <CategoriesPage />
               </PublicLayout>
             </Route>
+            <Route path="/category/:id">
+              <PublicLayout>
+                <CategoryPage />
+              </PublicLayout>
+            </Route>
             <Route path="/about">
               <PublicLayout>
                 <AProposPage />
@@ -98,6 +105,11 @@ export default function App() {
             <Route path="/auth/register">
               <PublicLayout>
                 <RegisterPage />
+              </PublicLayout>
+            </Route>
+            <Route path="/property/:id">
+              <PublicLayout>
+                <PropertyDetailsPage />
               </PublicLayout>
             </Route>
 
