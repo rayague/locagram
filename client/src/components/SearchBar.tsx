@@ -14,6 +14,7 @@ import {
 import { PRICE_RANGES, LOCATIONS } from "@/lib/constants";
 import { SearchParams } from "@/lib/types";
 import { getCategories } from "@/lib/firebase";
+import { toast } from "sonner";
 
 interface Category {
   id: string;
@@ -26,14 +27,24 @@ export default function SearchBar() {
   const [searchParams, setSearchParams] = useState<SearchParams>({});
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [errors, setErrors] = useState<{
+    location?: string;
+    type?: string;
+    maxPrice?: string;
+  }>({});
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const categoriesData = await getCategories();
-        setCategories(categoriesData as Category[]);
+        const fetchedCategories = await getCategories();
+        // Dédupliquer les catégories en utilisant un Set
+        const uniqueCategories = Array.from(
+          new Map(fetchedCategories.map(cat => [cat.id, cat])).values()
+        );
+        setCategories(uniqueCategories);
       } catch (error) {
-        console.error("Erreur lors de la récupération des catégories:", error);
+        console.error("Erreur lors du chargement des catégories:", error);
+        toast.error("Impossible de charger les catégories");
       } finally {
         setIsLoading(false);
       }
@@ -42,19 +53,40 @@ export default function SearchBar() {
     fetchCategories();
   }, []);
 
+  const validateForm = () => {
+    const newErrors: typeof errors = {};
+    
+    if (!searchParams.location?.trim()) {
+      newErrors.location = "Veuillez sélectionner une ville";
+    }
+    
+    if (!searchParams.type || searchParams.type === "all") {
+      newErrors.type = "Veuillez sélectionner un type de bien";
+    }
+    
+    if (!searchParams.maxPrice) {
+      newErrors.maxPrice = "Veuillez sélectionner un budget maximum";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!validateForm()) {
+      toast.error("Veuillez remplir tous les champs obligatoires");
+      return;
+    }
+
     // Build query string
     const queryParams = new URLSearchParams();
-    if (searchParams.location)
-      queryParams.set("location", searchParams.location);
-    if (searchParams.type && searchParams.type !== "all")
-      queryParams.set("type", searchParams.type);
-    if (searchParams.maxPrice)
-      queryParams.set("maxPrice", searchParams.maxPrice.toString());
+    queryParams.set("location", searchParams.location!);
+    queryParams.set("type", searchParams.type!);
+    queryParams.set("maxPrice", searchParams.maxPrice!.toString());
 
-    setLocation(`/properties?${queryParams.toString()}`);
+    setLocation(`/louer?${queryParams.toString()}`);
   };
 
   return (
@@ -73,7 +105,7 @@ export default function SearchBar() {
             htmlFor="search-location"
             className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
           >
-            Lieu
+            Lieu <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <MapPin className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
@@ -81,11 +113,16 @@ export default function SearchBar() {
               id="search-location"
               type="text"
               placeholder="Cotonou, Porto-Novo, Parakou..."
-              className="w-full pl-8 sm:pl-10 h-9 sm:h-10 text-sm sm:text-base"
+              className={`w-full pl-8 sm:pl-10 h-9 sm:h-10 text-sm sm:text-base ${
+                errors.location ? "border-red-500 focus:ring-red-500" : ""
+              }`}
               value={searchParams.location || ""}
-              onChange={(e) =>
-                setSearchParams({ ...searchParams, location: e.target.value })
-              }
+              onChange={(e) => {
+                setSearchParams({ ...searchParams, location: e.target.value });
+                if (errors.location) {
+                  setErrors({ ...errors, location: undefined });
+                }
+              }}
               list="locations-list"
             />
             <datalist id="locations-list">
@@ -93,6 +130,9 @@ export default function SearchBar() {
                 <option key={location} value={location} />
               ))}
             </datalist>
+            {errors.location && (
+              <p className="text-red-500 text-xs mt-1">{errors.location}</p>
+            )}
           </div>
         </div>
 
@@ -101,17 +141,24 @@ export default function SearchBar() {
             htmlFor="search-type"
             className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
           >
-            Type de bien
+            Type de bien <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <Select
               value={searchParams.type}
-              onValueChange={(value) =>
-                setSearchParams({ ...searchParams, type: value as any })
-              }
+              onValueChange={(value) => {
+                setSearchParams({ ...searchParams, type: value as any });
+                if (errors.type) {
+                  setErrors({ ...errors, type: undefined });
+                }
+              }}
               disabled={isLoading}
             >
-              <SelectTrigger className="w-full pl-8 sm:pl-10 h-9 sm:h-10 text-sm sm:text-base">
+              <SelectTrigger 
+                className={`w-full pl-8 sm:pl-10 h-9 sm:h-10 text-sm sm:text-base ${
+                  errors.type ? "border-red-500 focus:ring-red-500" : ""
+                }`}
+              >
                 <Home className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                 <SelectValue placeholder={isLoading ? "Chargement..." : "Tous les types"} />
               </SelectTrigger>
@@ -124,6 +171,9 @@ export default function SearchBar() {
                 ))}
               </SelectContent>
             </Select>
+            {errors.type && (
+              <p className="text-red-500 text-xs mt-1">{errors.type}</p>
+            )}
           </div>
         </div>
 
@@ -132,20 +182,26 @@ export default function SearchBar() {
             htmlFor="search-price"
             className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1"
           >
-            Budget max
+            Budget max <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <Select
               value={searchParams.maxPrice?.toString()}
-              onValueChange={(value) =>
+              onValueChange={(value) => {
                 setSearchParams({
                   ...searchParams,
-                  maxPrice:
-                    value && value !== "nomax" ? parseInt(value) : undefined,
-                })
-              }
+                  maxPrice: value && value !== "nomax" ? parseInt(value) : undefined,
+                });
+                if (errors.maxPrice) {
+                  setErrors({ ...errors, maxPrice: undefined });
+                }
+              }}
             >
-              <SelectTrigger className="w-full pl-8 sm:pl-10 h-9 sm:h-10 text-sm sm:text-base">
+              <SelectTrigger 
+                className={`w-full pl-8 sm:pl-10 h-9 sm:h-10 text-sm sm:text-base ${
+                  errors.maxPrice ? "border-red-500 focus:ring-red-500" : ""
+                }`}
+              >
                 <DollarSign className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                 <SelectValue placeholder="Budget max" />
               </SelectTrigger>
@@ -157,6 +213,9 @@ export default function SearchBar() {
                 ))}
               </SelectContent>
             </Select>
+            {errors.maxPrice && (
+              <p className="text-red-500 text-xs mt-1">{errors.maxPrice}</p>
+            )}
           </div>
         </div>
 

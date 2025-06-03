@@ -1,17 +1,78 @@
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import PropertyCard from '@/components/PropertyCard';
-import SectionHeading from '@/components/common/SectionHeading';
-import { Property } from '@/lib/types';
+import { useEffect, useState } from "react";
+import { useLocation, useSearch } from "wouter";
+import { getProperties, Property } from "@/lib/firebase";
+import { toast } from "sonner";
+import { motion } from "framer-motion";
+import { Bed, Bath, Car, MapPin, Calendar } from "lucide-react";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+import SearchBar from "@/components/SearchBar";
 
 export default function LouerPage() {
-  // Fetch properties for rent
-  const { data: properties = [], isLoading } = useQuery<Property[]>({
-    queryKey: ['/api/properties/rent'],
-  });
+  const [location, setLocation] = useLocation();
+  const search = useSearch();
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fonction pour récupérer les propriétés
+  const fetchProperties = async (searchParams: URLSearchParams) => {
+    try {
+      setIsLoading(true);
+      const location = searchParams.get("location");
+      const type = searchParams.get("type");
+      const maxPrice = searchParams.get("maxPrice");
+
+      const results = await getProperties({
+        location: location || undefined,
+        type: type || undefined,
+        maxPrice: maxPrice ? parseInt(maxPrice) : undefined,
+      });
+      
+      setProperties(results);
+      if (results.length === 0 && (location || type || maxPrice)) {
+        toast.info("Aucune annonce ne correspond à vos critères");
+      }
+    } catch (err) {
+      console.error("Erreur lors de la récupération des annonces:", err);
+      setError("Une erreur est survenue lors de la recherche");
+      toast.error("Erreur lors de la recherche");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Effet pour surveiller les changements d'URL et mettre à jour les résultats
+  useEffect(() => {
+    const searchParams = new URLSearchParams(search || "");
+    fetchProperties(searchParams);
+  }, [search]); // Se déclenche à chaque changement de l'URL
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex justify-center items-center min-h-[400px]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center text-red-500">
+          <p className="text-lg">{error}</p>
+          <button
+            onClick={() => setLocation("/")}
+            className="mt-4 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+          >
+            Retour à l'accueil
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -31,97 +92,121 @@ export default function LouerPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-6">
-              Louez votre prochain logement
+              Louez votre bien immobilier
             </h1>
             <p className="text-xl text-white/90 mb-8">
-              Explorez notre sélection de biens à louer au Bénin. Des appartements aux maisons, trouvez le logement qui vous correspond.
+              Découvrez notre sélection de propriétés à louer au Bénin. Trouvez le logement idéal pour votre séjour.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Search section */}
+      {/* Search form */}
       <section className="py-12 bg-gray-50 dark:bg-gray-800">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <Input
-                  type="text"
-                  placeholder="Localisation"
-                  className="w-full"
-                />
-                <Input
-                  type="number"
-                  placeholder="Loyer max"
-                  className="w-full"
-                />
-                <Input
-                  type="number"
-                  placeholder="Surface min"
-                  className="w-full"
-                />
-                <Button className="w-full bg-green-600 hover:bg-green-700">
-                  Rechercher
-                </Button>
-              </div>
-            </div>
+            <SearchBar />
           </div>
         </div>
       </section>
 
-      {/* Properties grid */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading 
-            title="Nos biens à louer"
-            subtitle="Découvrez notre sélection de logements disponibles à la location"
-          />
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {isLoading ? (
-              // Loading state with skeleton cards
-              [...Array(3)].map((_, i) => (
-                <div key={i} className="bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 animate-pulse">
-                  <div className="h-64 bg-gray-200 dark:bg-gray-700"></div>
-                  <div className="p-6">
-                    <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
-                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-4 w-2/3"></div>
-                    <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                  </div>
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-2xl font-bold mb-6">
+          {properties.length} annonce{properties.length > 1 ? "s" : ""} trouvée
+          {properties.length > 1 ? "s" : ""}
+        </h1>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {properties.map((property) => (
+            <motion.div
+              key={property.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow"
+            >
+              <div className="relative h-48">
+                <img
+                  src={property.images?.[0] || "/placeholder.jpg"}
+                  alt={property.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-4 right-4 bg-primary-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                  {new Intl.NumberFormat("fr-FR", {
+                    style: "currency",
+                    currency: "XOF",
+                    maximumFractionDigits: 0,
+                  }).format(property.price)}
                 </div>
-              ))
-            ) : properties.length > 0 ? (
-              properties.map((property, index) => (
-                <PropertyCard key={property.id} property={property} index={index} />
-              ))
-            ) : (
-              <div className="col-span-full text-center py-12">
-                <p className="text-gray-600 dark:text-gray-400 text-lg">
-                  Aucun bien disponible pour le moment.
-                </p>
               </div>
-            )}
-          </div>
-        </div>
-      </section>
 
-      {/* CTA section */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-800">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-serif font-bold text-gray-900 dark:text-white mb-6">
-              Besoin d'aide pour trouver votre logement ?
-            </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-              Notre équipe d'experts est là pour vous accompagner dans votre recherche de location. Contactez-nous pour en discuter.
-            </p>
-            <Button className="bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-lg px-6 py-3">
-              Nous contacter
-            </Button>
-          </div>
+              <div className="p-4">
+                <h2 className="text-xl font-semibold mb-2 line-clamp-1">
+                  {property.title}
+                </h2>
+                <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
+                  {property.description}
+                </p>
+
+                <div className="flex items-center text-gray-500 dark:text-gray-400 mb-4">
+                  <MapPin className="w-4 h-4 mr-1" />
+                  <span className="text-sm">{property.location}</span>
+                </div>
+
+                <div className="grid grid-cols-3 gap-4 mb-4">
+                  {property.features?.bedrooms && (
+                    <div className="flex items-center text-gray-600 dark:text-gray-300">
+                      <Bed className="w-4 h-4 mr-1" />
+                      <span className="text-sm">{property.features.bedrooms} ch.</span>
+                    </div>
+                  )}
+                  {property.features?.bathrooms && (
+                    <div className="flex items-center text-gray-600 dark:text-gray-300">
+                      <Bath className="w-4 h-4 mr-1" />
+                      <span className="text-sm">{property.features.bathrooms} sdb</span>
+                    </div>
+                  )}
+                  {property.features?.area && (
+                    <div className="flex items-center text-gray-600 dark:text-gray-300">
+                      <Car className="w-4 h-4 mr-1" />
+                      <span className="text-sm">{property.features.area}m²</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                  <div className="flex items-center">
+                    <Calendar className="w-4 h-4 mr-1" />
+                    <span>
+                      {format(property.createdAt, "d MMM yyyy", { locale: fr })}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setLocation(`/property/${property.id}`)}
+                    className="text-primary-500 hover:text-primary-600 font-medium"
+                  >
+                    Voir les détails
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
-      </section>
+
+        {properties.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-500 dark:text-gray-400 mb-4">
+              Aucune annonce ne correspond à vos critères de recherche.
+            </p>
+            <button
+              onClick={() => setLocation("/")}
+              className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+            >
+              Modifier la recherche
+            </button>
+          </div>
+        )}
+      </div>
     </motion.div>
   );
 } 

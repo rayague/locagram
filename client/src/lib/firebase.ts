@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, connectFirestoreEmulator, collection, getDocs } from "firebase/firestore";
+import { getFirestore, connectFirestoreEmulator, collection, getDocs, query, where, orderBy, limit } from "firebase/firestore";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
 
@@ -33,10 +33,81 @@ if (import.meta.env.DEV) {
 export const getCategories = async () => {
   const categoriesRef = collection(db, 'categories');
   const snapshot = await getDocs(categoriesRef);
-  return snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  }));
+  
+  // Utiliser un Map pour dédupliquer les catégories par ID
+  const uniqueCategories = new Map();
+  
+  snapshot.docs.forEach(doc => {
+    const data = doc.data();
+    // Si une catégorie avec cet ID existe déjà, on la garde
+    if (!uniqueCategories.has(doc.id)) {
+      uniqueCategories.set(doc.id, {
+        id: doc.id,
+        ...data
+      });
+    }
+  });
+  
+  return Array.from(uniqueCategories.values());
+};
+
+// Interface pour les annonces
+export interface Property {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  location: string;
+  type: string;
+  category: string;
+  images: string[];
+  features: {
+    bedrooms?: number;
+    bathrooms?: number;
+    area?: number;
+    parking?: boolean;
+  };
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Fonction pour récupérer les annonces filtrées
+export const getProperties = async (filters: {
+  location?: string;
+  type?: string;
+  maxPrice?: number;
+}) => {
+  try {
+    const listingsRef = collection(db, 'listings');
+    // On récupère toutes les annonces et on filtre côté client
+    const q = query(listingsRef, orderBy('createdAt', 'desc'));
+    const snapshot = await getDocs(q);
+    
+    // Filtrer les résultats côté client
+    const results = snapshot.docs
+      .map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate(),
+          updatedAt: data.updatedAt?.toDate(),
+          price: data.price as number
+        } as Property;
+      })
+      .filter(property => {
+        // Appliquer tous les filtres côté client
+        const matchesLocation = !filters.location || property.location === filters.location;
+        const matchesType = !filters.type || property.type === filters.type;
+        const matchesPrice = !filters.maxPrice || property.price <= filters.maxPrice;
+        return matchesLocation && matchesType && matchesPrice;
+      });
+
+    return results;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des annonces:", error);
+    throw error;
+  }
 };
 
 export { db, auth, storage }; 

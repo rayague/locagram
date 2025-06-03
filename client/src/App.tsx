@@ -21,7 +21,7 @@ import NotFoundPage from '@/pages/NotFound';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import { useAuth } from '@/contexts/AuthContext';
-import { FirebaseTest } from "./components/FirebaseTest";
+import { Toaster } from "sonner";
 
 // Protected route component
 function ProtectedRoute({ component: Component, ...rest }: { component: React.ComponentType }) {
@@ -49,88 +49,90 @@ function PublicLayout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <Switch>
-          {/* Public routes with layout */}
-          <Route path="/">
-            <PublicLayout>
-              <HomePage />
-            </PublicLayout>
-          </Route>
-          <Route path="/acheter">
-            <PublicLayout>
-              <AcheterPage />
-            </PublicLayout>
-          </Route>
-          <Route path="/louer">
-            <PublicLayout>
-              <LouerPage />
-            </PublicLayout>
-          </Route>
-          <Route path="/vendre">
-            <PublicLayout>
-              <VendrePage />
-            </PublicLayout>
-          </Route>
-          <Route path="/categories">
-            <PublicLayout>
-              <CategoriesPage />
-            </PublicLayout>
-          </Route>
-          <Route path="/about">
-            <PublicLayout>
-              <AProposPage />
-            </PublicLayout>
-          </Route>
-          <Route path="/contact">
-            <PublicLayout>
-              <ContactPage />
-            </PublicLayout>
-          </Route>
-          <Route path="/auth/login">
-            <PublicLayout>
-              <LoginPage />
-            </PublicLayout>
-          </Route>
-          <Route path="/auth/register">
-            <PublicLayout>
-              <RegisterPage />
-            </PublicLayout>
-          </Route>
+    <>
+      <ThemeProvider>
+        <AuthProvider>
+          <Toaster />
+          <Switch>
+            {/* Public routes with layout */}
+            <Route path="/">
+              <PublicLayout>
+                <HomePage />
+              </PublicLayout>
+            </Route>
+            <Route path="/acheter">
+              <PublicLayout>
+                <AcheterPage />
+              </PublicLayout>
+            </Route>
+            <Route path="/louer">
+              <PublicLayout>
+                <LouerPage />
+              </PublicLayout>
+            </Route>
+            <Route path="/vendre">
+              <PublicLayout>
+                <VendrePage />
+              </PublicLayout>
+            </Route>
+            <Route path="/categories">
+              <PublicLayout>
+                <CategoriesPage />
+              </PublicLayout>
+            </Route>
+            <Route path="/about">
+              <PublicLayout>
+                <AProposPage />
+              </PublicLayout>
+            </Route>
+            <Route path="/contact">
+              <PublicLayout>
+                <ContactPage />
+              </PublicLayout>
+            </Route>
+            <Route path="/auth/login">
+              <PublicLayout>
+                <LoginPage />
+              </PublicLayout>
+            </Route>
+            <Route path="/auth/register">
+              <PublicLayout>
+                <RegisterPage />
+              </PublicLayout>
+            </Route>
 
-          {/* Protected dashboard routes without public layout */}
-          <Route path="/dashboard">
-            <ProtectedRoute component={DashboardPage} />
-          </Route>
-          <Route path="/dashboard/annonces">
-            <ProtectedRoute component={AnnoncesPage} />
-          </Route>
-          <Route path="/dashboard/reservations">
-            <ProtectedRoute component={ReservationsPage} />
-          </Route>
-          <Route path="/dashboard/messages">
-            <ProtectedRoute component={MessagesPage} />
-          </Route>
-          <Route path="/dashboard/categories">
-            <ProtectedRoute component={CategoriesDashboardPage} />
-          </Route>
-          <Route path="/dashboard/users">
-            <ProtectedRoute component={UsersPage} />
-          </Route>
-          <Route path="/dashboard/settings">
-            <ProtectedRoute component={SettingsPage} />
-          </Route>
+            {/* Protected dashboard routes without public layout */}
+            <Route path="/dashboard">
+              <ProtectedRoute component={DashboardPage} />
+            </Route>
+            <Route path="/dashboard/annonces">
+              <ProtectedRoute component={AnnoncesPage} />
+            </Route>
+            <Route path="/dashboard/reservations">
+              <ProtectedRoute component={ReservationsPage} />
+            </Route>
+            <Route path="/dashboard/messages">
+              <ProtectedRoute component={MessagesPage} />
+            </Route>
+            <Route path="/dashboard/categories">
+              <ProtectedRoute component={CategoriesDashboardPage} />
+            </Route>
+            <Route path="/dashboard/users">
+              <ProtectedRoute component={UsersPage} />
+            </Route>
+            <Route path="/dashboard/settings">
+              <ProtectedRoute component={SettingsPage} />
+            </Route>
 
-          {/* 404 page */}
-          <Route>
-            <PublicLayout>
-              <NotFoundPage />
-            </PublicLayout>
-          </Route>
-        </Switch>
-        <FirebaseTest />
-      </AuthProvider>
-    </ThemeProvider>
+            {/* 404 page */}
+            <Route>
+              <PublicLayout>
+                <NotFoundPage />
+              </PublicLayout>
+            </Route>
+          </Switch>
+        </AuthProvider>
+      </ThemeProvider>
+    </>
   );
 }
