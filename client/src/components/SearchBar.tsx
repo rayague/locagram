@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { MapPin, Home, DollarSign, Search, ChevronDown } from "lucide-react";
@@ -11,12 +11,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { PRICE_RANGES, PROPERTY_TYPES, LOCATIONS } from "@/lib/constants";
+import { PRICE_RANGES, LOCATIONS } from "@/lib/constants";
 import { SearchParams } from "@/lib/types";
+import { getCategories } from "@/lib/firebase";
+
+interface Category {
+  id: string;
+  name: string;
+  description: string;
+}
 
 export default function SearchBar() {
   const [location, setLocation] = useLocation();
   const [searchParams, setSearchParams] = useState<SearchParams>({});
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoriesData = await getCategories();
+        setCategories(categoriesData as Category[]);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des catégories:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,14 +59,14 @@ export default function SearchBar() {
 
   return (
     <motion.div
-      className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-2xl border border-gray-200 dark:border-gray-700"
+      className="relative z-[100] bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-2xl border border-gray-200 dark:border-gray-700 mb-16"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
       <form
         onSubmit={handleSearch}
-        className="flex flex-col md:flex-row md:items-center gap-3"
+        className="flex flex-col md:flex-row md:items-end gap-2 sm:gap-3"
       >
         <div className="flex-1 min-w-0">
           <label
@@ -52,12 +76,12 @@ export default function SearchBar() {
             Lieu
           </label>
           <div className="relative">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <MapPin className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
             <Input
               id="search-location"
               type="text"
               placeholder="Cotonou, Porto-Novo, Parakou..."
-              className="w-full pl-10"
+              className="w-full pl-8 sm:pl-10 h-9 sm:h-10 text-sm sm:text-base"
               value={searchParams.location || ""}
               onChange={(e) =>
                 setSearchParams({ ...searchParams, location: e.target.value })
@@ -85,16 +109,17 @@ export default function SearchBar() {
               onValueChange={(value) =>
                 setSearchParams({ ...searchParams, type: value as any })
               }
+              disabled={isLoading}
             >
-              <SelectTrigger className="w-full pl-10">
-                <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <SelectValue placeholder="Tous les types" />
+              <SelectTrigger className="w-full pl-8 sm:pl-10 h-9 sm:h-10 text-sm sm:text-base">
+                <Home className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                <SelectValue placeholder={isLoading ? "Chargement..." : "Tous les types"} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tous les types</SelectItem>
-                {PROPERTY_TYPES.map((type) => (
-                  <SelectItem key={type.value} value={type.value}>
-                    {type.label}
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -120,8 +145,8 @@ export default function SearchBar() {
                 })
               }
             >
-              <SelectTrigger className="w-full pl-10">
-                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <SelectTrigger className="w-full pl-8 sm:pl-10 h-9 sm:h-10 text-sm sm:text-base">
+                <DollarSign className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                 <SelectValue placeholder="Budget max" />
               </SelectTrigger>
               <SelectContent>
@@ -138,9 +163,9 @@ export default function SearchBar() {
         <Button
           type="submit"
           size="lg"
-          className="inline-flex items-center justify-center px-5 py-3 font-display font-medium text-white bg-green-500 hover:bg-primary-600 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 md:self-end"
+          className="w-full md:w-auto h-9 sm:h-10 text-sm sm:text-base font-medium text-white bg-green-500 hover:bg-primary-600 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 mt-1 sm:mt-0"
         >
-          <Search className="w-5 h-5 mr-1.5" />
+          <Search className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5" />
           Rechercher
         </Button>
       </form>

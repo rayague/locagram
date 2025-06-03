@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import { getFirestore, connectFirestoreEmulator, collection, getDocs } from "firebase/firestore";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
 
@@ -28,5 +28,15 @@ if (import.meta.env.DEV) {
   // connectAuthEmulator(auth, 'http://localhost:9099');
   // connectStorageEmulator(storage, 'localhost', 9199);
 }
+
+// Fonction pour récupérer les catégories
+export const getCategories = async () => {
+  const categoriesRef = collection(db, 'categories');
+  const snapshot = await getDocs(categoriesRef);
+  return snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
+};
 
 export { db, auth, storage }; 
