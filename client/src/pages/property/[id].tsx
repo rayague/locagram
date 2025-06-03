@@ -193,13 +193,13 @@ export default function PropertyDetailsPage() {
         
         <div className="absolute bottom-0 left-0 right-0 p-8">
           <div className="container mx-auto">
-            <Link
-              href="/"
+            <button
+              onClick={() => window.history.back()}
               className="inline-flex items-center text-white/90 hover:text-white mb-6 transition-colors"
             >
               <ArrowLeft className="w-5 h-5 mr-2" />
               Retour
-            </Link>
+            </button>
             <h1 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4">
               {property.title}
             </h1>
