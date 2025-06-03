@@ -21,6 +21,7 @@ import NotFoundPage from '@/pages/NotFound';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import { useAuth } from '@/contexts/AuthContext';
+import { FirebaseTest } from "./components/FirebaseTest";
 
 // Protected route component
 function ProtectedRoute({ component: Component, ...rest }: { component: React.ComponentType }) {
@@ -128,6 +129,7 @@ export default function App() {
             </PublicLayout>
           </Route>
         </Switch>
+        <FirebaseTest />
       </AuthProvider>
     </ThemeProvider>
   );
