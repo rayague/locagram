@@ -16,6 +16,7 @@ import {
   addDoc,
   updateDoc,
   serverTimestamp,
+  Timestamp,
 } from "firebase/firestore";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
@@ -33,11 +34,14 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+console.log("Firebase app initialized:", app.name);
 
 // Initialize services
 const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
+
+console.log("Firestore instance:", db);
 
 // En développement, on peut connecter aux émulateurs Firebase
 if (import.meta.env.DEV) {
@@ -387,60 +391,6 @@ export const incrementPropertyViews = async (propertyId: string) => {
   }
 };
 
-// Fonction pour générer un token unique pour le navigateur
-export const generateBrowserToken = (): string => {
-  // Vérifie si un token existe déjà dans le localStorage
-  let token = localStorage.getItem("browserToken");
-  if (!token) {
-    // Crée un nouveau token si aucun n'existe
-    token = Math.random().toString(36).substring(2) + Date.now().toString(36);
-    localStorage.setItem("browserToken", token);
-  }
-  return token;
-};
-
-// Fonction pour envoyer un message
-export const sendContactMessage = async (
-  messageData: Omit<ContactMessage, "id" | "status" | "createdAt">
-) => {
-  try {
-    const messagesRef = collection(db, "messages");
-
-    // Créer un ID unique basé sur le token et l'ID de la propriété
-    const messageId = `${messageData.browserToken}_${messageData.propertyId}`;
-    const messageRef = doc(messagesRef, messageId);
-
-    // Vérifie si un message existe déjà
-    const existingMessage = await getDoc(messageRef);
-
-    if (existingMessage.exists()) {
-      const existingData = existingMessage.data();
-      const messageTime = existingData.createdAt.toDate();
-      const oneHourAgo = new Date();
-      oneHourAgo.setHours(oneHourAgo.getHours() - 1);
-
-      if (messageTime > oneHourAgo) {
-        throw new Error(
-          "Vous avez déjà envoyé un message pour cette propriété récemment. Veuillez patienter avant d'envoyer un nouveau message."
-        );
-      }
-    }
-
-    // Ajoute ou met à jour le message
-    const newMessage = {
-      ...messageData,
-      status: "sent",
-      createdAt: serverTimestamp(),
-    };
-
-    await setDoc(messageRef, newMessage);
-    return messageId;
-  } catch (error) {
-    console.error("Erreur lors de l'envoi du message:", error);
-    throw error;
-  }
-};
-
 // Fonction pour récupérer les messages d'un utilisateur
 export const getUserMessages = async (userId: string) => {
   try {
@@ -468,6 +418,64 @@ export const markMessageAsRead = async (messageId: string) => {
   } catch (error) {
     console.error("Erreur lors du marquage du message comme lu:", error);
     throw error;
+  }
+};
+
+// Fonction simple pour sauvegarder un message
+export const saveContactMessage = async (messageData: {
+  name: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+}) => {
+  try {
+    console.log("⭐ Début saveContactMessage");
+    console.log("📝 Données reçues:", messageData);
+
+    // Vérifier la connexion à Firestore
+    if (!db) {
+      throw new Error("Firestore n'est pas initialisé");
+    }
+
+    // Créer la référence à la collection
+    const messagesRef = collection(db, "contact-messages");
+    console.log("📁 Collection référencée:", messagesRef.id);
+
+    // Préparer les données du message
+    const messageToSave = {
+      ...messageData,
+      createdAt: serverTimestamp(),
+      type: "contact",
+    };
+
+    console.log("📦 Données à sauvegarder:", messageToSave);
+
+    // Tentative d'ajout du document
+    try {
+      const docRef = await addDoc(messagesRef, messageToSave);
+      console.log("✅ Message sauvegardé avec succès! ID:", docRef.id);
+
+      // Vérifier que le document a bien été créé
+      const savedDoc = await getDoc(docRef);
+      if (savedDoc.exists()) {
+        console.log("✅ Document vérifié comme existant");
+      } else {
+        console.log("❌ Document non trouvé après sauvegarde");
+      }
+
+      return docRef.id;
+    } catch (addError) {
+      console.error("❌ Erreur lors de l'ajout du document:", addError);
+      throw addError;
+    }
+  } catch (error) {
+    console.error("❌ Erreur dans saveContactMessage:", error);
+    if (error instanceof Error) {
+      throw new Error(`Erreur lors de la sauvegarde: ${error.message}`);
+    } else {
+      throw new Error("Une erreur inconnue est survenue");
+    }
   }
 };
 

@@ -1,220 +1,193 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, User, Phone, Mail, MessageSquare } from "lucide-react";
-import { toast } from "sonner";
-import { generateBrowserToken, sendContactMessage } from "@/lib/firebase";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { saveContactMessage } from "@/lib/firebase";
+import { User, Mail, Phone, Send } from "lucide-react";
 
 interface ContactModalProps {
   isOpen: boolean;
   onClose: () => void;
-  propertyTitle?: string;
-  propertyId: string;
-  author?: {
-    name: string;
-    email?: string;
-    phone?: string;
-    id: string;
-  };
 }
 
-export default function ContactModal({
-  isOpen,
-  onClose,
-  propertyTitle,
-  propertyId,
-  author,
-}: ContactModalProps) {
+export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
+    subject: "",
     message: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!author?.id || !propertyId || !propertyTitle) {
-      toast.error("Informations manquantes pour l'envoi du message");
-      return;
-    }
+    setIsLoading(true);
 
     try {
-      setIsSubmitting(true);
+      console.log("📝 Début de la soumission du formulaire");
+      console.log("📦 Données du formulaire:", formData);
 
-      // Récupère ou génère le token du navigateur
-      const browserToken = generateBrowserToken();
+      // Valider les données
+      if (
+        !formData.name.trim() ||
+        !formData.email.trim() ||
+        !formData.phone.trim() ||
+        !formData.subject.trim() ||
+        !formData.message.trim()
+      ) {
+        throw new Error("Tous les champs sont obligatoires");
+      }
 
-      // Prépare les données du message
-      const messageData = {
-        senderName: formData.name,
-        senderEmail: formData.email,
-        senderPhone: formData.phone,
-        message: formData.message,
-        propertyId,
-        propertyTitle,
-        receiverId: author.id,
-        browserToken,
-      };
-
-      // Envoie le message
-      await sendContactMessage(messageData);
-
-      // Affiche une notification de succès
-      toast.success("Message envoyé avec succès!", {
-        description: "L'annonceur vous répondra dans les plus brefs délais.",
-        duration: 5000,
+      // Sauvegarder le message
+      console.log("💾 Tentative de sauvegarde du message...");
+      const messageId = await saveContactMessage({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        subject: formData.subject.trim(),
+        message: formData.message.trim(),
       });
 
-      // Réinitialise le formulaire et ferme la modal
+      console.log("✅ Message enregistré avec ID:", messageId);
+
+      // Afficher le succès
+      toast({
+        title: "Message envoyé",
+        description: "Votre message a été enregistré avec succès.",
+        variant: "default",
+      });
+
+      // Réinitialiser et fermer
       setFormData({
         name: "",
         email: "",
         phone: "",
+        subject: "",
         message: "",
       });
       onClose();
-    } catch (error: any) {
-      // Affiche une notification d'erreur
-      toast.error(error.message || "Erreur lors de l'envoi du message", {
-        description: "Veuillez réessayer plus tard.",
-        duration: 5000,
+    } catch (error) {
+      console.error("❌ Erreur lors de l'envoi du message:", error);
+
+      toast({
+        title: "Erreur d'envoi",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Une erreur inattendue est survenue",
+        variant: "destructive",
       });
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-          {/* Overlay */}
-          <motion.div
-            className="absolute inset-0 bg-black/50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-          />
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader>
+          <DialogTitle>Nous contacter</DialogTitle>
+        </DialogHeader>
 
-          {/* Modal */}
-          <motion.div
-            className="relative w-full max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-          >
-            {/* Header */}
-            <div className="p-6 pb-4 border-b border-gray-200 dark:border-gray-700">
-              <div className="flex justify-between items-center mb-3">
-                <h2 className="text-2xl font-serif font-bold text-gray-900 dark:text-white">
-                  Contacter l'annonceur
-                </h2>
-                <button
-                  onClick={onClose}
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 gap-4">
+            <div className="relative">
+              <label className="block text-sm font-medium mb-2">
+                Nom complet
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  required
+                  className="pl-10"
+                  placeholder="Votre nom complet"
+                />
               </div>
-              {propertyTitle && (
-                <p className="text-gray-600 dark:text-gray-400 font-medium">
-                  {propertyTitle}
-                </p>
-              )}
-              {author && (
-                <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                  <div className="text-sm text-gray-600 dark:text-gray-300">
-                    <div className="font-medium text-gray-900 dark:text-white mb-2">
-                      Informations de l'annonceur:
-                    </div>
-                    <p>{author.name}</p>
-                    {author.phone && <p>Tél: {author.phone}</p>}
-                    {author.email && <p>Email: {author.email}</p>}
-                  </div>
-                </div>
-              )}
             </div>
 
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Votre nom"
-                    required
-                    className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input
-                    type="tel"
-                    placeholder="Téléphone"
-                    required
-                    className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
-                    value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
+            <div className="relative">
+              <label className="block text-sm font-medium mb-2">Email</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
+                <Input
                   type="email"
-                  placeholder="Votre email"
-                  required
-                  className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
                   value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
-                />
-              </div>
-              <div className="relative">
-                <MessageSquare className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-                <textarea
-                  placeholder="Votre message"
-                  rows={3}
                   required
-                  className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all resize-none"
-                  value={formData.message}
-                  onChange={(e) =>
-                    setFormData({ ...formData, message: e.target.value })
-                  }
+                  className="pl-10"
+                  placeholder="exemple@email.com"
                 />
               </div>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full py-3 px-6 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>Envoi en cours...</span>
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-4 h-4" />
-                    <span>Envoyer le message</span>
-                  </>
-                )}
-              </button>
-            </form>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
+            </div>
+
+            <div className="relative">
+              <label className="block text-sm font-medium mb-2">
+                Téléphone
+              </label>
+              <div className="relative">
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: e.target.value })
+                  }
+                  required
+                  className="pl-10"
+                  placeholder="+229 00 00 00 00"
+                />
+              </div>
+            </div>
+
+            <div className="relative">
+              <label className="block text-sm font-medium mb-2">Sujet</label>
+              <Input
+                type="text"
+                value={formData.subject}
+                onChange={(e) =>
+                  setFormData({ ...formData, subject: e.target.value })
+                }
+                required
+                placeholder="Sujet de votre message"
+              />
+            </div>
+
+            <div className="relative">
+              <label className="block text-sm font-medium mb-2">Message</label>
+              <Textarea
+                value={formData.message}
+                onChange={(e) =>
+                  setFormData({ ...formData, message: e.target.value })
+                }
+                required
+                className="min-h-[120px] resize-none"
+                placeholder="Votre message..."
+              />
+            </div>
+          </div>
+
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            <Send className="mr-2 h-4 w-4" />
+            {isLoading ? "Envoi en cours..." : "Envoyer le message"}
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

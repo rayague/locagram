@@ -102,15 +102,17 @@ export interface ContactModalProps {
 }
 
 export interface ContactMessage {
-  id?: string;
-  senderName: string;
-  senderEmail: string;
-  senderPhone: string;
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  subject: string;
   message: string;
-  propertyId: string;
-  propertyTitle: string;
-  receiverId: string;
-  browserToken: string;
-  createdAt: string;
-  status: "sent" | "read";
+  createdAt: { toDate(): Date } | Date;
+  status: "new" | "read" | "replied";
+  response?: {
+    message: string;
+    createdAt: { toDate(): Date } | Date;
+    adminId: string;
+  };
 }

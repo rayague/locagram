@@ -1,6 +1,6 @@
-import { Link } from 'wouter';
-import { FaLink } from 'react-icons/fa';
-import logo from '@/assets/logo-locagram.png';
+import { Link } from "wouter";
+import { FaLink } from "react-icons/fa";
+import logo from "@/assets/logo-locagram.png";
 
 export default function Footer() {
   return (
@@ -11,7 +11,9 @@ export default function Footer() {
           <div className="space-y-4">
             <Link href="/" className="flex items-center space-x-2">
               <img src={logo} alt="Locagram Logo" className="h-8 w-8" />
-              <h3 className="text-2xl font-bold text-white dark:text-white">Locagram</h3>
+              <h3 className="text-2xl font-bold text-white dark:text-white">
+                Locagram
+              </h3>
             </Link>
             <p className="text-gray-400 dark:text-gray-400">
               Votre partenaire immobilier de confiance au Bénin.
@@ -20,25 +22,31 @@ export default function Footer() {
 
           {/* Quick links */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-white dark:text-white">Liens rapides</h3>
+            <h3 className="text-lg font-semibold text-white dark:text-white">
+              Liens rapides
+            </h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/acheter" className="text-gray-400 dark:text-gray-400 hover:text-white dark:hover:text-white">
-                  Acheter
-                </Link>
-              </li>
-              <li>
-                <Link href="/louer" className="text-gray-400 dark:text-gray-400 hover:text-white dark:hover:text-white">
+                <Link
+                  href="/louer"
+                  className="text-gray-400 dark:text-gray-400 hover:text-white dark:hover:text-white"
+                >
                   Louer
                 </Link>
               </li>
               <li>
-                <Link href="/vendre" className="text-gray-400 dark:text-gray-400 hover:text-white dark:hover:text-white">
+                <Link
+                  href="/vendre"
+                  className="text-gray-400 dark:text-gray-400 hover:text-white dark:hover:text-white"
+                >
                   Vendre
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-400 dark:text-gray-400 hover:text-white dark:hover:text-white">
+                <Link
+                  href="/contact"
+                  className="text-gray-400 dark:text-gray-400 hover:text-white dark:hover:text-white"
+                >
                   Contact
                 </Link>
               </li>
@@ -47,7 +55,9 @@ export default function Footer() {
 
           {/* Contact info */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-white dark:text-white">Contact</h3>
+            <h3 className="text-lg font-semibold text-white dark:text-white">
+              Contact
+            </h3>
             <ul className="space-y-2 text-gray-400 dark:text-gray-400">
               <li>Email: contact@locagram.bj</li>
               <li>Tél: +229 90 00 00 00</li>
@@ -71,7 +81,16 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t border-gray-800 dark:border-gray-800 text-center text-gray-400 dark:text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Locagram. Tous droits réservés.</p>
+          <p>
+            &copy; {new Date().getFullYear()} Locagram. Développé par{" "}
+            <a
+              href="mailto:rayague03@gmail.com"
+              className="text-green-500 hover:text-green-400"
+            >
+              Ray Ague
+            </a>
+            . Tous droits réservés.
+          </p>
         </div>
       </div>
     </footer>

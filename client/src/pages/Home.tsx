@@ -20,32 +20,11 @@ import { Property } from "@/lib/types";
 export default function HomePage() {
   const { toast } = useToast();
   const [contactModalOpen, setContactModalOpen] = useState(false);
-  const [email, setEmail] = useState("");
 
   // Fetch featured properties
   const { data: featuredProperties = [], isLoading } = useQuery<Property[]>({
     queryKey: ["/api/properties/featured"],
   });
-
-  const handleNewsletterSignup = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!email) {
-      toast({
-        title: "Erreur",
-        description: "Veuillez entrer une adresse email valide",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Would normally send this to an API
-    toast({
-      title: "Merci !",
-      description: "Vous êtes maintenant inscrit à notre newsletter",
-    });
-    setEmail("");
-  };
 
   // Ajout d'une variable pour la couleur de fond principale
   const mainBg = "bg-white dark:bg-gray-900 transition-colors duration-300";
@@ -98,10 +77,7 @@ export default function HomePage() {
               size="lg"
               className="bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-lg px-6 py-3 border border-green-700 transition-all duration-300"
             >
-              <Link
-                href="/acheter"
-                className="flex flex-row gap-2 items-center"
-              >
+              <Link href="/louer" className="flex flex-row gap-2 items-center">
                 <span>Voir toutes les propriétés</span>
                 <ArrowRight className="w-4 flex h-4 " />
               </Link>
@@ -221,47 +197,6 @@ export default function HomePage() {
                 </Link>
               </Button>
             </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Newsletter */}
-      <section className="py-16 bg-white dark:bg-gray-900 transition-colors duration-300">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            className="max-w-2xl mx-auto text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8 }}
-          >
-            <h2 className="text-2xl md:text-3xl font-serif font-bold text-gray-900 dark:text-white mb-4">
-              Restez informé
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-8">
-              Inscrivez-vous à notre newsletter pour recevoir en exclusivité nos
-              dernières annonces et conseils immobiliers.
-            </p>
-
-            <form
-              className="flex flex-col sm:flex-row max-w-lg mx-auto gap-3"
-              onSubmit={handleNewsletterSignup}
-            >
-              <Input
-                type="email"
-                placeholder="Votre adresse email"
-                className="flex-1"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-
-              <Button
-                type="submit"
-                className="bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow px-6 py-3 border border-green-700 transition-colors"
-              >
-                S'inscrire
-              </Button>
-            </form>
           </motion.div>
         </div>
       </section>

@@ -1,32 +1,36 @@
-import { Route, Switch, Redirect } from 'wouter';
-import { AuthProvider } from '@/contexts/AuthContext';
-import { ThemeProvider } from '@/contexts/ThemeContext';
-import HomePage from '@/pages/Home';
-import AcheterPage from '@/pages/acheter';
-import LouerPage from '@/pages/louer';
-import VendrePage from '@/pages/vendre';
-import CategoriesPage from '@/pages/categories';
-import CategoryPage from '@/pages/category/[id]';
-import AProposPage from '@/pages/APropos';
-import ContactPage from '@/pages/contact';
-import DashboardPage from '@/pages/dashboard';
-import AnnoncesPage from '@/pages/dashboard/annonces';
-import ReservationsPage from '@/pages/dashboard/reservations';
-import MessagesPage from '@/pages/dashboard/messages';
-import CategoriesDashboardPage from '@/pages/dashboard/categories';
-import UsersPage from '@/pages/dashboard/users';
-import SettingsPage from '@/pages/dashboard/settings';
-import LoginPage from '@/pages/auth/login';
-import RegisterPage from '@/pages/auth/register';
-import NotFoundPage from '@/pages/NotFound';
-import Footer from '@/components/Footer';
-import Navbar from '@/components/Navbar';
-import { useAuth } from '@/contexts/AuthContext';
+import { Route, Switch, Redirect } from "wouter";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import HomePage from "@/pages/Home";
+import LouerPage from "@/pages/louer";
+import VendrePage from "@/pages/vendre";
+import CategoriesPage from "@/pages/categories";
+import CategoryPage from "@/pages/category/[id]";
+import AProposPage from "@/pages/APropos";
+import ContactPage from "@/pages/contact";
+import DashboardPage from "@/pages/dashboard";
+import AnnoncesPage from "@/pages/dashboard/annonces";
+import ReservationsPage from "@/pages/dashboard/reservations";
+import MessagesPage from "@/pages/dashboard/messages";
+import CategoriesDashboardPage from "@/pages/dashboard/categories";
+import UsersPage from "@/pages/dashboard/users";
+import SettingsPage from "@/pages/dashboard/settings";
+import LoginPage from "@/pages/auth/login";
+import RegisterPage from "@/pages/auth/register";
+import NotFoundPage from "@/pages/NotFound";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import { useAuth } from "@/contexts/AuthContext";
 import { Toaster } from "sonner";
-import PropertyDetailsPage from '@/pages/property/[id]';
+import PropertyDetailsPage from "@/pages/property/[id]";
 
 // Protected route component
-function ProtectedRoute({ component: Component, ...rest }: { component: React.ComponentType }) {
+function ProtectedRoute({
+  component: Component,
+  ...rest
+}: {
+  component: React.ComponentType;
+}) {
   const { user } = useAuth();
 
   if (!user) {
@@ -41,9 +45,7 @@ function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <div className="flex-grow">
-        {children}
-      </div>
+      <div className="flex-grow">{children}</div>
       <Footer />
     </div>
   );
@@ -60,11 +62,6 @@ export default function App() {
             <Route path="/">
               <PublicLayout>
                 <HomePage />
-              </PublicLayout>
-            </Route>
-            <Route path="/acheter">
-              <PublicLayout>
-                <AcheterPage />
               </PublicLayout>
             </Route>
             <Route path="/louer">

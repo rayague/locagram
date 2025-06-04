@@ -1,38 +1,42 @@
-import { motion } from 'framer-motion';
-import { Building2, Users, Award, Heart } from 'lucide-react';
+import { motion } from "framer-motion";
+import { Building2, Users, Award, Heart } from "lucide-react";
 
 const stats = [
-  { id: 1, name: 'Biens immobiliers', value: '1000+' },
-  { id: 2, name: 'Clients satisfaits', value: '500+' },
-  { id: 3, name: 'Années d\'expérience', value: '10+' },
-  { id: 4, name: 'Agents immobiliers', value: '50+' }
+  { id: 1, name: "Biens immobiliers", value: "1000+" },
+  { id: 2, name: "Clients satisfaits", value: "500+" },
+  { id: 3, name: "Années d'expérience", value: "10+" },
+  { id: 4, name: "Agents immobiliers", value: "50+" },
 ];
 
 const values = [
   {
     id: 1,
-    name: 'Expertise',
-    description: 'Notre équipe d\'experts vous accompagne à chaque étape de votre projet immobilier.',
-    icon: Award
+    name: "Expertise",
+    description:
+      "Notre équipe d'experts vous accompagne à chaque étape de votre projet immobilier.",
+    icon: Award,
   },
   {
     id: 2,
-    name: 'Confiance',
-    description: 'Nous construisons des relations durables basées sur la transparence et l\'honnêteté.',
-    icon: Heart
+    name: "Confiance",
+    description:
+      "Nous construisons des relations durables basées sur la transparence et l'honnêteté.",
+    icon: Heart,
   },
   {
     id: 3,
-    name: 'Innovation',
-    description: 'Nous utilisons les dernières technologies pour simplifier vos transactions immobilières.',
-    icon: Building2
+    name: "Innovation",
+    description:
+      "Nous utilisons les dernières technologies pour simplifier vos transactions immobilières.",
+    icon: Building2,
   },
   {
     id: 4,
-    name: 'Service',
-    description: 'Notre priorité est votre satisfaction, nous sommes là pour vous servir.',
-    icon: Users
-  }
+    name: "Service",
+    description:
+      "Notre priorité est votre satisfaction, nous sommes là pour vous servir.",
+    icon: Users,
+  },
 ];
 
 export default function AProposPage() {
@@ -45,7 +49,7 @@ export default function AProposPage() {
             <div className="absolute -right-64 -top-64 w-96 h-96 rounded-full bg-white/10 blur-3xl"></div>
             <div className="absolute -left-64 -bottom-64 w-96 h-96 rounded-full bg-white/10 blur-3xl"></div>
           </div>
-          
+
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -56,14 +60,15 @@ export default function AProposPage() {
                 À propos de nous
               </h1>
               <p className="text-xl text-white/90">
-                Votre partenaire de confiance dans l'immobilier depuis plus de 10 ans
+                Votre partenaire de confiance dans l'immobilier depuis plus de
+                10 ans
               </p>
             </motion.div>
           </div>
         </section>
 
         {/* Stats section */}
-        <section className="py-16 bg-white dark:bg-gray-900">
+        <section className="py-20">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {stats.map((stat) => (
@@ -125,73 +130,7 @@ export default function AProposPage() {
             </div>
           </div>
         </section>
-
-        {/* Team section */}
-        <section className="py-20">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="max-w-3xl mx-auto text-center mb-16"
-            >
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                Notre équipe
-              </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-400">
-                Des professionnels passionnés à votre service
-              </p>
-            </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Team member cards would go here */}
-              <div className="bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-sm">
-                <div className="h-64 bg-gray-200 dark:bg-gray-700"></div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                    Jean Dupont
-                  </h3>
-                  <p className="text-green-600 dark:text-green-400 mb-4">
-                    Directeur Général
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Plus de 15 ans d'expérience dans l'immobilier
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-sm">
-                <div className="h-64 bg-gray-200 dark:bg-gray-700"></div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                    Marie Martin
-                  </h3>
-                  <p className="text-green-600 dark:text-green-400 mb-4">
-                    Responsable Commerciale
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Expertise en négociation immobilière
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-sm">
-                <div className="h-64 bg-gray-200 dark:bg-gray-700"></div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                    Pierre Durand
-                  </h3>
-                  <p className="text-green-600 dark:text-green-400 mb-4">
-                    Expert Immobilier
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Spécialiste en investissement immobilier
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
     </div>
   );
-} 
+}
