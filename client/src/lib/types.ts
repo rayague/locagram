@@ -1,5 +1,5 @@
 export interface Property {
-  id: number;
+  id: string;
   title: string;
   description: string;
   price: number;
@@ -18,10 +18,12 @@ export interface Property {
   features: string[];
   createdAt: string;
   updatedAt: string;
+  views: number;
+  userId?: string;
 }
 
-export type PropertyType = 'apartment' | 'house' | 'villa' | 'land' | 'all';
-export type PropertyStatus = 'for_sale' | 'for_rent';
+export type PropertyType = "apartment" | "house" | "villa" | "land" | "all";
+export type PropertyStatus = "for_sale" | "for_rent";
 
 export interface CategoryItem {
   id: string;

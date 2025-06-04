@@ -1,116 +1,190 @@
-import { useState, useEffect } from 'react';
-import { useRoute, Link, useLocation } from 'wouter';
-import { motion } from 'framer-motion';
-import { useQuery } from '@tanstack/react-query';
-import { getProperties, Property as FirebaseProperty, getUserById } from '../../lib/firebase';
-import { Property, PropertyType, PropertyStatus } from '../../lib/types';
-import { toast } from 'sonner';
-import { ArrowLeft, MapPin, Bed, Bath, Square, Trees, CheckCircle, Phone, Mail } from 'lucide-react';
-import ContactModal from '../../components/ContactModal';
+import { useState, useEffect } from "react";
+import { useRoute, Link, useLocation } from "wouter";
+import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import {
+  getProperties,
+  Property as FirebaseProperty,
+  getUserById,
+} from "../../lib/firebase";
+import { Property, PropertyType, PropertyStatus } from "../../lib/types";
+import { toast } from "sonner";
+import {
+  ArrowLeft,
+  MapPin,
+  Bed,
+  Bath,
+  Square,
+  Trees,
+  CheckCircle,
+  Phone,
+  Mail,
+  Eye,
+} from "lucide-react";
+import ContactModal from "../../components/ContactModal";
 
 // Fonction pour adapter les données Firebase au format attendu par le composant
 const adaptProperty = (property: FirebaseProperty): Property => {
   try {
-    const city = property.location?.split(',').pop()?.trim() || property.location || '';
-    const bedrooms = property.rooms?.bedrooms ? parseInt(property.rooms.bedrooms) : 0;
-    const bathrooms = property.rooms?.bathrooms ? parseInt(property.rooms.bathrooms) : 0;
-    const propertyType: PropertyType = (property.roomType?.toLowerCase() as PropertyType) || 'apartment';
-    const status: PropertyStatus = property.status === 'active' ? 'for_sale' : 'for_rent';
+    const city =
+      property.location?.split(",").pop()?.trim() || property.location || "";
+    const bedrooms = property.rooms?.bedrooms
+      ? parseInt(property.rooms.bedrooms)
+      : 0;
+    const bathrooms = property.rooms?.bathrooms
+      ? parseInt(property.rooms.bathrooms)
+      : 0;
+    const propertyType: PropertyType =
+      (property.roomType?.toLowerCase() as PropertyType) || "apartment";
+    const status: PropertyStatus =
+      property.status === "active" ? "for_sale" : "for_rent";
     const features = [
-      ...(property.equipment?.pool ? ['Piscine'] : []),
-      ...(property.equipment?.airConditioning ? ['Climatisation'] : []),
-      ...(property.equipment?.wifi ? ['WiFi'] : []),
-      ...(property.equipment?.parking ? ['Parking'] : []),
-      ...(property.equipment?.balcony ? ['Balcon'] : [])
+      ...(property.equipment?.pool ? ["Piscine"] : []),
+      ...(property.equipment?.airConditioning ? ["Climatisation"] : []),
+      ...(property.equipment?.wifi ? ["WiFi"] : []),
+      ...(property.equipment?.parking ? ["Parking"] : []),
+      ...(property.equipment?.balcony ? ["Balcon"] : []),
     ];
     const images = Array.isArray(property.images) ? property.images : [];
 
+    // Conserve l'ID tel qu'il est dans Firebase sans le convertir
+    const id = property.id;
+    if (!id) {
+      throw new Error("La propriété n'a pas d'ID");
+    }
+
     return {
-      id: parseInt(property.id) || 0,
-      title: property.title || 'Sans titre',
-      description: property.description || '',
-      price: typeof property.price === 'number' ? property.price : 0,
-      priceUnit: 'FCFA',
-      location: property.location || '',
+      id, // Utilise l'ID directement sans conversion
+      title: property.title || "Sans titre",
+      description: property.description || "",
+      price: typeof property.price === "number" ? property.price : 0,
+      priceUnit: "FCFA",
+      location: property.location || "",
       city,
-      country: 'Bénin',
+      country: "Bénin",
       bedrooms,
       bathrooms,
-      area: typeof property.capacity === 'number' ? property.capacity : 0,
+      area: typeof property.capacity === "number" ? property.capacity : 0,
       type: propertyType,
       status,
       images,
       features,
       createdAt: property.createdAt?.toISOString() || new Date().toISOString(),
-      updatedAt: property.updatedAt?.toISOString() || new Date().toISOString()
+      updatedAt: property.updatedAt?.toISOString() || new Date().toISOString(),
+      views: property.views || 0,
+      userId: property.userId,
     };
   } catch (error: any) {
-    console.error('Erreur lors de l\'adaptation de la propriété:', error);
-    throw new Error(`Erreur lors de l'adaptation de la propriété: ${error?.message || 'Erreur inconnue'}`);
+    console.error("Erreur lors de l'adaptation de la propriété:", error);
+    throw new Error(
+      `Erreur lors de l'adaptation de la propriété: ${
+        error?.message || "Erreur inconnue"
+      }`
+    );
   }
 };
 
 export default function PropertyDetailsPage() {
-  const [, params] = useRoute('/property/:id');
+  const [, params] = useRoute("/property/:id");
   const [location, setLocation] = useLocation();
   const propertyId = params?.id;
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
-  const [author, setAuthor] = useState<{ name: string; email?: string; phone?: string } | null>(null);
+  const [author, setAuthor] = useState<{
+    name: string;
+    email?: string;
+    phone?: string;
+  } | null>(null);
 
   // Récupérer les détails de l'annonce
-  const { data: property, isLoading, error } = useQuery<Property, Error>({
-    queryKey: ['property', propertyId],
+  const {
+    data: property,
+    isLoading,
+    error,
+  } = useQuery<Property, Error>({
+    queryKey: ["property", propertyId],
     queryFn: async () => {
       // Vérifier si nous avons les données dans le state
-      const locationState = (window.history.state as { propertyData?: Property })?.propertyData;
+      const locationState = (
+        window.history.state as { propertyData?: Property }
+      )?.propertyData;
       if (locationState) {
-        console.log('Utilisation des données du state:', locationState);
+        console.log("Utilisation des données du state:", locationState);
         return locationState;
       }
 
       if (!propertyId) {
-        console.error('ID de propriété manquant');
-        throw new Error('ID de propriété manquant');
+        console.error("ID de propriété manquant");
+        throw new Error("ID de propriété manquant");
       }
 
       try {
-        console.log('Recherche de la propriété dans Firebase');
+        console.log(
+          "ID de propriété recherché:",
+          propertyId,
+          "Type:",
+          typeof propertyId
+        );
         const allProperties = await getProperties({});
-        
+        console.log(
+          "Toutes les propriétés:",
+          allProperties.map((p) => ({ id: p.id, type: typeof p.id }))
+        );
+
+        // Debug des IDs avant la comparaison
+        allProperties.forEach((p) => {
+          console.log(
+            `Comparaison - ID Firebase: ${
+              p.id
+            } (${typeof p.id}) vs propertyId: ${propertyId} (${typeof propertyId})`
+          );
+        });
+
         // Recherche de la propriété avec l'ID exact
-        const foundProperty = allProperties.find(p => p.id === propertyId);
-        
+        const foundProperty = allProperties.find((p) => {
+          const propId = p.id?.toString() || "";
+          const searchId = propertyId?.toString() || "";
+          console.log(
+            `Comparaison détaillée - Firebase ID: ${propId} vs Recherché: ${searchId}`
+          );
+          return propId === searchId;
+        });
+
         if (!foundProperty) {
-          console.error('Propriété non trouvée pour ID:', propertyId);
-          throw new Error('Propriété non trouvée');
+          console.error("Propriété non trouvée pour ID:", propertyId);
+          throw new Error("Propriété non trouvée");
         }
-        
-        return adaptProperty(foundProperty);
+
+        console.log("Propriété trouvée (avant adaptation):", foundProperty);
+        const adaptedProperty = adaptProperty(foundProperty);
+        console.log("Propriété adaptée:", adaptedProperty);
+
+        return adaptedProperty;
       } catch (error) {
-        console.error('Erreur détaillée:', error);
+        console.error("Erreur détaillée:", error);
         if (error instanceof Error) {
-          console.error('Stack trace:', error.stack);
+          console.error("Stack trace:", error.stack);
           throw error;
         }
-        throw new Error('Erreur lors du chargement de la propriété');
+        throw new Error("Erreur lors du chargement de la propriété");
       }
     },
     enabled: !!propertyId,
     retry: 1,
-    staleTime: 30000
+    staleTime: 30000,
   });
 
   // Charger l'auteur dès que la propriété est chargée
   useEffect(() => {
     if (property && (property as any).userId) {
-      getUserById((property as any).userId).then(user => {
-        if (user) setAuthor({ name: user.name, email: user.email, phone: user.phone });
+      getUserById((property as any).userId).then((user) => {
+        if (user)
+          setAuthor({ name: user.name, email: user.email, phone: user.phone });
       });
     }
   }, [property]);
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('fr-FR').format(price);
+    return new Intl.NumberFormat("fr-FR").format(price);
   };
 
   if (!propertyId) {
@@ -190,7 +264,7 @@ export default function PropertyDetailsPage() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
         </div>
-        
+
         <div className="absolute bottom-0 left-0 right-0 p-8">
           <div className="container mx-auto">
             <button
@@ -205,7 +279,9 @@ export default function PropertyDetailsPage() {
             </h1>
             <div className="flex items-center text-white/90">
               <MapPin className="w-5 h-5 mr-2" />
-              <span>{property.location}, {property.city}</span>
+              <span>
+                {property.location}, {property.city}
+              </span>
             </div>
           </div>
         </div>
@@ -224,14 +300,20 @@ export default function PropertyDetailsPage() {
                     <span className="text-3xl font-bold text-primary-500">
                       {formatPrice(property.price)} {property.priceUnit}
                     </span>
-                    {property.status === 'for_rent' && (
-                      <span className="text-gray-500 dark:text-gray-400 ml-2">/mois</span>
+                    {property.status === "for_rent" && (
+                      <span className="text-gray-500 dark:text-gray-400 ml-2">
+                        /mois
+                      </span>
                     )}
                   </div>
-                  <span className={`px-4 py-2 rounded-full text-sm font-medium ${
-                    property.status === 'for_sale' ? 'bg-accent-500' : 'bg-primary-500'
-                  } text-white`}>
-                    {property.status === 'for_sale' ? 'À vendre' : 'À louer'}
+                  <span
+                    className={`px-4 py-2 rounded-full text-sm font-medium ${
+                      property.status === "for_sale"
+                        ? "bg-accent-500"
+                        : "bg-primary-500"
+                    } text-white`}
+                  >
+                    {property.status === "for_sale" ? "À vendre" : "À louer"}
                   </span>
                 </div>
               </div>
@@ -245,33 +327,60 @@ export default function PropertyDetailsPage() {
                   <div className="flex items-center">
                     <Bed className="w-6 h-6 text-primary-500 mr-3" />
                     <div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">Chambres</div>
-                      <div className="font-medium text-gray-900 dark:text-white">{property.bedrooms}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        Chambres
+                      </div>
+                      <div className="font-medium text-gray-900 dark:text-white">
+                        {property.bedrooms}
+                      </div>
                     </div>
                   </div>
                   <div className="flex items-center">
                     <Bath className="w-6 h-6 text-primary-500 mr-3" />
                     <div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">Salles de bain</div>
-                      <div className="font-medium text-gray-900 dark:text-white">{property.bathrooms}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        Salles de bain
+                      </div>
+                      <div className="font-medium text-gray-900 dark:text-white">
+                        {property.bathrooms}
+                      </div>
                     </div>
                   </div>
                   <div className="flex items-center">
                     <Square className="w-6 h-6 text-primary-500 mr-3" />
                     <div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">Surface</div>
-                      <div className="font-medium text-gray-900 dark:text-white">{property.area} m²</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        Surface
+                      </div>
+                      <div className="font-medium text-gray-900 dark:text-white">
+                        {property.area} m²
+                      </div>
                     </div>
                   </div>
                   {property.landArea && (
                     <div className="flex items-center">
                       <Trees className="w-6 h-6 text-primary-500 mr-3" />
                       <div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400">Terrain</div>
-                        <div className="font-medium text-gray-900 dark:text-white">{property.landArea} m²</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          Terrain
+                        </div>
+                        <div className="font-medium text-gray-900 dark:text-white">
+                          {property.landArea} m²
+                        </div>
                       </div>
                     </div>
                   )}
+                  <div className="flex items-center">
+                    <Eye className="w-6 h-6 text-primary-500 mr-3" />
+                    <div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        Vues
+                      </div>
+                      <div className="font-medium text-gray-900 dark:text-white">
+                        {property.views || 0}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -295,7 +404,9 @@ export default function PropertyDetailsPage() {
                     {property.features.map((feature, index) => (
                       <div key={index} className="flex items-center">
                         <CheckCircle className="w-5 h-5 text-primary-500 mr-2" />
-                        <span className="text-gray-600 dark:text-gray-300">{feature}</span>
+                        <span className="text-gray-600 dark:text-gray-300">
+                          {feature}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -342,4 +453,4 @@ export default function PropertyDetailsPage() {
       />
     </motion.div>
   );
-} 
+}
