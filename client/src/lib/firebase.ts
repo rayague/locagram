@@ -1,14 +1,11 @@
 import { initializeApp } from "firebase/app";
 import {
   getFirestore,
-  connectFirestoreEmulator,
   collection,
   getDocs,
   query,
   where,
   orderBy,
-  limit,
-  deleteDoc,
   doc,
   setDoc,
   writeBatch,
@@ -16,29 +13,51 @@ import {
   addDoc,
   updateDoc,
   serverTimestamp,
-  Timestamp,
+  enableMultiTabIndexedDbPersistence,
 } from "firebase/firestore";
-import { getAuth, connectAuthEmulator } from "firebase/auth";
-import { getStorage, connectStorageEmulator } from "firebase/storage";
+import {
+  getAuth,
+  setPersistence,
+  browserLocalPersistence,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { getStorage } from "firebase/storage";
 import { ContactMessage } from "./types";
 
-// Configuration Firebase pour le projet locagram-f08b9
 const firebaseConfig = {
-  apiKey: "AIzaSyDxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXx", // Remplace par ta clé API
+  apiKey: "AIzaSyCeaMAgyFWN12ktRuGSHsLdySgiZqvBIKA",
   authDomain: "locagram-f08b9.firebaseapp.com",
   projectId: "locagram-f08b9",
   storageBucket: "locagram-f08b9.appspot.com",
-  messagingSenderId: "118315401649757880816", // ID du projet
-  appId: "1:118315401649757880816:web:2bd8440602b25100b9f3d9", // ID de l'application
+  messagingSenderId: "504321320981",
+  appId: "1:504321320981:web:65037b379691080972c61c",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-console.log("Firebase app initialized:", app.name);
 
-// Initialize services
+// Initialize Firestore
 const db = getFirestore(app);
+
+// Enable multi-tab persistence
+enableMultiTabIndexedDbPersistence(db).catch((err) => {
+  if (err.code === "failed-precondition") {
+    console.warn(
+      "Multiple tabs open, persistence can only be enabled in one tab at a time."
+    );
+  } else if (err.code === "unimplemented") {
+    console.warn("The current browser does not support persistence.");
+  }
+});
+
+// Initialize Auth with persistence
 const auth = getAuth(app);
+setPersistence(auth, browserLocalPersistence).catch((error) => {
+  console.error("Error setting auth persistence:", error);
+});
+
 const storage = getStorage(app);
 
 console.log("Firestore instance:", db);
@@ -274,7 +293,7 @@ export const getProperties = async (filters: {
     snapshot.docs.forEach((doc) => {
       const data = doc.data();
       console.log(
-        `- ID: ${doc.id}, Catégorie: ${data.category}, Titre: ${data.title}`
+        `- ID: ${doc.id}, Catégorie: ${data.category}, Titre: ${data.title}, Status: ${data.status}`
       );
     });
 
@@ -290,22 +309,16 @@ export const getProperties = async (filters: {
           price: data.price as number,
         } as Property;
 
-        // Log détaillé pour chaque annonce
-        console.log("Détails de l'annonce:", {
-          id: property.id,
-          category: property.category,
-          title: property.title,
-          roomType: property.roomType,
-          rawCategory: data.category, // Log de la valeur brute
-          categoryMatches: filters.category
-            ? property.category === filters.category
-            : "N/A",
-        });
-
         return property;
       })
       .filter((property) => {
-        // Appliquer tous les filtres côté client
+        // Vérifier d'abord si l'annonce est active
+        if (property.status === "inactive" || property.status === "desactive") {
+          console.log(`Annonce ${property.id} filtrée car ${property.status}`);
+          return false;
+        }
+
+        // Appliquer tous les autres filtres
         const matchesLocation =
           !filters.location || property.location === filters.location;
         const matchesType = !filters.type || property.roomType === filters.type;
@@ -323,6 +336,7 @@ export const getProperties = async (filters: {
             matchesLocation,
             matchesType,
             matchesPrice,
+            status: property.status,
             finalResult:
               matchesLocation && matchesType && matchesPrice && matchesCategory,
           });
@@ -341,6 +355,7 @@ export const getProperties = async (filters: {
           id: p.id,
           category: p.category,
           title: p.title,
+          status: p.status,
         }))
       );
     }
@@ -476,6 +491,24 @@ export const saveContactMessage = async (messageData: {
     } else {
       throw new Error("Une erreur inconnue est survenue");
     }
+  }
+};
+
+// Custom sign in function with persistence
+export const signInWithPersistence = async (
+  email: string,
+  password: string
+) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    return userCredential;
+  } catch (error) {
+    console.error("Error during sign in:", error);
+    throw error;
   }
 };
 

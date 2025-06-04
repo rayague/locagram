@@ -40,8 +40,15 @@ const adaptProperty = (property: FirebaseProperty): Property => {
       (property.roomType?.toLowerCase() as PropertyType) || "apartment";
 
     // Déterminer le statut avec une valeur par défaut
-    const status: PropertyStatus =
-      property.status === "active" ? "for_sale" : "for_rent";
+    let status: PropertyStatus;
+    if (property.status === "active") {
+      status = "for_sale";
+    } else if (property.status === "inactive") {
+      // Ne pas inclure les propriétés inactives
+      throw new Error("Propriété inactive");
+    } else {
+      status = "for_rent";
+    }
 
     // Construire les features avec des valeurs par défaut
     const features = [
