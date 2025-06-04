@@ -100,3 +100,17 @@ export interface ContactModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+export interface ContactMessage {
+  id?: string;
+  senderName: string;
+  senderEmail: string;
+  senderPhone: string;
+  message: string;
+  propertyId: string;
+  propertyTitle: string;
+  receiverId: string;
+  browserToken: string;
+  createdAt: string;
+  status: "sent" | "read";
+}

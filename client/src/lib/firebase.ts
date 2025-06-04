@@ -13,9 +13,13 @@ import {
   setDoc,
   writeBatch,
   getDoc,
+  addDoc,
+  updateDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
+import { ContactMessage } from "./types";
 
 // Configuration Firebase pour le projet locagram-f08b9
 const firebaseConfig = {
@@ -379,6 +383,90 @@ export const incrementPropertyViews = async (propertyId: string) => {
     console.log("Vues incrémentées pour la propriété:", propertyId);
   } catch (error) {
     console.error("Erreur lors de l'incrémentation des vues:", error);
+    throw error;
+  }
+};
+
+// Fonction pour générer un token unique pour le navigateur
+export const generateBrowserToken = (): string => {
+  // Vérifie si un token existe déjà dans le localStorage
+  let token = localStorage.getItem("browserToken");
+  if (!token) {
+    // Crée un nouveau token si aucun n'existe
+    token = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    localStorage.setItem("browserToken", token);
+  }
+  return token;
+};
+
+// Fonction pour envoyer un message
+export const sendContactMessage = async (
+  messageData: Omit<ContactMessage, "id" | "status" | "createdAt">
+) => {
+  try {
+    const messagesRef = collection(db, "messages");
+
+    // Créer un ID unique basé sur le token et l'ID de la propriété
+    const messageId = `${messageData.browserToken}_${messageData.propertyId}`;
+    const messageRef = doc(messagesRef, messageId);
+
+    // Vérifie si un message existe déjà
+    const existingMessage = await getDoc(messageRef);
+
+    if (existingMessage.exists()) {
+      const existingData = existingMessage.data();
+      const messageTime = existingData.createdAt.toDate();
+      const oneHourAgo = new Date();
+      oneHourAgo.setHours(oneHourAgo.getHours() - 1);
+
+      if (messageTime > oneHourAgo) {
+        throw new Error(
+          "Vous avez déjà envoyé un message pour cette propriété récemment. Veuillez patienter avant d'envoyer un nouveau message."
+        );
+      }
+    }
+
+    // Ajoute ou met à jour le message
+    const newMessage = {
+      ...messageData,
+      status: "sent",
+      createdAt: serverTimestamp(),
+    };
+
+    await setDoc(messageRef, newMessage);
+    return messageId;
+  } catch (error) {
+    console.error("Erreur lors de l'envoi du message:", error);
+    throw error;
+  }
+};
+
+// Fonction pour récupérer les messages d'un utilisateur
+export const getUserMessages = async (userId: string) => {
+  try {
+    const messagesRef = collection(db, "messages");
+    const q = query(messagesRef, where("receiverId", "==", userId));
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as ContactMessage[];
+  } catch (error) {
+    console.error("Erreur lors de la récupération des messages:", error);
+    throw error;
+  }
+};
+
+// Fonction pour marquer un message comme lu
+export const markMessageAsRead = async (messageId: string) => {
+  try {
+    const messageRef = doc(db, "messages", messageId);
+    await updateDoc(messageRef, {
+      status: "read",
+    });
+  } catch (error) {
+    console.error("Erreur lors du marquage du message comme lu:", error);
     throw error;
   }
 };

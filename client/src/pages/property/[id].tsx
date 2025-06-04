@@ -47,14 +47,13 @@ const adaptProperty = (property: FirebaseProperty): Property => {
     ];
     const images = Array.isArray(property.images) ? property.images : [];
 
-    // Conserve l'ID tel qu'il est dans Firebase sans le convertir
-    const id = property.id;
-    if (!id) {
-      throw new Error("La propriété n'a pas d'ID");
+    // Vérifie la présence de l'ID de l'utilisateur
+    if (!property.userId) {
+      console.warn("Attention: userId manquant pour la propriété", property.id);
     }
 
     return {
-      id, // Utilise l'ID directement sans conversion
+      id: property.id, // L'ID est une chaîne
       title: property.title || "Sans titre",
       description: property.description || "",
       price: typeof property.price === "number" ? property.price : 0,
@@ -72,10 +71,15 @@ const adaptProperty = (property: FirebaseProperty): Property => {
       createdAt: property.createdAt?.toISOString() || new Date().toISOString(),
       updatedAt: property.updatedAt?.toISOString() || new Date().toISOString(),
       views: property.views || 0,
-      userId: property.userId,
+      userId: property.userId, // S'assurer que l'ID de l'utilisateur est inclus
     };
   } catch (error: any) {
-    console.error("Erreur lors de l'adaptation de la propriété:", error);
+    console.error(
+      "Erreur lors de l'adaptation de la propriété:",
+      error,
+      "Données brutes:",
+      property
+    );
     throw new Error(
       `Erreur lors de l'adaptation de la propriété: ${
         error?.message || "Erreur inconnue"
@@ -449,7 +453,13 @@ export default function PropertyDetailsPage() {
         isOpen={isContactModalOpen}
         onClose={() => setIsContactModalOpen(false)}
         propertyTitle={property.title}
-        author={author || undefined}
+        propertyId={property.id}
+        author={{
+          name: author?.name || "",
+          email: author?.email,
+          phone: author?.phone,
+          id: property.userId || "",
+        }}
       />
     </motion.div>
   );
