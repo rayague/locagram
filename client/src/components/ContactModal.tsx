@@ -9,22 +9,36 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { saveContactMessage } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import { User, Mail, Phone, Send } from "lucide-react";
 
 interface ContactModalProps {
   isOpen: boolean;
   onClose: () => void;
+  propertyTitle: string;
+  propertyId: string;
+  author: {
+    name: string;
+    email?: string;
+    phone?: string;
+    id: string;
+  };
 }
 
-export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
+export default function ContactModal({
+  isOpen,
+  onClose,
+  propertyTitle,
+  propertyId,
+  author,
+}: ContactModalProps) {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    subject: "",
+    senderName: "",
+    senderEmail: "",
+    senderPhone: "",
     message: "",
   });
 
@@ -38,40 +52,48 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
       // Valider les données
       if (
-        !formData.name.trim() ||
-        !formData.email.trim() ||
-        !formData.phone.trim() ||
-        !formData.subject.trim() ||
+        !formData.senderName.trim() ||
+        !formData.senderEmail.trim() ||
+        !formData.senderPhone.trim() ||
         !formData.message.trim()
       ) {
         throw new Error("Tous les champs sont obligatoires");
       }
 
-      // Sauvegarder le message
-      console.log("💾 Tentative de sauvegarde du message...");
-      const messageId = await saveContactMessage({
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        phone: formData.phone.trim(),
-        subject: formData.subject.trim(),
-        message: formData.message.trim(),
-      });
+      // Générer un browserToken unique
+      const browserToken = Math.random().toString(36).substring(2, 15);
 
-      console.log("✅ Message enregistré avec ID:", messageId);
+      // Sauvegarder le message dans la collection messages
+      const messageData = {
+        browserToken,
+        createdAt: serverTimestamp(),
+        message: formData.message.trim(),
+        propertyId,
+        propertyTitle,
+        read: false,
+        receiverId: author.id,
+        senderEmail: formData.senderEmail.trim(),
+        senderName: formData.senderName.trim(),
+        senderPhone: formData.senderPhone.trim(),
+        status: "sent",
+      };
+
+      const docRef = await addDoc(collection(db, "messages"), messageData);
+
+      console.log("✅ Message enregistré avec ID:", docRef.id);
 
       // Afficher le succès
       toast({
         title: "Message envoyé",
-        description: "Votre message a été enregistré avec succès.",
+        description: "Votre message a été envoyé avec succès.",
         variant: "default",
       });
 
       // Réinitialiser et fermer
       setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        subject: "",
+        senderName: "",
+        senderEmail: "",
+        senderPhone: "",
         message: "",
       });
       onClose();
@@ -95,7 +117,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Nous contacter</DialogTitle>
+          <DialogTitle>Contacter l'annonceur</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -108,9 +130,9 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
                   type="text"
-                  value={formData.name}
+                  value={formData.senderName}
                   onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
+                    setFormData({ ...formData, senderName: e.target.value })
                   }
                   required
                   className="pl-10"
@@ -125,9 +147,9 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
                   type="email"
-                  value={formData.email}
+                  value={formData.senderEmail}
                   onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
+                    setFormData({ ...formData, senderEmail: e.target.value })
                   }
                   required
                   className="pl-10"
@@ -144,28 +166,15 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
                   type="tel"
-                  value={formData.phone}
+                  value={formData.senderPhone}
                   onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
+                    setFormData({ ...formData, senderPhone: e.target.value })
                   }
                   required
                   className="pl-10"
                   placeholder="+229 00 00 00 00"
                 />
               </div>
-            </div>
-
-            <div className="relative">
-              <label className="block text-sm font-medium mb-2">Sujet</label>
-              <Input
-                type="text"
-                value={formData.subject}
-                onChange={(e) =>
-                  setFormData({ ...formData, subject: e.target.value })
-                }
-                required
-                placeholder="Sujet de votre message"
-              />
             </div>
 
             <div className="relative">

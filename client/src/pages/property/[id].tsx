@@ -22,6 +22,8 @@ import {
   Eye,
 } from "lucide-react";
 import ContactModal from "../../components/ContactModal";
+import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../../lib/firebase";
 
 // Fonction pour adapter les données Firebase au format attendu par le composant
 const adaptProperty = (property: FirebaseProperty): Property => {
@@ -98,6 +100,63 @@ export default function PropertyDetailsPage() {
     email?: string;
     phone?: string;
   } | null>(null);
+
+  // Fonction pour incrémenter les vues
+  const incrementViews = async (id: string) => {
+    try {
+      // Vérifier si ce navigateur a déjà vu cette propriété
+      const viewedProperties = JSON.parse(
+        localStorage.getItem("viewedProperties") || "{}"
+      );
+      const browserToken =
+        localStorage.getItem("browserToken") ||
+        Math.random().toString(36).substring(2, 15);
+
+      // Sauvegarder le browserToken s'il n'existe pas
+      if (!localStorage.getItem("browserToken")) {
+        localStorage.setItem("browserToken", browserToken);
+      }
+
+      // Si cette propriété a déjà été vue par ce navigateur, ne pas incrémenter
+      if (viewedProperties[id] === browserToken) {
+        console.log("Cette propriété a déjà été vue par ce navigateur");
+        return;
+      }
+
+      const propertyRef = doc(db, "listings", id);
+      const propertyDoc = await getDoc(propertyRef);
+
+      if (!propertyDoc.exists()) {
+        console.error("Propriété non trouvée:", id);
+        return;
+      }
+
+      // Incrémenter le compteur de vues
+      await setDoc(propertyRef, {
+        ...propertyDoc.data(),
+        views: (propertyDoc.data().views || 0) + 1,
+        updatedAt: serverTimestamp(),
+      });
+
+      // Marquer cette propriété comme vue par ce navigateur
+      viewedProperties[id] = browserToken;
+      localStorage.setItem(
+        "viewedProperties",
+        JSON.stringify(viewedProperties)
+      );
+
+      console.log("Vues incrémentées pour la propriété:", id);
+    } catch (error) {
+      console.error("Erreur lors de l'incrémentation des vues:", error);
+    }
+  };
+
+  // Incrémenter les vues lors du chargement de la page
+  useEffect(() => {
+    if (propertyId) {
+      incrementViews(propertyId);
+    }
+  }, [propertyId]);
 
   // Récupérer les détails de l'annonce
   const {
