@@ -68,15 +68,17 @@ export default function Footer() {
 
         {/* Demarcheurs section */}
         <div className="mt-12">
-          <Link
+          <a
             href="https://demarcheur-dashboard-hub.vercel.app/"
+           
+            rel="noopener noreferrer"
             className="my-4 text-white flex flex-row border border-slate-600 items-center justify-between p-8 rounded-lg bg-slate-900 dark:bg-slate-900 backdrop-blur-md backdrop-brightness-75"
           >
             <span className="tracking-tighter md:text-6xl lg:text-8xl sm:text-6xl text-4xl font-black text-white dark:text-white">
               DÉMARCHEURS
             </span>
             <FaLink className="text-white dark:text-white mb-2 md:text-6xl lg:text-8xl sm:text-6xl text-4xl" />
-          </Link>
+          </a>
         </div>
 
         {/* Copyright */}
