@@ -60,8 +60,8 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-gray-400 dark:text-gray-400">
               <li>Email: contact@locagram.bj</li>
-              <li>Tél: +229 90 00 00 00</li>
-              <li>Adresse: Cotonou, Bénin</li>
+              <li>Tél: +229 01 58 84 52 58</li>
+              <li>Adresse: Abomey-Calavi, Bénin</li>
             </ul>
           </div>
         </div>
