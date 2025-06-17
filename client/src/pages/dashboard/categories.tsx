@@ -1,68 +1,76 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import {
-  Plus,
-  Search,
-  Filter,
-  MoreVertical,
-  Edit,
-  Trash,
-  Tag,
-} from 'lucide-react';
-import DashboardLayout from '@/components/dashboard/DashboardLayout';
-import { useAuth } from '@/contexts/AuthContext';
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Plus, Search, Filter, MoreVertical, Edit, Trash } from "lucide-react";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import { useAuth } from "@/contexts/AuthContext";
+import { getCategories } from "@/lib/firebase";
 
-// Mock data for categories
-const categories = [
-  {
-    id: 1,
-    name: 'Maison',
-    icon: '🏠',
-    description: 'Propriétés résidentielles individuelles',
-    count: 45,
-    status: 'active',
-  },
-  {
-    id: 2,
-    name: 'Appartement',
-    icon: '🏢',
-    description: 'Logements en copropriété',
-    count: 78,
-    status: 'active',
-  },
-  {
-    id: 3,
-    name: 'Commerce',
-    icon: '🏪',
-    description: 'Locaux commerciaux et bureaux',
-    count: 32,
-    status: 'active',
-  },
-  {
-    id: 4,
-    name: 'Industriel',
-    icon: '🏭',
-    description: 'Entrepôts et usines',
-    count: 15,
-    status: 'active',
-  },
-  {
-    id: 5,
-    name: 'Terrain',
-    icon: '🌳',
-    description: 'Parcelles constructibles',
-    count: 23,
-    status: 'active',
-  },
-];
+interface Category {
+  id: string;
+  name: string;
+  description: string;
+}
 
 export default function CategoriesPage() {
   const { user } = useAuth();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        setIsLoading(true);
+        const fetchedCategories = await getCategories();
+
+        // Utiliser un Map pour garder uniquement la première occurrence de chaque catégorie
+        const uniqueMap = new Map();
+        fetchedCategories.forEach((category) => {
+          const normalizedName = category.name.toLowerCase().trim();
+          if (!uniqueMap.has(normalizedName)) {
+            uniqueMap.set(normalizedName, category);
+          }
+        });
+
+        // Convertir le Map en tableau et trier par nom
+        const uniqueCategories = Array.from(uniqueMap.values()).sort((a, b) =>
+          a.name.localeCompare(b.name, "fr", { sensitivity: "base" })
+        );
+
+        setCategories(uniqueCategories);
+      } catch (err) {
+        console.error("Erreur lors du chargement des catégories:", err);
+        setError("Une erreur est survenue lors du chargement des catégories");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadCategories();
+  }, []);
 
   const filteredCategories = categories.filter((category) =>
     category.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (isLoading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <DashboardLayout>
+        <div className="text-center text-red-500">{error}</div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
@@ -74,7 +82,7 @@ export default function CategoriesPage() {
               Catégories
             </h1>
             <p className="mt-1 text-gray-500 dark:text-gray-400">
-              Gérez les types de propriétés
+              Gérez les catégories disponibles pour les démarcheurs
             </p>
           </div>
           <button className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
@@ -115,15 +123,12 @@ export default function CategoriesPage() {
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                      <span className="text-2xl">{category.icon}</span>
+                      <span className="text-2xl">📁</span>
                     </div>
                     <div>
                       <h3 className="text-lg font-medium text-gray-900 dark:text-white">
                         {category.name}
                       </h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {category.count} propriétés
-                      </p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -139,19 +144,8 @@ export default function CategoriesPage() {
                   </div>
                 </div>
                 <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                  {category.description}
+                  {category.description || "Aucune description"}
                 </p>
-                <div className="mt-4 flex items-center justify-between">
-                  <span
-                    className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                      category.status === 'active'
-                        ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
-                        : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
-                    }`}
-                  >
-                    {category.status === 'active' ? 'Actif' : 'Inactif'}
-                  </span>
-                </div>
               </div>
             </motion.div>
           ))}
@@ -159,4 +153,4 @@ export default function CategoriesPage() {
       </div>
     </DashboardLayout>
   );
-} 
+}

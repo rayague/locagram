@@ -24,7 +24,6 @@ import {
   signOut,
 } from "firebase/auth";
 import { getStorage } from "firebase/storage";
-import { ContactMessage } from "./types";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCeaMAgyFWN12ktRuGSHsLdySgiZqvBIKA",
@@ -416,7 +415,7 @@ export const getUserMessages = async (userId: string) => {
     return querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
-    })) as ContactMessage[];
+    })) as ContactMessageData[];
   } catch (error) {
     console.error("Erreur lors de la récupération des messages:", error);
     throw error;
@@ -508,6 +507,48 @@ export const signInWithPersistence = async (
     return userCredential;
   } catch (error) {
     console.error("Error during sign in:", error);
+    throw error;
+  }
+};
+
+interface ContactMessageData {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+  createdAt: Date;
+  type: string;
+  status?: "read" | "unread";
+}
+
+// Fonction pour récupérer tous les messages de contact (admin only)
+export const getAllContactMessages = async (): Promise<
+  ContactMessageData[]
+> => {
+  try {
+    console.log("Récupération de tous les messages de contact");
+    const messagesRef = collection(db, "contact-messages");
+    const q = query(messagesRef, orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        name: data.name || "",
+        email: data.email || "",
+        phone: data.phone || "",
+        subject: data.subject || "",
+        message: data.message || "",
+        createdAt: data.createdAt?.toDate() || new Date(),
+        type: data.type || "contact",
+        status: data.status || "unread",
+      };
+    });
+  } catch (error) {
+    console.error("Erreur lors de la récupération des messages:", error);
     throw error;
   }
 };

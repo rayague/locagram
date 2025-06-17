@@ -90,7 +90,7 @@ export default function ContactPage() {
     {
       icon: <Phone className="w-6 h-6" />,
       title: "Téléphone",
-      content: "+229 90 00 00 00",
+      content: "+229 01 58 84 52 58",
       description: "Du lundi au vendredi, 8h-18h",
     },
     {
@@ -102,8 +102,8 @@ export default function ContactPage() {
     {
       icon: <MapPin className="w-6 h-6" />,
       title: "Adresse",
-      content: "123 Avenue de l'Indépendance",
-      description: "Cotonou, Bénin",
+      content: "Abomey-Calavi, Sèmè",
+      description: "Abomey-Calavi, Bénin",
     },
     {
       icon: <Clock className="w-6 h-6" />,
