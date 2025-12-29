@@ -32,7 +32,7 @@ const users = [
     role: 'demarcheur',
     status: 'active',
     lastLogin: '2024-02-15 10:15',
-    agency: 'Agence Cotonou',
+    agency: 'Votre Agence',
   },
   {
     id: 3,
@@ -41,7 +41,7 @@ const users = [
     role: 'demarcheur',
     status: 'inactive',
     lastLogin: '2024-02-14 16:45',
-    agency: 'Agence Porto-Novo',
+    agency: 'Votre Agence',
   },
 ];
 

@@ -70,7 +70,7 @@ export default function VendrePage() {
             <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
               <h3 className="text-xl font-bold mb-4">Expertise locale</h3>
               <p className="text-gray-600 dark:text-gray-300">
-                Notre connaissance approfondie du marché immobilier béninois
+                Notre connaissance approfondie du marché immobilier local
                 vous garantit une estimation précise et une vente optimale.
               </p>
             </div>

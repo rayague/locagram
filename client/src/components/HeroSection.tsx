@@ -51,7 +51,7 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
           >
-            La référence immobilière au Bénin
+            La référence immobilière locale
           </motion.span>
           
           <motion.h1 
@@ -60,7 +60,7 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
           >
-            Découvrez des propriétés <span className="text-primary-400">exceptionnelles</span> au cœur du Bénin
+            Découvrez des propriétés <span className="text-primary-400">exceptionnelles</span> près de chez vous
           </motion.h1>
           
           <motion.p 
@@ -69,7 +69,7 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.6 }}
           >
-            Explorer, acheter ou louer des biens immobiliers de prestige dans les plus beaux endroits du Bénin.
+            Explorer, acheter ou louer des biens immobiliers de prestige dans les plus beaux endroits près de chez vous.
           </motion.p>
           
           <motion.div

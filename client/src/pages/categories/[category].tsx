@@ -12,7 +12,7 @@ import { Property } from '@/lib/types';
 const CATEGORY_INFO = {
   'auberge': {
     title: 'Auberges',
-    description: 'Découvrez notre sélection d\'auberges au Bénin, parfaites pour un séjour authentique et chaleureux.'
+    description: 'Découvrez notre sélection d\'auberges, parfaites pour un séjour authentique et chaleureux.'
   },
   'maison': {
     title: 'Maisons à louer',
@@ -20,7 +20,7 @@ const CATEGORY_INFO = {
   },
   'manoir': {
     title: 'Manoirs',
-    description: 'Des manoirs d\'exception pour une expérience de luxe unique au Bénin.'
+    description: 'Des manoirs d\'exception pour une expérience de luxe unique.'
   },
   'atelier': {
     title: 'Ateliers',

@@ -112,7 +112,7 @@ export default function SearchBar() {
             <Input
               id="search-location"
               type="text"
-              placeholder="Cotonou, Porto-Novo, Parakou..."
+              placeholder="Votre ville..."
               className={`w-full pl-8 sm:pl-10 h-9 sm:h-10 text-sm sm:text-base ${
                 errors.location ? "border-red-500 focus:ring-red-500" : ""
               }`}

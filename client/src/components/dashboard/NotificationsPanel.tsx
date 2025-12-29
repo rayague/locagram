@@ -35,7 +35,7 @@ const mockNotifications: Notification[] = [
     id: '2',
     type: 'reservation',
     title: 'Nouvelle réservation',
-    message: 'Réservation pour Villa Luxe à Cotonou',
+    message: 'Réservation pour Villa Luxe',
     time: 'Il y a 15 minutes',
     read: false,
   },

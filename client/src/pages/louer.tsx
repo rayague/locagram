@@ -126,7 +126,7 @@ export default function LouerPage() {
               Louez votre bien immobilier
             </h1>
             <p className="text-xl text-white/90 mb-8">
-              Découvrez notre sélection de propriétés à louer au Bénin. Trouvez
+              Découvrez notre sélection de propriétés à louer. Trouvez
               le logement idéal pour votre séjour.
             </p>
           </div>

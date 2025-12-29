@@ -44,7 +44,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading
             title="Propriétés en vedette"
-            subtitle="Découvrez notre sélection de biens immobiliers d'exception à travers le Bénin."
+            subtitle="Découvrez notre sélection de biens immobiliers d'exception."
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -91,7 +91,7 @@ export default function HomePage() {
         backgroundImage="https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080"
         title="L'expérience immobilière redéfinie"
         subtitle="Notre mission"
-        description="Chez Locagram, nous vous proposons les meilleures propriétés du Bénin avec un service personnalisé et des outils numériques innovants pour faciliter votre investissement."
+        description="Chez Locagram, nous vous proposons les meilleures propriétés avec un service personnalisé et des outils numériques innovants pour faciliter votre investissement."
         buttonText="Découvrir notre histoire"
         buttonLink="/about"
       />
@@ -174,7 +174,7 @@ export default function HomePage() {
             </h2>
             <p className="text-lg text-primary-100 mb-8">
               Rejoignez-nous dès aujourd'hui et laissez-nous vous aider à
-              trouver le bien immobilier parfait pour vous au Bénin.
+              trouver le bien immobilier parfait pour vous.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">

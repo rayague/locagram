@@ -16,7 +16,7 @@ export default function Footer() {
               </h3>
             </Link>
             <p className="text-gray-400 dark:text-gray-400">
-              Votre partenaire immobilier de confiance au Bénin.
+              Votre partenaire immobilier de confiance.
             </p>
           </div>
 
@@ -61,7 +61,7 @@ export default function Footer() {
             <ul className="space-y-2 text-gray-400 dark:text-gray-400">
               <li>Email: contact@locagram.bj</li>
               <li>Tél: +229 01 58 84 52 58</li>
-              <li>Adresse: Abomey-Calavi, Bénin</li>
+              <li>Adresse: Votre ville</li>
             </ul>
           </div>
         </div>

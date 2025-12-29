@@ -102,8 +102,8 @@ export default function ContactPage() {
     {
       icon: <MapPin className="w-6 h-6" />,
       title: "Adresse",
-      content: "Abomey-Calavi, Sèmè",
-      description: "Abomey-Calavi, Bénin",
+      content: "Votre ville",
+      description: "Votre ville",
     },
     {
       icon: <Clock className="w-6 h-6" />,

@@ -25,7 +25,7 @@ export default function AboutPage() {
             </h1>
             <p className="text-xl text-white/90 mb-8">
               Découvrez l'histoire de notre entreprise et notre engagement pour
-              l'excellence immobilière au Bénin.
+              l'excellence immobilière partout.
             </p>
           </div>
         </div>
@@ -46,7 +46,7 @@ export default function AboutPage() {
                 valeurs fortes d'intégrité, de professionnalisme et de service
                 client. Nous avons commencé avec une petite équipe passionnée et
                 avons grandi pour devenir l'un des acteurs majeurs de
-                l'immobilier au Bénin.
+                l'immobilier partout.
               </p>
 
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
@@ -60,7 +60,7 @@ export default function AboutPage() {
                 Aujourd'hui, nous sommes fiers de notre réseau d'experts et de
                 notre portefeuille diversifié de propriétés. Notre engagement
                 envers l'excellence nous a permis de construire une réputation
-                solide dans le secteur immobilier béninois.
+                solide dans le secteur immobilier local.
               </p>
             </div>
           </div>

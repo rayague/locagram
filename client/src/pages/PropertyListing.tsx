@@ -108,7 +108,7 @@ export default function PropertyListing() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <SectionHeading 
           title={getPageTitle()} 
-          subtitle={filters.location ? `Propriétés à ${filters.location}` : 'Explorez notre catalogue de biens immobiliers au Bénin'}
+          subtitle={filters.location ? `Propriétés à ${filters.location}` : 'Explorez notre catalogue de biens immobiliers partout'}
         />
         
         <div className="flex flex-col md:flex-row items-start gap-6 mb-8">

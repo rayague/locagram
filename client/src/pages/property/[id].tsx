@@ -62,7 +62,7 @@ const adaptProperty = (property: FirebaseProperty): Property => {
       priceUnit: "FCFA",
       location: property.location || "",
       city,
-      country: "Bénin",
+      country: "",
       bedrooms,
       bathrooms,
       area: typeof property.capacity === "number" ? property.capacity : 0,

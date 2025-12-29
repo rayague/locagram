@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 
 const countries = [
-  { value: 'bj', label: 'Bénin' },
+  { value: '', label: 'Votre pays' },
   { value: 'sn', label: 'Sénégal' },
   { value: 'ci', label: 'Côte d\'Ivoire' },
   { value: 'cm', label: 'Cameroun' },
