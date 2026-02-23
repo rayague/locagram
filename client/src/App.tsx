@@ -129,6 +129,9 @@ export default function App() {
             <Route path="/dashboard/users">
               <ProtectedRoute component={UsersPage} />
             </Route>
+            <Route path="/admin/users">
+              <ProtectedRoute component={UsersPage} />
+            </Route>
             <Route path="/dashboard/settings">
               <ProtectedRoute component={SettingsPage} />
             </Route>
