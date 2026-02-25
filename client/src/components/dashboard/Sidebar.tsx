@@ -132,34 +132,41 @@ export default function Sidebar() {
 
         {/* Navigation */}
         <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
-          {sidebarItems.map((item) => {
-            if (!item) return null;
+          {sidebarItems
+            .filter((item): item is SidebarItem => {
+              // Filtrage strict avec type guard
+              if (!item || !item.icon || !item.name || !item.href) {
+                console.warn("Invalid sidebar item:", item);
+                return false;
+              }
 
-            // Filtrer les éléments selon le rôle
-            if (item.adminOnly && user?.role !== "admin") return null;
-            if (item.demarcheurOnly && user?.role !== "demarcheur") return null;
+              // Filtrer les éléments selon le rôle
+              if (item.adminOnly && user?.role !== "admin") return false;
+              if (item.demarcheurOnly && user?.role !== "demarcheur") return false;
 
-            const Icon = item.icon;
-            if (!Icon) return null;
-
-            const isActive = location === item.href;
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
-                  isActive
-                    ? "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400"
-                    : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
-                }`}
-              >
-                <Icon className="h-5 w-5" />
-                {!isCollapsed && (
-                  <span className="ml-3 text-sm font-medium">{item.name}</span>
-                )}
-              </Link>
-            );
-          })}
+              return true;
+            })
+            .map((item) => {
+              const Icon = item.icon;
+              const isActive = location === item.href;
+              
+              return (
+                <Link
+                  key={item.href} // Utilise href comme clé pour éviter les doublons
+                  href={item.href}
+                  className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
+                    isActive
+                      ? "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400"
+                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  }`}
+                >
+                  <Icon className="h-5 w-5" />
+                  {!isCollapsed && (
+                    <span className="ml-3 text-sm font-medium">{item.name}</span>
+                  )}
+                </Link>
+              );
+            })}
         </nav>
 
         {/* Logout button */}

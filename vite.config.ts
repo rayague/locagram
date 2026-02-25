@@ -17,7 +17,7 @@ export default defineConfig({
   },
   root: path.resolve(__dirname, "client"),
   build: {
-    outDir: path.resolve(__dirname, "dist/public"),
+    outDir: path.resolve(__dirname, "client", "dist"),
     emptyOutDir: true,
     rollupOptions: {
       output: {
@@ -27,14 +27,6 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    strictPort: true,
-    proxy: {
-      '/api': {
-        target: 'http://127.0.0.1:5000',
-        changeOrigin: true,
-        secure: false,
-        ws: true
-      }
-    }
+    strictPort: true
   }
 });
