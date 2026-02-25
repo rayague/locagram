@@ -7,7 +7,7 @@
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "dev:client": "cd client && npm run dev",
     "dev:server": "echo 'No server script configured'",
-    "build": "npx vite build",
+    "build": "cd client && npm run build",
     "build:client": "cd client && npx vite build",
     "start": "node server.js",
     "serve": "serve dist/public -s -p $PORT",
