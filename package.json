@@ -1,12 +1,35 @@
 {
-  "name": "locagram-docs",
+  "name": "locagram",
   "version": "1.0.0",
-  "description": "Documentation pour Locagram",
-  "main": "convert_to_pdf.js",
+  "description": "Plateforme de location immobilière Locagram",
+  "main": "server.js",
   "scripts": {
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "echo 'No server script configured'",
+    "build": "npm run build:client",
+    "build:client": "vite build",
+    "start": "node server.js",
+    "serve": "serve dist/public -s -p $PORT",
+    "install:client": "cd client && npm install",
     "convert": "node convert_to_pdf.js"
   },
   "dependencies": {
-    "puppeteer": "^24.33.0"
+    "puppeteer": "^24.33.0",
+    "express": "^4.19.2",
+    "serve": "^14.2.3",
+    "concurrently": "^8.2.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.5.1",
+    "@replit/vite-plugin-runtime-error-modal": "^1.0.0",
+    "@replit/vite-plugin-cartographer": "^1.0.0",
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.3.3",
+    "vite": "^5.2.8"
   }
 }
