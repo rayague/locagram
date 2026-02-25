@@ -132,28 +132,17 @@ export default function Sidebar() {
 
         {/* Navigation */}
         <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
-          {sidebarItems
+          {(sidebarItems as Array<SidebarItem | undefined | null>)
+            .filter(Boolean)
             .filter((item): item is SidebarItem => {
-              // Filtrage strict avec type guard
-              if (!item || !item.icon || !item.name || !item.href) {
-                console.warn("Invalid sidebar item:", item);
-                return false;
-              }
-
-              // Filtrer les éléments selon le rôle
+              if (!item || !item.icon || !item.name || !item.href) return false;
               if (item.adminOnly && user?.role !== "admin") return false;
               if (item.demarcheurOnly && user?.role !== "demarcheur") return false;
-
               return true;
             })
             .map((item) => {
-              // Vérification additionnelle des propriétés icon
-              if (!item.icon) {
-                console.error("Missing icon for item:", item);
-                return null;
-              }
-              
-              const Icon = item.icon;
+              const Icon = item?.icon;
+              if (!Icon) return null;
               const isActive = location === item.href;
               
               return (
