@@ -147,6 +147,12 @@ export default function Sidebar() {
               return true;
             })
             .map((item) => {
+              // Vérification additionnelle des propriétés icon
+              if (!item.icon) {
+                console.error("Missing icon for item:", item);
+                return null;
+              }
+              
               const Icon = item.icon;
               const isActive = location === item.href;
               

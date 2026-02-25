@@ -187,6 +187,12 @@ function AppRoutes() {
         </ProtectedRoute>
       </Route>
       
+      <Route path="/users">
+        <ProtectedRoute requireAdmin>
+          <UsersPage />
+        </ProtectedRoute>
+      </Route>
+      
       <Route path="/admin/notifications">
         <ProtectedRoute requireAdmin>
           <AdminNotificationsPage />
