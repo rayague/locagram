@@ -2,18 +2,10 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './src/**/*.{js,jsx,ts,tsx}',
-    './index.html',
-    '../shared/**/*.{js,jsx,ts,tsx}',
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./index.html",
   ],
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
@@ -56,18 +48,18 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        serif: ['Playfair Display', 'serif'],
-        montserrat: ['Montserrat', 'sans-serif'],
+        sans: ["Inter", "sans-serif"],
+        serif: ["Playfair Display", "serif"],
+        montserrat: ["Montserrat", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {
-          from: { height: 0 },
+          from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: 0 },
+          to: { height: "0" },
         },
       },
       animation: {
@@ -76,5 +68,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [require("tailwindcss-animate")],
 } 
