@@ -6,4 +6,4 @@ vite.config.ts.*
 *.tar.gz
 
 server/serviceAccountKey.json
-server/*serviceAccount*.json
+server/*serviceAccount*.jsondemarcheur-dashboard-hub/  
