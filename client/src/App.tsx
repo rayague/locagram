@@ -1,10 +1,11 @@
+import { lazy, Suspense } from "react";
 import { Route, Switch } from "wouter";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 import { ErrorBoundary } from "react-error-boundary";
 
-// Public pages
+// Public pages (eager — on the critical path)
 import HomePage from "@/pages/Home";
 import LouerPage from "@/pages/louer";
 import VendrePage from "@/pages/vendre";
@@ -15,35 +16,37 @@ import NotFoundPage from "@/pages/NotFound";
 import PropertyDetailsPage from "@/pages/property/[id]";
 import CategoryPage from "@/pages/category/[id]";
 
-// Auth pages
+// Auth pages (eager — needed on first interaction)
 import LoginPage from "@/pages/auth/login";
 import RegisterPage from "@/pages/auth/register";
-import RegistrationPendingPage from "@/pages/auth/RegistrationPending";
-import ForgotPasswordPage from "@/pages/auth/ForgotPassword";
-import ResetPasswordPage from "@/pages/auth/ResetPassword";
 
-// Dashboard pages
-import DashboardPage from "@/pages/dashboard/Dashboard";
-import ProfilePage from "@/pages/dashboard/Profile";
-import ListingsPage from "@/pages/dashboard/Listings";
-import CreateListingPage from "@/pages/dashboard/CreateListing";
-import EditListingPage from "@/pages/dashboard/EditListing";
-import ListingDetailPage from "@/pages/dashboard/ListingDetails";
-import DashboardReservationsPage from "@/pages/dashboard/reservations";
-import SubscriptionPage from "@/pages/dashboard/Subscription";
-import DashboardSettingsPage from "@/pages/dashboard/settings";
-import StatisticsPage from "@/pages/dashboard/Statistics";
-import MessagesPage from "@/pages/dashboard/messages";
+// Auth pages (lazy)
+const RegistrationPendingPage = lazy(() => import("@/pages/auth/RegistrationPending"));
+const ForgotPasswordPage = lazy(() => import("@/pages/auth/ForgotPassword"));
+const ResetPasswordPage = lazy(() => import("@/pages/auth/ResetPassword"));
 
-// Admin pages
-import AdminDashboardPage from "@/pages/admin/AdminDashboard";
-import AdminProfilePage from "@/pages/admin/AdminProfile";
-import UsersManagementPage from "@/pages/admin/UsersManagement";
-import ListingsManagementPage from "@/pages/admin/ListingsManagement";
-import CategoriesManagementPage from "@/pages/admin/CategoriesManagement";
-import SubscriptionManagementPage from "@/pages/admin/SubscriptionManagement";
-import AdminNotificationsPage from "@/pages/admin/notifications";
-import AdminSettingsPage from "@/pages/admin/AdminSettings";
+// Dashboard pages (lazy)
+const DashboardPage = lazy(() => import("@/pages/dashboard/Dashboard"));
+const ProfilePage = lazy(() => import("@/pages/dashboard/Profile"));
+const ListingsPage = lazy(() => import("@/pages/dashboard/Listings"));
+const CreateListingPage = lazy(() => import("@/pages/dashboard/CreateListing"));
+const EditListingPage = lazy(() => import("@/pages/dashboard/EditListing"));
+const ListingDetailPage = lazy(() => import("@/pages/dashboard/ListingDetails"));
+const DashboardReservationsPage = lazy(() => import("@/pages/dashboard/reservations"));
+const SubscriptionPage = lazy(() => import("@/pages/dashboard/Subscription"));
+const DashboardSettingsPage = lazy(() => import("@/pages/dashboard/settings"));
+const StatisticsPage = lazy(() => import("@/pages/dashboard/Statistics"));
+const MessagesPage = lazy(() => import("@/pages/dashboard/messages"));
+
+// Admin pages (lazy)
+const AdminDashboardPage = lazy(() => import("@/pages/admin/AdminDashboard"));
+const AdminProfilePage = lazy(() => import("@/pages/admin/AdminProfile"));
+const UsersManagementPage = lazy(() => import("@/pages/admin/UsersManagement"));
+const ListingsManagementPage = lazy(() => import("@/pages/admin/ListingsManagement"));
+const CategoriesManagementPage = lazy(() => import("@/pages/admin/CategoriesManagement"));
+const SubscriptionManagementPage = lazy(() => import("@/pages/admin/SubscriptionManagement"));
+const AdminNotificationsPage = lazy(() => import("@/pages/admin/notifications"));
+const AdminSettingsPage = lazy(() => import("@/pages/admin/AdminSettings"));
 
 // Layout
 import Footer from "@/components/Footer";
@@ -51,6 +54,15 @@ import Navbar from "@/components/Navbar";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Toaster } from "sonner";
 import { Toaster as ShadcnToaster } from "@/components/ui/toaster";
+
+// Shared page-level loading fallback
+function PageLoader() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
+      <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
 
 // Error fallback component
 function ErrorFallback({
@@ -115,6 +127,7 @@ function AppRoutes() {
   }
 
   return (
+    <Suspense fallback={<PageLoader />}>
     <Switch>
       {/* Routes publiques */}
       <Route path="/" exact>
@@ -210,6 +223,7 @@ function AppRoutes() {
       {/* 404 */}
       <Route component={NotFoundPage} />
     </Switch>
+    </Suspense>
   );
 }
 

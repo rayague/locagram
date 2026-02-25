@@ -7,16 +7,61 @@ transforming...
 Browserslist: browsers data (caniuse-lite) is 9 months old. Please run:
   npx update-browserslist-db@latest
   Why you should do it regularly: https://github.com/browserslist/update-db#readme
-[32m✓[39m 3205 modules transformed.
+[32m✓[39m 3206 modules transformed.
 rendering chunks...
 computing gzip size...
-[2mdist/[22m[32mindex.html                         [39m[1m[2m    0.83 kB[22m[1m[22m[2m │ gzip:   0.48 kB[22m
-[2mdist/[22m[32massets/logo-locagram-DF5ulDlh.png  [39m[1m[2m  144.28 kB[22m[1m[22m
-[2mdist/[22m[35massets/index-ChaIlyTa.css          [39m[1m[2m   90.03 kB[22m[1m[22m[2m │ gzip:  14.80 kB[22m
-[2mdist/[22m[36massets/index-CaQmak1E.js           [39m[1m[33m1,645.96 kB[39m[22m[2m │ gzip: 439.37 kB[22m
+[2mdist/[22m[32mindex.html                                 [39m[1m[2m    0.83 kB[22m[1m[22m[2m │ gzip:   0.49 kB[22m
+[2mdist/[22m[32massets/logo-locagram-DF5ulDlh.png          [39m[1m[2m  144.28 kB[22m[1m[22m
+[2mdist/[22m[35massets/index-yphoTWU3.css                  [39m[1m[2m   88.19 kB[22m[1m[22m[2m │ gzip:  14.50 kB[22m
+[2mdist/[22m[36massets/loader-circle-DRS8-Npq.js           [39m[1m[2m    0.32 kB[22m[1m[22m[2m │ gzip:   0.26 kB[22m
+[2mdist/[22m[36massets/plus-C8ryvax-.js                    [39m[1m[2m    0.33 kB[22m[1m[22m[2m │ gzip:   0.26 kB[22m
+[2mdist/[22m[36massets/circle-check-Dsqk-Qyv.js            [39m[1m[2m    0.35 kB[22m[1m[22m[2m │ gzip:   0.27 kB[22m
+[2mdist/[22m[36massets/circle-x-DL96jj3q.js                [39m[1m[2m    0.38 kB[22m[1m[22m[2m │ gzip:   0.28 kB[22m
+[2mdist/[22m[36massets/ellipsis-vertical-CyxRwEXN.js       [39m[1m[2m    0.41 kB[22m[1m[22m[2m │ gzip:   0.28 kB[22m
+[2mdist/[22m[36massets/globe-DjEcI5fL.js                   [39m[1m[2m    0.42 kB[22m[1m[22m[2m │ gzip:   0.30 kB[22m
+[2mdist/[22m[36massets/trash-3uv3dqon.js                   [39m[1m[2m    0.42 kB[22m[1m[22m[2m │ gzip:   0.31 kB[22m
+[2mdist/[22m[36massets/funnel-bQZe3JzO.js                  [39m[1m[2m    0.43 kB[22m[1m[22m[2m │ gzip:   0.32 kB[22m
+[2mdist/[22m[36massets/pencil-DCXmQypL.js                  [39m[1m[2m    0.45 kB[22m[1m[22m[2m │ gzip:   0.33 kB[22m
+[2mdist/[22m[36massets/refresh-cw-Dza4-Rqz.js              [39m[1m[2m    0.49 kB[22m[1m[22m[2m │ gzip:   0.33 kB[22m
+[2mdist/[22m[36massets/tag-CvFUzw-d.js                     [39m[1m[2m    0.50 kB[22m[1m[22m[2m │ gzip:   0.35 kB[22m
+[2mdist/[22m[36massets/save-DtGLRDcT.js                    [39m[1m[2m    0.50 kB[22m[1m[22m[2m │ gzip:   0.33 kB[22m
+[2mdist/[22m[36massets/pen-GQ2-awjS.js                     [39m[1m[2m    0.83 kB[22m[1m[22m[2m │ gzip:   0.44 kB[22m
+[2mdist/[22m[36massets/label-DErB-xCB.js                   [39m[1m[2m    0.91 kB[22m[1m[22m[2m │ gzip:   0.56 kB[22m
+[2mdist/[22m[36massets/card-6YQCOXWu.js                    [39m[1m[2m    1.00 kB[22m[1m[22m[2m │ gzip:   0.37 kB[22m
+[2mdist/[22m[36massets/ForgotPassword-3RbMETgO.js          [39m[1m[2m    1.52 kB[22m[1m[22m[2m │ gzip:   0.80 kB[22m
+[2mdist/[22m[36massets/RegistrationPending-Csq_7BbK.js     [39m[1m[2m    1.59 kB[22m[1m[22m[2m │ gzip:   0.78 kB[22m
+[2mdist/[22m[36massets/ResetPassword-CM7AAjHs.js           [39m[1m[2m    2.21 kB[22m[1m[22m[2m │ gzip:   0.93 kB[22m
+[2mdist/[22m[36massets/switch-DuedB89a.js                  [39m[1m[2m    2.58 kB[22m[1m[22m[2m │ gzip:   1.29 kB[22m
+[2mdist/[22m[36massets/badge-CrWsy6KR.js                   [39m[1m[2m    2.94 kB[22m[1m[22m[2m │ gzip:   1.18 kB[22m
+[2mdist/[22m[36massets/index-BtT_ZRFJ.js                   [39m[1m[2m    3.60 kB[22m[1m[22m[2m │ gzip:   1.63 kB[22m
+[2mdist/[22m[36massets/messages-Y3fa76Rt.js                [39m[1m[2m    3.68 kB[22m[1m[22m[2m │ gzip:   1.56 kB[22m
+[2mdist/[22m[36massets/notifications-CjVrBySX.js           [39m[1m[2m    4.54 kB[22m[1m[22m[2m │ gzip:   1.72 kB[22m
+[2mdist/[22m[36massets/tabs-BZThYfsE.js                    [39m[1m[2m    5.42 kB[22m[1m[22m[2m │ gzip:   2.19 kB[22m
+[2mdist/[22m[36massets/Statistics-C7iyAFw1.js              [39m[1m[2m    5.47 kB[22m[1m[22m[2m │ gzip:   1.45 kB[22m
+[2mdist/[22m[36massets/DashboardLayout-CU6wQHfK.js         [39m[1m[2m    5.51 kB[22m[1m[22m[2m │ gzip:   2.08 kB[22m
+[2mdist/[22m[36massets/AdminSettings-dKxnlGt2.js           [39m[1m[2m    5.60 kB[22m[1m[22m[2m │ gzip:   1.73 kB[22m
+[2mdist/[22m[36massets/AdminLayout-DUYS1ypk.js             [39m[1m[2m    5.84 kB[22m[1m[22m[2m │ gzip:   2.18 kB[22m
+[2mdist/[22m[36massets/reservations-CNJIX6Po.js            [39m[1m[2m    6.97 kB[22m[1m[22m[2m │ gzip:   2.69 kB[22m
+[2mdist/[22m[36massets/Dashboard-D4slkzTW.js               [39m[1m[2m    7.06 kB[22m[1m[22m[2m │ gzip:   2.50 kB[22m
+[2mdist/[22m[36massets/AdminDashboard-DmGmjzVh.js          [39m[1m[2m    7.12 kB[22m[1m[22m[2m │ gzip:   2.02 kB[22m
+[2mdist/[22m[36massets/Subscription-CcPsS4Cw.js            [39m[1m[2m    7.47 kB[22m[1m[22m[2m │ gzip:   2.98 kB[22m
+[2mdist/[22m[36massets/SubscriptionManagement-si2ALLxu.js  [39m[1m[2m    7.95 kB[22m[1m[22m[2m │ gzip:   2.61 kB[22m
+[2mdist/[22m[36massets/settings-B9APugCh.js                [39m[1m[2m    8.98 kB[22m[1m[22m[2m │ gzip:   2.31 kB[22m
+[2mdist/[22m[36massets/CategoriesManagement-BvLCtH4k.js    [39m[1m[2m    9.95 kB[22m[1m[22m[2m │ gzip:   3.48 kB[22m
+[2mdist/[22m[36massets/Listings-BB2t9Nrr.js                [39m[1m[2m   10.54 kB[22m[1m[22m[2m │ gzip:   3.81 kB[22m
+[2mdist/[22m[36massets/ListingDetails-BPUIsGVA.js          [39m[1m[2m   11.26 kB[22m[1m[22m[2m │ gzip:   3.32 kB[22m
+[2mdist/[22m[36massets/scroll-area-BML7JiOE.js             [39m[1m[2m   14.63 kB[22m[1m[22m[2m │ gzip:   4.65 kB[22m
+[2mdist/[22m[36massets/UsersManagement-CLBsUo46.js         [39m[1m[2m   15.11 kB[22m[1m[22m[2m │ gzip:   3.92 kB[22m
+[2mdist/[22m[36massets/Profile-Dur8iova.js                 [39m[1m[2m   15.92 kB[22m[1m[22m[2m │ gzip:   3.93 kB[22m
+[2mdist/[22m[36massets/CreateListing-DxIvclCa.js           [39m[1m[2m   17.87 kB[22m[1m[22m[2m │ gzip:   5.45 kB[22m
+[2mdist/[22m[36massets/AdminProfile-D3eSSsXG.js            [39m[1m[2m   19.35 kB[22m[1m[22m[2m │ gzip:   5.98 kB[22m
+[2mdist/[22m[36massets/dropdown-menu-CXYjH8cp.js           [39m[1m[2m   33.27 kB[22m[1m[22m[2m │ gzip:  10.23 kB[22m
+[2mdist/[22m[36massets/ListingsManagement-CJqYpR7q.js      [39m[1m[2m   46.87 kB[22m[1m[22m[2m │ gzip:  13.80 kB[22m
+[2mdist/[22m[36massets/EditListing-BvKmuz-D.js             [39m[1m[2m  108.40 kB[22m[1m[22m[2m │ gzip:  32.21 kB[22m
+[2mdist/[22m[36massets/index-sCGe_R2G.js                   [39m[1m[33m1,254.56 kB[39m[22m[2m │ gzip: 340.05 kB[22m
 [33m
 (!) Some chunks are larger than 500 kB after minification. Consider:
 - Using dynamic import() to code-split the application
 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
-[32m✓ built in 11.39s[39m
+[32m✓ built in 12.20s[39m
