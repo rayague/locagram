@@ -1,31 +1,56 @@
 import { Route, Switch } from "wouter";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { NotificationProvider } from "@/contexts/NotificationContext";
 import { ErrorBoundary } from "react-error-boundary";
+
+// Public pages
 import HomePage from "@/pages/Home";
 import LouerPage from "@/pages/louer";
 import VendrePage from "@/pages/vendre";
 import CategoriesPage from "@/pages/categories";
-import CategoryPage from "@/pages/category/[id]";
 import AProposPage from "@/pages/APropos";
 import ContactPage from "@/pages/contact";
-import DashboardPage from "@/pages/dashboard";
-import AnnoncesPage from "@/pages/dashboard/annonces";
-import ReservationsPage from "@/pages/dashboard/reservations";
-import MessagesPage from "@/pages/dashboard/messages";
-import CategoriesDashboardPage from "@/pages/dashboard/categories";
-import UsersPage from "@/pages/dashboard/users";
-import SettingsPage from "@/pages/dashboard/settings";
-import LoginPage from "@/pages/auth/login";
-import RegisterPage from "@/pages/auth/register";
 import NotFoundPage from "@/pages/NotFound";
 import PropertyDetailsPage from "@/pages/property/[id]";
+import CategoryPage from "@/pages/category/[id]";
+
+// Auth pages
+import LoginPage from "@/pages/auth/login";
+import RegisterPage from "@/pages/auth/register";
+import RegistrationPendingPage from "@/pages/auth/RegistrationPending";
+import ForgotPasswordPage from "@/pages/auth/ForgotPassword";
+import ResetPasswordPage from "@/pages/auth/ResetPassword";
+
+// Dashboard pages
+import DashboardPage from "@/pages/dashboard/Dashboard";
+import ProfilePage from "@/pages/dashboard/Profile";
+import ListingsPage from "@/pages/dashboard/Listings";
+import CreateListingPage from "@/pages/dashboard/CreateListing";
+import EditListingPage from "@/pages/dashboard/EditListing";
+import ListingDetailPage from "@/pages/dashboard/ListingDetails";
+import DashboardReservationsPage from "@/pages/dashboard/reservations";
+import SubscriptionPage from "@/pages/dashboard/Subscription";
+import DashboardSettingsPage from "@/pages/dashboard/settings";
+import StatisticsPage from "@/pages/dashboard/Statistics";
+import MessagesPage from "@/pages/dashboard/messages";
+
+// Admin pages
+import AdminDashboardPage from "@/pages/admin/AdminDashboard";
+import AdminProfilePage from "@/pages/admin/AdminProfile";
+import UsersManagementPage from "@/pages/admin/UsersManagement";
+import ListingsManagementPage from "@/pages/admin/ListingsManagement";
+import CategoriesManagementPage from "@/pages/admin/CategoriesManagement";
+import SubscriptionManagementPage from "@/pages/admin/SubscriptionManagement";
 import AdminNotificationsPage from "@/pages/admin/notifications";
-import AdminContactMessagesPage from "@/pages/admin/ContactMessages";
+import AdminSettingsPage from "@/pages/admin/AdminSettings";
+
+// Layout
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Toaster } from "sonner";
+import { Toaster as ShadcnToaster } from "@/components/ui/toaster";
 
 // Error fallback component
 function ErrorFallback({
@@ -93,119 +118,96 @@ function AppRoutes() {
     <Switch>
       {/* Routes publiques */}
       <Route path="/" exact>
-        <PublicLayout>
-          <HomePage />
-        </PublicLayout>
+        <PublicLayout><HomePage /></PublicLayout>
       </Route>
-      
       <Route path="/louer">
-        <PublicLayout>
-          <LouerPage />
-        </PublicLayout>
+        <PublicLayout><LouerPage /></PublicLayout>
       </Route>
-      
       <Route path="/vendre">
-        <PublicLayout>
-          <VendrePage />
-        </PublicLayout>
+        <PublicLayout><VendrePage /></PublicLayout>
       </Route>
-      
       <Route path="/categories">
-        <PublicLayout>
-          <CategoriesPage />
-        </PublicLayout>
+        <PublicLayout><CategoriesPage /></PublicLayout>
       </Route>
-      
       <Route path="/category/:id" component={CategoryPage} />
-      
       <Route path="/apropos">
-        <PublicLayout>
-          <AProposPage />
-        </PublicLayout>
+        <PublicLayout><AProposPage /></PublicLayout>
       </Route>
-      
       <Route path="/contact">
-        <PublicLayout>
-          <ContactPage />
-        </PublicLayout>
+        <PublicLayout><ContactPage /></PublicLayout>
       </Route>
-      
       <Route path="/property/:id" component={PropertyDetailsPage} />
-      
+
       {/* Routes d'authentification */}
       <Route path="/login" component={LoginPage} />
       <Route path="/auth/login" component={LoginPage} />
       <Route path="/auth/register" component={RegisterPage} />
-      
-      {/* Routes protégées - Dashboard utilisateur */}
-      <Route path="/dashboard" exact>
-        <ProtectedRoute>
-          <DashboardPage />
-        </ProtectedRoute>
+      <Route path="/registration-pending" component={RegistrationPendingPage} />
+      <Route path="/forgot-password" component={ForgotPasswordPage} />
+      <Route path="/reset-password" component={ResetPasswordPage} />
+
+      {/* Routes Dashboard utilisateur */}
+      <Route path="/dashboard">
+        <ProtectedRoute><DashboardPage /></ProtectedRoute>
       </Route>
-      
-      <Route path="/dashboard/annonces">
-        <ProtectedRoute>
-          <AnnoncesPage />
-        </ProtectedRoute>
+      <Route path="/dashboard/profile">
+        <ProtectedRoute><ProfilePage /></ProtectedRoute>
       </Route>
-      
+      <Route path="/dashboard/listings">
+        <ProtectedRoute><ListingsPage /></ProtectedRoute>
+      </Route>
+      <Route path="/dashboard/create-listing">
+        <ProtectedRoute><CreateListingPage /></ProtectedRoute>
+      </Route>
+      <Route path="/dashboard/listings/:id/edit">
+        <ProtectedRoute><EditListingPage /></ProtectedRoute>
+      </Route>
+      <Route path="/dashboard/listings/:id">
+        <ProtectedRoute><ListingDetailPage /></ProtectedRoute>
+      </Route>
       <Route path="/dashboard/reservations">
-        <ProtectedRoute>
-          <ReservationsPage />
-        </ProtectedRoute>
+        <ProtectedRoute><DashboardReservationsPage /></ProtectedRoute>
       </Route>
-      
-      <Route path="/dashboard/messages">
-        <ProtectedRoute>
-          <MessagesPage />
-        </ProtectedRoute>
+      <Route path="/dashboard/subscription">
+        <ProtectedRoute><SubscriptionPage /></ProtectedRoute>
       </Route>
-      
-      <Route path="/dashboard/categories">
-        <ProtectedRoute requireAdmin>
-          <CategoriesDashboardPage />
-        </ProtectedRoute>
-      </Route>
-      
-      <Route path="/dashboard/users">
-        <ProtectedRoute requireAdmin>
-          <UsersPage />
-        </ProtectedRoute>
-      </Route>
-      
       <Route path="/dashboard/settings">
-        <ProtectedRoute>
-          <SettingsPage />
-        </ProtectedRoute>
+        <ProtectedRoute><DashboardSettingsPage /></ProtectedRoute>
       </Route>
-      
+      <Route path="/dashboard/statistics">
+        <ProtectedRoute><StatisticsPage /></ProtectedRoute>
+      </Route>
+      <Route path="/dashboard/messages">
+        <ProtectedRoute><MessagesPage /></ProtectedRoute>
+      </Route>
+
       {/* Routes Admin */}
+      <Route path="/admin">
+        <ProtectedRoute requireAdmin><AdminDashboardPage /></ProtectedRoute>
+      </Route>
+      <Route path="/admin/profile">
+        <ProtectedRoute requireAdmin><AdminProfilePage /></ProtectedRoute>
+      </Route>
       <Route path="/admin/users">
-        <ProtectedRoute requireAdmin>
-          <UsersPage />
-        </ProtectedRoute>
+        <ProtectedRoute requireAdmin><UsersManagementPage /></ProtectedRoute>
       </Route>
-      
-      <Route path="/users">
-        <ProtectedRoute requireAdmin>
-          <UsersPage />
-        </ProtectedRoute>
+      <Route path="/admin/listings">
+        <ProtectedRoute requireAdmin><ListingsManagementPage /></ProtectedRoute>
       </Route>
-      
+      <Route path="/admin/categories">
+        <ProtectedRoute requireAdmin><CategoriesManagementPage /></ProtectedRoute>
+      </Route>
+      <Route path="/admin/subscriptions">
+        <ProtectedRoute requireAdmin><SubscriptionManagementPage /></ProtectedRoute>
+      </Route>
       <Route path="/admin/notifications">
-        <ProtectedRoute requireAdmin>
-          <AdminNotificationsPage />
-        </ProtectedRoute>
+        <ProtectedRoute requireAdmin><AdminNotificationsPage /></ProtectedRoute>
       </Route>
-      
-      <Route path="/admin/contact-messages">
-        <ProtectedRoute requireAdmin>
-          <AdminContactMessagesPage />
-        </ProtectedRoute>
+      <Route path="/admin/settings">
+        <ProtectedRoute requireAdmin><AdminSettingsPage /></ProtectedRoute>
       </Route>
-      
-      {/* 404 - Toutes les autres routes */}
+
+      {/* 404 */}
       <Route component={NotFoundPage} />
     </Switch>
   );
@@ -221,19 +223,21 @@ export default function App() {
         console.error("Global Error Boundary:", error, errorInfo);
       }}
       onReset={() => {
-        // Optionnel: reset d'état global
         window.location.reload();
       }}
     >
       <ThemeProvider>
         <AuthProvider>
-          <Toaster 
-            position="top-right"
-            richColors
-            closeButton
-            duration={4000}
-          />
-          <AppRoutes />
+          <NotificationProvider>
+            <Toaster 
+              position="top-right"
+              richColors
+              closeButton
+              duration={4000}
+            />
+            <ShadcnToaster />
+            <AppRoutes />
+          </NotificationProvider>
         </AuthProvider>
       </ThemeProvider>
     </ErrorBoundary>

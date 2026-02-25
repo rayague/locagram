@@ -14,6 +14,7 @@ import {
   updateDoc,
   serverTimestamp,
   enableMultiTabIndexedDbPersistence,
+  Timestamp,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -22,6 +23,8 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
+  fetchSignInMethodsForEmail,
+  type UserCredential,
 } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
@@ -622,4 +625,53 @@ export const rejectSubscriptionRequest = async (
   batch.update(doc(db, "subscriptionRequests", requestId), { status: "rejected" });
   batch.update(doc(db, "users", userId), { status: "rejected" });
   await batch.commit();
+};
+
+// Calcul de la date d'expiration de la période d'essai (2 mois)
+const calculateTrialExpiration = (): Timestamp => {
+  const date = new Date();
+  date.setMonth(date.getMonth() + 2);
+  return Timestamp.fromDate(date);
+};
+
+// Inscription d'un nouvel utilisateur
+export const signUp = async (
+  email: string,
+  password: string,
+  userData: Record<string, unknown>
+): Promise<UserCredential> => {
+  // Vérifier si l'email est déjà utilisé
+  const methods = await fetchSignInMethodsForEmail(auth, email);
+  if (methods.length > 0) {
+    throw new Error("Cet email est déjà utilisé par un autre compte");
+  }
+
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  const uid = userCredential.user.uid;
+  const trialExpiresAt = calculateTrialExpiration();
+
+  // Créer le document utilisateur dans Firestore
+  await setDoc(doc(db, "users", uid), {
+    email,
+    name: userData.name || "",
+    role: "demarcheur",
+    status: "pending",
+    phone: userData.phone || "",
+    zone: userData.zone || "",
+    categories: userData.categories || [],
+    company: userData.company || "",
+    address: userData.address || "",
+    city: userData.city || "",
+    country: userData.country || "Bénin",
+    cipNumber: userData.cipNumber || "",
+    trialExpiresAt,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+    lastLoginAt: serverTimestamp(),
+    isAdmin: false,
+    isOwner: false,
+    subscriptionType: "trial",
+  });
+
+  return userCredential;
 };

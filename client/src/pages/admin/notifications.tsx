@@ -1,387 +1,257 @@
-import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+﻿import React, { useEffect, useState } from "react";
+import { useNotifications } from "@/contexts/NotificationContext";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import {
-  Bell,
-  Mail,
-  Phone,
-  User,
-  MessageSquare,
-  Calendar,
-  CheckCircle,
-  XCircle,
-  UserCheck,
-  Clock,
-  Building,
-  Briefcase,
-  FileText,
-  MapPin,
-} from "lucide-react";
-import {
-  getAllContactMessages,
-  getSubscriptionRequests,
-  approveSubscriptionRequest,
-  rejectSubscriptionRequest,
-} from "@/lib/firebase";
-import AdminLayout from "@/components/admin/AdminLayout";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Timestamp } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
-import AdminProtectedRoute from "@/components/admin/AdminProtectedRoute";
-import { toast } from "sonner";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
+import AdminLayout from "@/components/layout/AdminLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { Mail, MessageSquare, Phone } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-export default function AdminNotificationsPage() {
-  return (
-    <AdminProtectedRoute>
-      <NotificationsContent />
-    </AdminProtectedRoute>
-  );
+const getNotificationIcon = (type: string) => {
+  switch (type) {
+    case "user_registered":
+      return "👤";
+    case "user_updated":
+      return "✏️";
+    case "user_status_changed":
+      return "🔄";
+    case "listing_created":
+      return "📝";
+    case "listing_updated":
+      return "📋";
+    case "listing_deleted":
+      return "🗑️";
+    case "listing_status_changed":
+      return "📊";
+    case "subscription_created":
+      return "💳";
+    case "subscription_updated":
+      return "🔄";
+    case "subscription_expired":
+      return "⚠️";
+    default:
+      return "📢";
+  }
+};
+
+interface ContactMessage {
+  id: string;
+  createdAt: Timestamp;
+  email: string;
+  message: string;
+  name: string;
+  phone: string;
+  subject: string;
+  type: string;
 }
 
-function NotificationsContent() {
-  const [activeTab, setActiveTab] = useState<"subscriptions" | "messages">(
-    "subscriptions"
-  );
-  const queryClient = useQueryClient();
+export default function NotificationsPage() {
+  const { notifications, markAsRead, markAllAsRead } = useNotifications();
+  const [messages, setMessages] = useState<ContactMessage[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const {
-    data: subscriptions,
-    isLoading: loadingSubscriptions,
-    error: subsError,
-  } = useQuery({
-    queryKey: ["subscription-requests"],
-    queryFn: getSubscriptionRequests,
-  });
+  useEffect(() => {
+    fetchMessages();
+  }, []);
 
-  const {
-    data: messages,
-    isLoading: loadingMessages,
-    error: msgError,
-  } = useQuery({
-    queryKey: ["contact-messages"],
-    queryFn: getAllContactMessages,
-  });
+  const fetchMessages = async () => {
+    try {
+      setIsLoading(true);
+      const messagesRef = collection(db, "contact-messages");
+      const q = query(messagesRef, orderBy("createdAt", "desc"));
+      const querySnapshot = await getDocs(q);
 
-  const approveMutation = useMutation({
-    mutationFn: ({ requestId, userId }: { requestId: string; userId: string }) =>
-      approveSubscriptionRequest(requestId, userId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["subscription-requests"] });
-      toast.success("Compte approuvé", {
-        description: "L'utilisateur peut maintenant se connecter.",
-      });
-    },
-    onError: () => {
-      toast.error("Erreur lors de l'approbation");
-    },
-  });
+      const fetchedMessages = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as ContactMessage[];
 
-  const rejectMutation = useMutation({
-    mutationFn: ({ requestId, userId }: { requestId: string; userId: string }) =>
-      rejectSubscriptionRequest(requestId, userId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["subscription-requests"] });
-      toast.success("Demande refusée", {
-        description: "L'utilisateur a été notifié.",
-      });
-    },
-    onError: () => {
-      toast.error("Erreur lors du refus");
-    },
-  });
+      setMessages(fetchedMessages);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des messages:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const pendingCount = subscriptions?.filter((s) => s.status === "pending").length ?? 0;
+  const handleReply = (type: "email" | "whatsapp", contact: string) => {
+    const url =
+      type === "email"
+        ? `mailto:${contact}`
+        : `https://wa.me/${contact.replace(/\D/g, "")}`;
+    window.open(url, "_blank");
+  };
 
   return (
     <AdminLayout>
-      <div className="p-6">
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <Bell className="h-6 w-6 text-green-600" />
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Notifications
-          </h1>
-          {pendingCount > 0 && (
-            <Badge className="bg-red-500 text-white">
-              {pendingCount} en attente
-            </Badge>
-          )}
-        </div>
-
-        {/* Tabs */}
-        <div className="flex gap-1 mb-6 border-b border-gray-200 dark:border-gray-700">
-          <button
-            onClick={() => setActiveTab("subscriptions")}
-            className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors flex items-center gap-2 ${
-              activeTab === "subscriptions"
-                ? "bg-white dark:bg-gray-800 border border-b-white dark:border-b-gray-800 border-gray-200 dark:border-gray-700 text-green-600"
-                : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-            }`}
-          >
-            <UserCheck className="h-4 w-4" />
-            Demandes d'inscription
-            {pendingCount > 0 && (
-              <span className="ml-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">
-                {pendingCount}
-              </span>
+      <div className="p-6 space-y-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Notifications</CardTitle>
+            {notifications.some((n) => !n.read) && (
+              <Button
+                variant="outline"
+                onClick={markAllAsRead}
+                className="text-sm"
+              >
+                Tout marquer comme lu
+              </Button>
             )}
-          </button>
-          <button
-            onClick={() => setActiveTab("messages")}
-            className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors flex items-center gap-2 ${
-              activeTab === "messages"
-                ? "bg-white dark:bg-gray-800 border border-b-white dark:border-b-gray-800 border-gray-200 dark:border-gray-700 text-green-600"
-                : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-            }`}
-          >
-            <MessageSquare className="h-4 w-4" />
-            Messages de contact
-            {(messages?.length ?? 0) > 0 && (
-              <span className="ml-1 bg-gray-400 text-white text-xs rounded-full px-1.5 py-0.5">
-                {messages?.length}
-              </span>
-            )}
-          </button>
-        </div>
-
-        {/* Subscription requests tab */}
-        {activeTab === "subscriptions" && (
-          <ScrollArea className="h-[calc(100vh-14rem)] pr-4">
-            {loadingSubscriptions ? (
-              <div className="space-y-4">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
-                    <Skeleton className="h-6 w-1/3 mb-4" />
-                    <Skeleton className="h-4 w-1/2 mb-2" />
-                    <Skeleton className="h-4 w-3/4" />
-                  </div>
-                ))}
-              </div>
-            ) : subsError ? (
-              <div className="bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 p-4 rounded-lg">
-                <p>Erreur lors du chargement des demandes d'inscription.</p>
-              </div>
-            ) : subscriptions?.length === 0 ? (
-              <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                <UserCheck className="h-12 w-12 mx-auto mb-4 opacity-30" />
-                <p className="text-lg font-medium">Aucune demande d'inscription</p>
-                <p className="text-sm mt-1">Les nouvelles inscriptions apparaîtront ici.</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {subscriptions?.map((req) => (
-                  <div
-                    key={req.id}
-                    className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700"
-                  >
-                    {/* Header row */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="bg-green-50 dark:bg-green-900/20 p-2 rounded-full">
-                          <User className="h-5 w-5 text-green-600" />
+          </CardHeader>
+          <CardContent>
+            <ScrollArea className="h-[calc(100vh-16rem)]">
+              {notifications.length === 0 ? (
+                <div className="p-8 text-center text-muted-foreground">
+                  Aucune notification
+                </div>
+              ) : (
+                <div className="divide-y">
+                  {notifications.map((notification) => (
+                    <div
+                      key={notification.id}
+                      className={cn(
+                        "p-6 hover:bg-accent cursor-pointer transition-colors",
+                        !notification.read && "bg-accent/50"
+                      )}
+                      onClick={() =>
+                        !notification.read && markAsRead(notification.id)
+                      }
+                    >
+                      <div className="flex items-start gap-4">
+                        <span
+                          className="text-3xl"
+                          role="img"
+                          aria-label={notification.type}
+                        >
+                          {getNotificationIcon(notification.type)}
+                        </span>
+                        <div className="flex-1 space-y-2">
+                          <div className="flex items-center justify-between">
+                            <p className="font-medium">{notification.title}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {format(
+                                notification.createdAt instanceof Timestamp
+                                  ? notification.createdAt.toDate()
+                                  : notification.createdAt,
+                                "PPp",
+                                { locale: fr }
+                              )}
+                            </p>
+                          </div>
+                          <p className="text-muted-foreground">
+                            {notification.message}
+                          </p>
+                          {notification.data && (
+                            <div className="mt-2 text-sm text-muted-foreground">
+                              <pre className="whitespace-pre-wrap">
+                                {JSON.stringify(notification.data, null, 2)}
+                              </pre>
+                            </div>
+                          )}
                         </div>
-                        <div>
-                          <h3 className="font-semibold text-gray-900 dark:text-white">
-                            {req.name}
-                          </h3>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {req.userType} · {req.profession}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Messages de Contact</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea className="h-[calc(100vh-16rem)]">
+              {isLoading ? (
+                <div className="flex items-center justify-center p-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                </div>
+              ) : messages.length === 0 ? (
+                <div className="p-8 text-center text-muted-foreground">
+                  Aucun message
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {messages.map((message) => (
+                    <div
+                      key={message.id}
+                      className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="space-y-1">
+                          <h3 className="font-medium">{message.subject}</h3>
+                          <p className="text-sm text-muted-foreground">
+                            De: {message.name}
                           </p>
                         </div>
+                        <p className="text-sm text-muted-foreground">
+                          {format(
+                            message.createdAt.toDate(),
+                            "d MMMM yyyy 'à' HH:mm:ss",
+                            { locale: fr }
+                          )}
+                        </p>
                       </div>
-                      <Badge
-                        className={
-                          req.status === "pending"
-                            ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"
-                            : req.status === "approved"
-                            ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
-                            : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
-                        }
-                      >
-                        {req.status === "pending" && (
-                          <Clock className="h-3 w-3 mr-1" />
-                        )}
-                        {req.status === "approved" && (
-                          <CheckCircle className="h-3 w-3 mr-1" />
-                        )}
-                        {req.status === "rejected" && (
-                          <XCircle className="h-3 w-3 mr-1" />
-                        )}
-                        {req.status === "pending"
-                          ? "En attente"
-                          : req.status === "approved"
-                          ? "Approuvé"
-                          : "Refusé"}
-                      </Badge>
-                    </div>
 
-                    {/* Details grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm text-gray-600 dark:text-gray-400 mb-4">
-                      <div className="flex items-center gap-2">
-                        <Mail className="h-4 w-4 shrink-0" />
-                        <a href={`mailto:${req.email}`} className="hover:text-green-600 truncate">
-                          {req.email}
-                        </a>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Phone className="h-4 w-4 shrink-0" />
-                        <a href={`tel:${req.phone}`} className="hover:text-green-600">
-                          {req.phone}
-                        </a>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 shrink-0" />
-                        <span>
-                          {req.region ? `${req.region}, ` : ""}
-                          {req.country?.toUpperCase()}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Building className="h-4 w-4 shrink-0" />
-                        <span>{req.agencyName || "—"}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <FileText className="h-4 w-4 shrink-0" />
-                        <span>
-                          {req.idType?.toUpperCase()} · {req.idNumber}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 shrink-0" />
-                        <span>
-                          {format(req.createdAt, "d MMM yyyy 'à' HH:mm", {
-                            locale: fr,
-                          })}
-                        </span>
-                      </div>
-                    </div>
+                      <p className="mt-2 text-sm">{message.message}</p>
 
-                    {/* Action buttons — only for pending requests */}
-                    {req.status === "pending" && (
-                      <div className="flex gap-3 pt-2 border-t border-gray-100 dark:border-gray-700">
-                        <Button
-                          size="sm"
-                          className="bg-green-600 hover:bg-green-700 text-white"
-                          disabled={
-                            approveMutation.isPending || rejectMutation.isPending
-                          }
-                          onClick={() =>
-                            approveMutation.mutate({
-                              requestId: req.id,
-                              userId: req.userId,
-                            })
-                          }
-                        >
-                          <CheckCircle className="h-4 w-4 mr-1" />
-                          Approuver
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          disabled={
-                            approveMutation.isPending || rejectMutation.isPending
-                          }
-                          onClick={() =>
-                            rejectMutation.mutate({
-                              requestId: req.id,
-                              userId: req.userId,
-                            })
-                          }
-                        >
-                          <XCircle className="h-4 w-4 mr-1" />
-                          Refuser
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </ScrollArea>
-        )}
-
-        {/* Contact messages tab */}
-        {activeTab === "messages" && (
-          <ScrollArea className="h-[calc(100vh-14rem)] pr-4">
-            {loadingMessages ? (
-              <div className="space-y-4">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
-                    <Skeleton className="h-6 w-1/3 mb-4" />
-                    <Skeleton className="h-4 w-1/2 mb-2" />
-                    <Skeleton className="h-4 w-3/4" />
-                  </div>
-                ))}
-              </div>
-            ) : msgError ? (
-              <div className="bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 p-4 rounded-lg">
-                <p>Erreur lors du chargement des messages de contact.</p>
-              </div>
-            ) : messages?.length === 0 ? (
-              <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-30" />
-                <p className="text-lg font-medium">Aucun message de contact</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {messages?.map((message) => (
-                  <div
-                    key={message.id}
-                    className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700"
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="bg-blue-50 dark:bg-blue-900/20 p-2 rounded-full">
-                          <MessageSquare className="h-5 w-5 text-blue-600" />
-                        </div>
-                        <div>
-                          <h3 className="font-medium text-gray-900 dark:text-white">
-                            {message.subject}
-                          </h3>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {message.name}
-                          </p>
-                        </div>
-                      </div>
-                      <Badge
-                        variant={message.status === "read" ? "secondary" : "default"}
-                      >
-                        {message.status === "read" ? "Lu" : "Non lu"}
-                      </Badge>
-                    </div>
-                    <p className="text-gray-600 dark:text-gray-300 mb-4 whitespace-pre-wrap text-sm">
-                      {message.message}
-                    </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm text-gray-500 dark:text-gray-400">
-                      <div className="flex items-center gap-2">
-                        <Mail className="h-4 w-4" />
-                        <a href={`mailto:${message.email}`} className="hover:text-green-600">
+                      <div className="mt-4 flex items-center gap-4">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Mail className="h-4 w-4" />
                           {message.email}
-                        </a>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Phone className="h-4 w-4" />
-                        <a href={`tel:${message.phone}`} className="hover:text-green-600">
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Phone className="h-4 w-4" />
                           {message.phone}
-                        </a>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4" />
-                        <span>
-                          {format(message.createdAt, "d MMM yyyy 'à' HH:mm", {
-                            locale: fr,
-                          })}
-                        </span>
+                        </div>
+
+                        <div className="ml-auto">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="outline" size="sm">
+                                Répondre
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleReply("email", message.email)
+                                }
+                              >
+                                <Mail className="h-4 w-4 mr-2" />
+                                Répondre par email
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleReply("whatsapp", message.phone)
+                                }
+                              >
+                                <MessageSquare className="h-4 w-4 mr-2" />
+                                Répondre par WhatsApp
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </ScrollArea>
-        )}
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
+          </CardContent>
+        </Card>
       </div>
     </AdminLayout>
   );
