@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'wouter';
+import { Link } from 'wouter';
 import { motion } from 'framer-motion';
 import { AlertCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -8,7 +8,6 @@ import { useToast } from '@/hooks/use-toast';
 export default function LoginPage() {
   const { login } = useAuth();
   const { toast } = useToast();
-  const [, setLocation] = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -18,24 +17,16 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const success = await login(email, password);
-      if (success) {
-        toast({
-          title: 'Connexion réussie',
-          description: 'Vous allez être redirigé vers le tableau de bord.',
-        });
-        setLocation('/dashboard');
-      } else {
-        toast({
-          title: 'Erreur de connexion',
-          description: 'Email ou mot de passe incorrect',
-          variant: 'destructive',
-        });
-      }
+      await login(email, password);
+      toast({
+        title: 'Connexion réussie',
+        description: 'Vous allez être redirigé vers le tableau de bord.',
+      });
+      // AuthContext's onAuthStateChanged will handle the redirect automatically
     } catch (error) {
       toast({
-        title: 'Erreur',
-        description: 'Une erreur est survenue lors de la connexion',
+        title: 'Erreur de connexion',
+        description: error instanceof Error ? error.message : 'Une erreur est survenue lors de la connexion',
         variant: 'destructive',
       });
     } finally {

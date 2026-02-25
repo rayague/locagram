@@ -5,14 +5,20 @@ import { AlertCircle, User, Mail, Phone, Building, Briefcase, FileText, MapPin }
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
+import { createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import { doc, setDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from '@/lib/firebase';
+import { getFirebaseErrorMessage } from '@/contexts/AuthContext';
 
 const countries = [
-  { value: '', label: 'Votre pays' },
+  { value: 'bj', label: 'Bénin' },
   { value: 'sn', label: 'Sénégal' },
-  { value: 'ci', label: 'Côte d\'Ivoire' },
+  { value: 'ci', label: "Côte d'Ivoire" },
   { value: 'cm', label: 'Cameroun' },
   { value: 'ga', label: 'Gabon' },
-  // Ajoutez d'autres pays selon vos besoins
+  { value: 'tg', label: 'Togo' },
+  { value: 'gh', label: 'Ghana' },
+  { value: 'ng', label: 'Nigéria' },
 ];
 
 const regions = {
@@ -68,22 +74,98 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Client-side validation before calling Firebase
+    if (formData.password !== formData.confirmPassword) {
+      toast({
+        title: "Erreur",
+        description: "Les mots de passe ne correspondent pas.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      toast({
+        title: "Erreur",
+        description: "Le mot de passe doit contenir au moins 6 caractères.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const phoneRegex = /^\+?[0-9]{8,15}$/;
+    if (!phoneRegex.test(formData.phone.replace(/\s/g, ""))) {
+      toast({
+        title: "Numéro de téléphone invalide",
+        description: "Veuillez saisir un numéro valide (entre 8 et 15 chiffres).",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      // Ici, vous ajouterez la logique d'inscription
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulation d'une requête
-      
+      // 1. Create Firebase Auth user
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+      const uid = userCredential.user.uid;
+
+      // 2. Save user profile to Firestore
+      await setDoc(doc(db, "users", uid), {
+        uid,
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        name: `${formData.firstName} ${formData.lastName}`,
+        phone: formData.phone,
+        country: formData.country,
+        region: formData.region,
+        idType: formData.idType,
+        idNumber: formData.idNumber,
+        agencyName: formData.agencyName,
+        userType: formData.userType,
+        profession: formData.profession,
+        role: "demarcheur",
+        status: "pending",
+        createdAt: serverTimestamp(),
+      });
+
+      // 3. Create subscription request for admin notification
+      await addDoc(collection(db, "subscriptionRequests"), {
+        userId: uid,
+        email: formData.email,
+        name: `${formData.firstName} ${formData.lastName}`,
+        phone: formData.phone,
+        country: formData.country,
+        region: formData.region,
+        idType: formData.idType,
+        idNumber: formData.idNumber,
+        agencyName: formData.agencyName,
+        userType: formData.userType,
+        profession: formData.profession,
+        status: "pending",
+        createdAt: serverTimestamp(),
+      });
+
+      // 4. Sign out immediately — account requires admin approval before use
+      await signOut(auth);
+
       toast({
         title: "Inscription réussie",
-        description: "Votre compte a été créé avec succès.",
+        description:
+          "Votre compte a été créé. Il est en attente de validation par l'administrateur. Vous recevrez une confirmation.",
       });
-      
-      setLocation('/auth/login');
+
+      setLocation("/auth/login");
     } catch (error) {
       toast({
         title: "Erreur d'inscription",
-        description: "Une erreur est survenue lors de la création de votre compte.",
+        description: getFirebaseErrorMessage(error),
         variant: "destructive",
       });
     } finally {

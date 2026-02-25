@@ -5,16 +5,43 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { User as FirebaseUser } from "firebase/auth";
+import { User as FirebaseUser, signInWithEmailAndPassword } from "firebase/auth";
 import { User } from "@/lib/auth";
 import { auth } from "@/lib/firebase";
 import { useLocation } from "wouter";
+
+// Map Firebase error codes to French user-friendly messages
+export function getFirebaseErrorMessage(error: unknown): string {
+  const code = (error as { code?: string })?.code ?? "";
+  const messages: Record<string, string> = {
+    "auth/email-already-in-use": "Cette adresse email est déjà utilisée",
+    "auth/invalid-email": "Adresse email invalide",
+    "auth/user-not-found": "Aucun compte associé à cet email",
+    "auth/wrong-password": "Mot de passe incorrect",
+    "auth/invalid-credential": "Email ou mot de passe incorrect",
+    "auth/weak-password": "Le mot de passe doit contenir au moins 6 caractères",
+    "auth/network-request-failed":
+      "Problème de connexion réseau. Vérifiez votre connexion internet",
+    "auth/too-many-requests":
+      "Trop de tentatives échouées. Veuillez réessayer plus tard",
+    "auth/user-disabled": "Ce compte a été désactivé",
+    "auth/operation-not-allowed": "Opération non autorisée",
+    "auth/requires-recent-login":
+      "Veuillez vous reconnecter pour effectuer cette opération",
+    "auth/popup-closed-by-user": "Connexion annulée",
+  };
+  return (
+    messages[code] ||
+    (error instanceof Error ? error.message : "Une erreur est survenue")
+  );
+}
 
 interface AuthContextType {
   firebaseUser: FirebaseUser | null;
   user: User | null;
   isAdmin: boolean;
   isLoading: boolean;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
 }
 
@@ -23,6 +50,7 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   isAdmin: false,
   isLoading: true,
+  login: async () => false,
   logout: async () => {},
 });
 
@@ -32,6 +60,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [, setLocation] = useLocation();
+
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      return true;
+    } catch (error) {
+      throw new Error(getFirebaseErrorMessage(error));
+    }
+  };
 
   const logout = async () => {
     try {
@@ -63,9 +100,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           };
           setUser(appUser);
 
-          // Redirection si sur page de login
+          // Redirection si sur page de login ou register
           const currentPath = window.location.pathname;
-          if (currentPath === "/login" || currentPath === "/") {
+          if (
+            currentPath === "/login" ||
+            currentPath === "/auth/login" ||
+            currentPath === "/"
+          ) {
             const targetPath = isUserAdmin ? "/admin/users" : "/dashboard";
             setLocation(targetPath);
           }
@@ -97,7 +138,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [setLocation]);
 
   return (
-    <AuthContext.Provider value={{ firebaseUser, user, isAdmin, isLoading, logout }}>
+    <AuthContext.Provider value={{ firebaseUser, user, isAdmin, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
