@@ -5,9 +5,10 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { User as FirebaseUser, signInWithEmailAndPassword } from "firebase/auth";
+import { User as FirebaseUser, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import { User } from "@/lib/auth";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { useLocation } from "wouter";
 
 // Map Firebase error codes to French user-friendly messages
@@ -62,12 +63,53 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [, setLocation] = useLocation();
 
   const login = async (email: string, password: string): Promise<boolean> => {
+    // Step 1: Firebase authentication
+    let credential;
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      return true;
+      credential = await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       throw new Error(getFirebaseErrorMessage(error));
     }
+
+    // Step 2: Check user status in Firestore before allowing access
+    try {
+      const userSnap = await getDoc(doc(db, "users", credential.user.uid));
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        if (data.status === "pending") {
+          await signOut(auth);
+          throw new Error(
+            "Votre compte est en attente de validation par l'administrateur. Vous serez notifié par email."
+          );
+        }
+        if (data.status === "rejected") {
+          await signOut(auth);
+          throw new Error(
+            "Votre demande d'inscription a été refusée. Contactez l'administrateur pour plus d'informations."
+          );
+        }
+        if (data.status === "suspended") {
+          await signOut(auth);
+          throw new Error(
+            "Votre compte a été suspendu. Contactez l'administrateur."
+          );
+        }
+      }
+    } catch (error) {
+      // Re-throw our domain errors directly
+      if (
+        error instanceof Error &&
+        (error.message.includes("attente") ||
+          error.message.includes("refusée") ||
+          error.message.includes("suspendu"))
+      ) {
+        throw error;
+      }
+      // Firestore read failure — fail open (let the user in, onAuthStateChanged will handle state)
+      console.warn("Could not check user status in Firestore:", error);
+    }
+
+    return true;
   };
 
   const logout = async () => {

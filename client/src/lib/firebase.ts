@@ -554,3 +554,72 @@ export const getAllContactMessages = async (): Promise<
 };
 
 export { db, auth, storage };
+
+// ── Subscription requests (new user registrations awaiting approval) ─────────
+
+export interface SubscriptionRequest {
+  id: string;
+  userId: string;
+  email: string;
+  name: string;
+  phone: string;
+  country: string;
+  region: string;
+  idType: string;
+  idNumber: string;
+  agencyName: string;
+  userType: string;
+  profession: string;
+  status: "pending" | "approved" | "rejected";
+  createdAt: Date;
+}
+
+export const getSubscriptionRequests = async (): Promise<SubscriptionRequest[]> => {
+  try {
+    const ref = collection(db, "subscriptionRequests");
+    const q = query(ref, orderBy("createdAt", "desc"));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((d) => {
+      const data = d.data();
+      return {
+        id: d.id,
+        userId: data.userId || "",
+        email: data.email || "",
+        name: data.name || "",
+        phone: data.phone || "",
+        country: data.country || "",
+        region: data.region || "",
+        idType: data.idType || "",
+        idNumber: data.idNumber || "",
+        agencyName: data.agencyName || "",
+        userType: data.userType || "",
+        profession: data.profession || "",
+        status: data.status || "pending",
+        createdAt: data.createdAt?.toDate() || new Date(),
+      };
+    });
+  } catch (error) {
+    console.error("Erreur getSubscriptionRequests:", error);
+    throw error;
+  }
+};
+
+export const approveSubscriptionRequest = async (
+  requestId: string,
+  userId: string
+): Promise<void> => {
+  const batch = writeBatch(db);
+  batch.update(doc(db, "subscriptionRequests", requestId), { status: "approved" });
+  batch.update(doc(db, "users", userId), { status: "active" });
+  await batch.commit();
+};
+
+export const rejectSubscriptionRequest = async (
+  requestId: string,
+  userId: string
+): Promise<void> => {
+  const batch = writeBatch(db);
+  batch.update(doc(db, "subscriptionRequests", requestId), { status: "rejected" });
+  batch.update(doc(db, "users", userId), { status: "rejected" });
+  await batch.commit();
+};
