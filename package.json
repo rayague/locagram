@@ -7,7 +7,7 @@
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "dev:client": "cd client && npm run dev",
     "dev:server": "echo 'No server script configured'",
-    "build": "cd client && npm install && npm run build",
+    "build": "echo 'Build is handled by Vercel builds config'",
     "build:client": "cd client && npx vite build",
     "start": "node server.js",
     "serve": "serve dist/public -s -p $PORT",
@@ -15,6 +15,7 @@
     "convert": "node convert_to_pdf.js"
   },
   "dependencies": {
+    "fs-extra": "^11.2.0",
     "puppeteer": "^24.33.0",
     "express": "^4.19.2",
     "serve": "^14.2.3",
