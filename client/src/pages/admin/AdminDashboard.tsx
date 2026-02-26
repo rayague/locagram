@@ -191,14 +191,15 @@ const AdminDashboard: React.FC = () => {
   );
 
   const getStatusBadge = (status: User['status']) => {
-    const statusConfig = {
+    const statusConfig: Record<string, { label: string; variant: string }> = {
       active: { label: 'Actif', variant: 'success' },
       inactive: { label: 'Inactif', variant: 'secondary' },
       pending: { label: 'En attente', variant: 'warning' },
       suspended: { label: 'Suspendu', variant: 'destructive' },
-    } as const;
+      rejected: { label: 'Rejeté', variant: 'destructive' },
+    };
 
-    const config = statusConfig[status];
+    const config = statusConfig[status as string] ?? { label: status ?? 'Inconnu', variant: 'secondary' };
     return (
       <Badge variant={config.variant as any}>
         {config.label}

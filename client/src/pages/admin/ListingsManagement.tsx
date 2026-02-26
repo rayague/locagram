@@ -176,14 +176,14 @@ const ListingsManagement = () => {
   };
 
   const getStatusBadge = (status: Listing['status']) => {
-    const statusConfig = {
+    const statusConfig: Record<string, { color: string; icon: React.ElementType }> = {
       active: { color: 'bg-green-100 text-green-800', icon: CheckCircle2 },
       inactive: { color: 'bg-gray-100 text-gray-800', icon: XCircle },
       pending: { color: 'bg-yellow-100 text-yellow-800', icon: AlertCircle },
       sold: { color: 'bg-blue-100 text-blue-800', icon: CheckCircle2 },
     };
 
-    const config = statusConfig[status];
+    const config = statusConfig[status as string] ?? { color: 'bg-gray-100 text-gray-600', icon: AlertCircle };
     const Icon = config.icon;
 
     return (

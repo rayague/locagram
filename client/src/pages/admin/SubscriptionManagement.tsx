@@ -23,7 +23,7 @@ import { toast } from "@/hooks/use-toast";
 import AdminLayout from "@/components/layout/AdminLayout";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Search, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { Search, CheckCircle2, XCircle, Clock, AlertCircle } from "lucide-react";
 import { useNotificationActions } from "@/hooks/useNotificationActions";
 
 interface SubscriptionRequest {
@@ -165,13 +165,13 @@ const SubscriptionManagement = () => {
   };
 
   const getStatusBadge = (status: SubscriptionRequest["status"]) => {
-    const statusConfig = {
+    const statusConfig: Record<string, { label: string; variant: string; icon: React.ElementType }> = {
       pending: { label: "En attente", variant: "warning", icon: Clock },
       approved: { label: "Approuvé", variant: "success", icon: CheckCircle2 },
       rejected: { label: "Rejeté", variant: "destructive", icon: XCircle },
-    } as const;
+    };
 
-    const config = statusConfig[status];
+    const config = statusConfig[status as string] ?? { label: status ?? "Inconnu", variant: "secondary", icon: AlertCircle };
     const Icon = config.icon;
 
     return (
