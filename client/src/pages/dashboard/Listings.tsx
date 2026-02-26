@@ -44,7 +44,6 @@ import {
   onSnapshot,
   deleteDoc,
   doc,
-  enableIndexedDbPersistence,
   updateDoc,
   serverTimestamp,
   getDoc,
@@ -58,15 +57,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useLocation } from "wouter";
 import { Badge } from "@/components/ui/badge";
-
-// Activer la persistance hors ligne
-enableIndexedDbPersistence(db).catch((err) => {
-  if (err.code === "failed-precondition") {
-    console.warn("La persistance a échoué car plusieurs onglets sont ouverts");
-  } else if (err.code === "unimplemented") {
-    console.warn("La persistance n'est pas disponible dans cet environnement");
-  }
-});
 
 const formatDate = (date: any) => {
   if (!date) return "Non spécifié";
