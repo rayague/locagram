@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app";
 import {
-  getFirestore,
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
   collection,
   getDocs,
   query,
@@ -13,7 +15,6 @@ import {
   addDoc,
   updateDoc,
   serverTimestamp,
-  enableMultiTabIndexedDbPersistence,
   Timestamp,
 } from "firebase/firestore";
 import {
@@ -40,18 +41,11 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore
-const db = getFirestore(app);
-
-// Enable multi-tab persistence
-enableMultiTabIndexedDbPersistence(db).catch((err) => {
-  if (err.code === "failed-precondition") {
-    console.warn(
-      "Multiple tabs open, persistence can only be enabled in one tab at a time."
-    );
-  } else if (err.code === "unimplemented") {
-    console.warn("The current browser does not support persistence.");
-  }
+// Initialize Firestore with persistence configured at init time (must be before any other Firestore call)
+const db = initializeFirestore(app, {
+  localCache: persistentLocalCache({
+    tabManager: persistentMultipleTabManager(),
+  }),
 });
 
 // Initialize Auth with persistence
