@@ -28,7 +28,7 @@ import {
   Globe,
   Clock
 } from 'lucide-react';
-import { collection, getDocs, doc, updateDoc, query, where } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc, query, where, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { toast } from '@/hooks/use-toast';
 import AdminLayout from '@/components/layout/AdminLayout';
@@ -68,7 +68,8 @@ const UsersManagement = () => {
   const loadUsers = async () => {
     try {
       const usersRef = collection(db, 'users');
-      const usersSnapshot = await getDocs(usersRef);
+      const usersQuery = query(usersRef, orderBy('createdAt', 'asc'));
+      const usersSnapshot = await getDocs(usersQuery);
       const usersData = usersSnapshot.docs.map(doc => ({
         uid: doc.id,
         ...doc.data(),
