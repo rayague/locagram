@@ -50,10 +50,7 @@ export function getFirebaseErrorMessage(error: unknown): string {
       "Veuillez vous reconnecter pour effectuer cette opération",
     "auth/popup-closed-by-user": "Connexion annulée",
   };
-  return (
-    messages[code] ||
-    (error instanceof Error ? error.message : "Une erreur est survenue")
-  );
+  return messages[code] || "Une erreur est survenue. Veuillez réessayer.";
 }
 
 export interface User {

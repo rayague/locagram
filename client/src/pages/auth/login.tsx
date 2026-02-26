@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'wouter';
 import { motion } from 'framer-motion';
 import { AlertCircle } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, getFirebaseErrorMessage } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
 export default function LoginPage() {
@@ -22,11 +22,10 @@ export default function LoginPage() {
         title: 'Connexion réussie',
         description: 'Vous allez être redirigé vers le tableau de bord.',
       });
-      // AuthContext's onAuthStateChanged will handle the redirect automatically
     } catch (error) {
       toast({
         title: 'Erreur de connexion',
-        description: error instanceof Error ? error.message : 'Une erreur est survenue lors de la connexion',
+        description: getFirebaseErrorMessage(error),
         variant: 'destructive',
       });
     } finally {
