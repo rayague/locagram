@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,37 +10,23 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import {
-  Search,
-  MoreVertical,
-  CheckCircle2,
-  XCircle,
-  AlertCircle,
-  User,
-  Phone,
-  Mail,
-  MapPin,
-  Calendar,
-  Eye,
-  MessageCircle,
-  Tag,
-  ExternalLink,
-  Pencil,
-  Globe,
-  Clock
+  Search, MoreVertical, CheckCircle2, XCircle, AlertCircle,
+  User, Phone, Mail, MapPin, Calendar, Eye, MessageCircle,
+  Tag, Globe, Clock, ChevronLeft, ChevronRight, RefreshCw,
+  Users, UserCheck, UserX, Timer,
 } from 'lucide-react';
-import { collection, getDocs, doc, updateDoc, query, where, orderBy } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { toast } from '@/hooks/use-toast';
 import AdminLayout from '@/components/layout/AdminLayout';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { cn } from '@/lib/utils';
 
 interface User {
   uid: string;
   email: string;
   name: string;
   role: 'admin' | 'demarcheur';
-  status: 'active' | 'inactive' | 'pending' | 'suspended';
+  status: 'active' | 'inactive' | 'pending' | 'suspended' | 'rejected';
   phone?: string;
   zone?: string;
   country?: string;
@@ -49,473 +35,412 @@ interface User {
   lastLoginAt?: Date;
 }
 
+type StatusFilter = 'all' | 'pending' | 'active' | 'suspended' | 'inactive' | 'rejected';
+
+const PAGE_SIZE = 25;
+
+const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string; icon: React.ElementType }> = {
+  active:    { label: 'Actif',      color: 'text-green-700',  bg: 'bg-green-100',  icon: CheckCircle2 },
+  inactive:  { label: 'Inactif',    color: 'text-gray-600',   bg: 'bg-gray-100',   icon: XCircle },
+  pending:   { label: 'En attente', color: 'text-yellow-700', bg: 'bg-yellow-100', icon: AlertCircle },
+  suspended: { label: 'Suspendu',   color: 'text-red-700',    bg: 'bg-red-100',    icon: XCircle },
+  rejected:  { label: 'Rejeté',     color: 'text-red-600',    bg: 'bg-red-50',     icon: XCircle },
+};
+
 const UsersManagement = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [isLoading, setIsLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
+  const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    loadUsers();
-  }, []);
-
-  useEffect(() => {
-    filterUsers();
-  }, [searchQuery, users]);
+  useEffect(() => { loadUsers(); }, []);
+  useEffect(() => { setPage(1); }, [searchQuery, statusFilter]);
 
   const loadUsers = async () => {
+    setIsLoading(true);
     try {
-      const usersRef = collection(db, 'users');
-      const usersQuery = query(usersRef, orderBy('createdAt', 'asc'));
-      const usersSnapshot = await getDocs(usersQuery);
-      const usersData = usersSnapshot.docs.map(doc => ({
-        uid: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate(),
-        lastLoginAt: doc.data().lastLoginAt?.toDate()
+      const usersQuery = query(collection(db, 'users'), orderBy('createdAt', 'asc'));
+      const snapshot = await getDocs(usersQuery);
+      const data = snapshot.docs.map(d => ({
+        uid: d.id,
+        ...d.data(),
+        createdAt: d.data().createdAt?.toDate(),
+        lastLoginAt: d.data().lastLoginAt?.toDate(),
       })) as User[];
-
-      setUsers(usersData);
-      setFilteredUsers(usersData);
-    } catch (error) {
-      console.error('Erreur lors du chargement des utilisateurs:', error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de charger les utilisateurs",
-        variant: "destructive",
-      });
+      setUsers(data);
+    } catch (err) {
+      console.error(err);
+      toast({ title: 'Erreur', description: 'Impossible de charger les utilisateurs', variant: 'destructive' });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const filterUsers = () => {
-    const query = searchQuery.toLowerCase();
-    const filtered = users.filter(user => 
-      user.name.toLowerCase().includes(query) ||
-      user.email.toLowerCase().includes(query) ||
-      user.phone?.toLowerCase().includes(query) ||
-      user.zone?.toLowerCase().includes(query)
-    );
-    setFilteredUsers(filtered);
-  };
-
   const updateUserStatus = async (userId: string, newStatus: User['status']) => {
     try {
-      const userRef = doc(db, 'users', userId);
-      await updateDoc(userRef, { status: newStatus });
-      
-      // Mettre à jour l'état local
-      setUsers(users.map(user => 
-        user.uid === userId ? { ...user, status: newStatus } : user
-      ));
-
-      toast({
-        title: "Statut mis à jour",
-        description: `Le statut de l'utilisateur a été modifié avec succès`,
-      });
-    } catch (error) {
-      console.error('Erreur lors de la mise à jour du statut:', error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de mettre à jour le statut",
-        variant: "destructive",
-      });
+      await updateDoc(doc(db, 'users', userId), { status: newStatus });
+      setUsers(prev => prev.map(u => u.uid === userId ? { ...u, status: newStatus } : u));
+      if (selectedUser?.uid === userId) setSelectedUser(prev => prev ? { ...prev, status: newStatus } : prev);
+      toast({ title: 'Statut mis à jour', description: 'Le statut a été modifié avec succès' });
+    } catch (err) {
+      console.error(err);
+      toast({ title: 'Erreur', description: 'Impossible de mettre à jour le statut', variant: 'destructive' });
     }
   };
 
-  const getStatusBadge = (status: User['status']) => {
-    const statusConfig: Record<string, { color: string; icon: React.ElementType }> = {
-      active: { color: 'bg-green-100 text-green-800', icon: CheckCircle2 },
-      inactive: { color: 'bg-gray-100 text-gray-800', icon: XCircle },
-      pending: { color: 'bg-yellow-100 text-yellow-800', icon: AlertCircle },
-      suspended: { color: 'bg-red-100 text-red-800', icon: XCircle },
-      rejected: { color: 'bg-red-100 text-red-700', icon: XCircle },
-    };
+  const formatDate = (date?: Date) => {
+    if (!date) return '—';
+    return new Date(date).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  };
 
-    const config = statusConfig[status as string] ?? { color: 'bg-gray-100 text-gray-600', icon: AlertCircle };
-    const Icon = config.icon;
-
+  const getStatusBadge = (status: string) => {
+    const cfg = STATUS_CONFIG[status] ?? { label: status ?? 'Inconnu', color: 'text-gray-600', bg: 'bg-gray-100', icon: AlertCircle };
+    const Icon = cfg.icon;
     return (
-      <Badge className={`${config.color} flex items-center gap-1`}>
+      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${cfg.bg} ${cfg.color}`}>
         <Icon className="h-3 w-3" />
-        {status.charAt(0).toUpperCase() + status.slice(1)}
-      </Badge>
+        {cfg.label}
+      </span>
     );
   };
 
-  const formatDate = (date?: Date) => {
-    if (!date) return 'Jamais';
-    return new Date(date).toLocaleDateString('fr-FR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+  const filtered = users.filter(u => {
+    const matchStatus = statusFilter === 'all' || u.status === statusFilter;
+    const q = searchQuery.toLowerCase();
+    const matchSearch = !q ||
+      u.name?.toLowerCase().includes(q) ||
+      u.email?.toLowerCase().includes(q) ||
+      u.phone?.toLowerCase().includes(q) ||
+      u.zone?.toLowerCase().includes(q);
+    return matchStatus && matchSearch;
+  });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  const counts = {
+    all:       users.length,
+    pending:   users.filter(u => u.status === 'pending').length,
+    active:    users.filter(u => u.status === 'active').length,
+    suspended: users.filter(u => u.status === 'suspended').length,
+    inactive:  users.filter(u => u.status === 'inactive').length,
+    rejected:  users.filter(u => u.status === 'rejected').length,
   };
 
-  const handleWhatsAppClick = (phone: string) => {
-    // Nettoyer le numéro de téléphone (enlever les espaces et caractères spéciaux)
-    const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
-    // Créer le lien WhatsApp
-    const whatsappUrl = `https://wa.me/${cleanPhone}`;
-    window.open(whatsappUrl, '_blank');
-  };
+  const STAT_CARDS = [
+    { key: 'all',       label: 'Total',      icon: Users,      color: 'text-blue-600',   bg: 'bg-blue-50' },
+    { key: 'pending',   label: 'En attente', icon: Timer,      color: 'text-yellow-600', bg: 'bg-yellow-50' },
+    { key: 'active',    label: 'Actifs',      icon: UserCheck,  color: 'text-green-600',  bg: 'bg-green-50' },
+    { key: 'suspended', label: 'Suspendus',   icon: UserX,      color: 'text-red-600',    bg: 'bg-red-50' },
+  ] as const;
+
+  const FILTER_TABS: { key: StatusFilter; label: string }[] = [
+    { key: 'all',       label: 'Tous' },
+    { key: 'pending',   label: 'En attente' },
+    { key: 'active',    label: 'Actifs' },
+    { key: 'suspended', label: 'Suspendus' },
+    { key: 'inactive',  label: 'Inactifs' },
+    { key: 'rejected',  label: 'Rejetés' },
+  ];
 
   return (
     <AdminLayout>
-      <div className="container mx-auto py-4 sm:py-6 px-3 sm:px-6 lg:px-8">
-        <div className="max-w-[1400px] mx-auto space-y-4 sm:space-y-6">
-          <Card className="border-none shadow-lg">
-            <CardHeader className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-t-lg p-4 sm:p-6">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-                <div>
-                  <CardTitle className="text-xl sm:text-2xl font-bold">Gestion des Utilisateurs</CardTitle>
-                  <CardDescription className="text-sm sm:text-base mt-1 sm:mt-2">
-                    Gérez les utilisateurs de la plateforme, leurs statuts et leurs permissions
-                  </CardDescription>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                  <div className="relative flex-1 sm:flex-none">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                    <Input
-                      placeholder="Rechercher un utilisateur..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 w-full sm:w-64 bg-white/50 backdrop-blur-sm"
-                    />
-                  </div>
-                  <Button onClick={loadUsers} variant="outline" className="bg-white/50 backdrop-blur-sm">
-                    Actualiser
-                  </Button>
+      <div className="mx-auto py-4 px-3 sm:px-6 max-w-7xl space-y-4">
+
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-bold">Utilisateurs</h1>
+            <p className="text-sm text-muted-foreground">{users.length} utilisateur{users.length > 1 ? 's' : ''} enregistrés</p>
+          </div>
+          <Button onClick={loadUsers} variant="outline" size="sm" className="gap-2">
+            <RefreshCw className="h-4 w-4" />
+            Actualiser
+          </Button>
+        </div>
+
+        {/* Stat cards — cliquables */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {STAT_CARDS.map(({ key, label, icon: Icon, color, bg }) => (
+            <button
+              key={key}
+              onClick={() => setStatusFilter(key)}
+              className={`rounded-lg border p-3 text-left transition-all hover:shadow-md ${
+                statusFilter === key ? 'border-primary ring-1 ring-primary shadow-sm' : 'border-border bg-white'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs text-muted-foreground font-medium">{label}</span>
+                <div className={`h-7 w-7 rounded-full ${bg} flex items-center justify-center`}>
+                  <Icon className={`h-4 w-4 ${color}`} />
                 </div>
               </div>
-            </CardHeader>
-            <CardContent className="p-3 sm:p-6">
-              {isLoading ? (
-                <div className="flex items-center justify-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-                </div>
-              ) : filteredUsers.length === 0 ? (
-                <div className="text-center py-12 text-muted-foreground">
-                  {searchQuery 
-                    ? `Aucun utilisateur trouvé pour "${searchQuery}"`
-                    : 'Aucun utilisateur disponible'}
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
-                  {filteredUsers.map((user) => (
-                    <Card 
-                      key={user.uid} 
-                      className="relative overflow-hidden hover:shadow-xl transition-all duration-300 border border-border/50 bg-gradient-to-br from-white to-gray-50/50"
-                    >
-                      <CardContent className="p-4 sm:p-6 lg:p-8">
-                        <div className="absolute top-2 right-2 sm:top-3 sm:right-3 lg:top-4 lg:right-4">
-                          {getStatusBadge(user.status)}
-                        </div>
-                        
-                        <div className="flex items-start gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6 lg:mb-8">
-                          <div className="h-12 w-12 sm:h-16 sm:w-16 lg:h-20 lg:w-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center ring-4 ring-primary/5 flex-shrink-0">
-                            <User className="h-6 w-6 sm:h-8 sm:w-8 lg:h-10 lg:w-10 text-primary" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-semibold text-base sm:text-lg lg:text-xl truncate">{user.name}</h3>
-                            <p className="text-xs sm:text-sm lg:text-base text-muted-foreground">{user.role === 'admin' ? 'Administrateur' : 'Démarcheur'}</p>
-                          </div>
-                        </div>
+              <div className={`text-2xl font-bold ${color}`}>{counts[key]}</div>
+            </button>
+          ))}
+        </div>
 
-                        <div className="space-y-3 sm:space-y-4 lg:space-y-5">
-                          <div className="space-y-2 sm:space-y-3 lg:space-y-4 text-xs sm:text-sm lg:text-base">
-                            <div className="flex items-center gap-2 text-muted-foreground bg-gray-50/50 p-2 sm:p-3 lg:p-4 rounded-lg">
-                              <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-primary/60 flex-shrink-0" />
-                              <span className="truncate">{user.email}</span>
+        {/* Barre de recherche + onglets de filtre */}
+        <div className="flex flex-col sm:flex-row gap-2">
+          <div className="relative max-w-sm w-full">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input
+              placeholder="Nom, email, téléphone, zone..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+          <div className="flex gap-1 flex-wrap">
+            {FILTER_TABS.map(({ key, label }) => (
+              <button
+                key={key}
+                onClick={() => setStatusFilter(key)}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors ${
+                  statusFilter === key
+                    ? 'bg-primary text-white border-primary'
+                    : 'bg-white text-gray-600 border-gray-200 hover:border-primary hover:text-primary'
+                }`}
+              >
+                {label}
+                {key !== 'all' && counts[key] > 0 && (
+                  <span className={`ml-1 ${statusFilter === key ? 'opacity-75' : 'text-gray-400'}`}>
+                    ({counts[key]})
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Tableau */}
+        <Card className="border shadow-sm">
+          <CardContent className="p-0">
+            {isLoading ? (
+              <div className="flex items-center justify-center py-16">
+                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary" />
+              </div>
+            ) : filtered.length === 0 ? (
+              <div className="text-center py-16 text-sm text-muted-foreground">
+                {searchQuery || statusFilter !== 'all'
+                  ? 'Aucun utilisateur ne correspond à votre recherche'
+                  : 'Aucun utilisateur disponible'}
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b bg-gray-50/80">
+                      <th className="text-left px-4 py-3 font-medium text-gray-500 w-8">#</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-500">Utilisateur</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-500 hidden sm:table-cell">Téléphone</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-500 hidden md:table-cell">Zone</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-500 hidden lg:table-cell">Inscription</th>
+                      <th className="text-left px-4 py-3 font-medium text-gray-500">Statut</th>
+                      <th className="text-right px-4 py-3 font-medium text-gray-500">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {paginated.map((user, idx) => (
+                      <tr key={user.uid} className="hover:bg-gray-50/50 transition-colors">
+                        <td className="px-4 py-3 text-gray-400 text-xs">
+                          {(page - 1) * PAGE_SIZE + idx + 1}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                              <User className="h-4 w-4 text-primary" />
                             </div>
-                            {user.phone && (
-                              <div className="flex items-center gap-2 text-muted-foreground bg-gray-50/50 p-2 sm:p-3 lg:p-4 rounded-lg">
-                                <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-primary/60 flex-shrink-0" />
-                                <span className="truncate">{user.phone}</span>
-                              </div>
-                            )}
-                            {user.zone && (
-                              <div className="flex items-center gap-2 text-muted-foreground bg-gray-50/50 p-2 sm:p-3 lg:p-4 rounded-lg">
-                                <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-primary/60 flex-shrink-0" />
-                                <span className="truncate">{user.zone}</span>
-                              </div>
-                            )}
-                            <div className="flex items-center gap-2 text-muted-foreground bg-gray-50/50 p-2 sm:p-3 lg:p-4 rounded-lg">
-                              <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-primary/60 flex-shrink-0" />
-                              <span className="truncate">Dernière connexion: {formatDate(user.lastLoginAt)}</span>
+                            <div className="min-w-0">
+                              <div className="font-medium text-gray-900 truncate max-w-[150px]">{user.name || '—'}</div>
+                              <div className="text-xs text-gray-400 truncate max-w-[150px]">{user.email}</div>
                             </div>
                           </div>
-
-                          {user.categories && user.categories.length > 0 && (
-                            <div className="space-y-2 sm:space-y-3 lg:space-y-4">
-                              <div className="flex items-center gap-2 text-xs sm:text-sm lg:text-base font-medium text-muted-foreground">
-                                <Tag className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5" />
-                                <span>Catégories</span>
-                              </div>
-                              <div className="flex flex-wrap gap-1.5 sm:gap-2 lg:gap-3">
-                                {user.categories.map((category, index) => (
-                                  <Badge 
-                                    key={index}
-                                    variant="secondary"
-                                    className="text-xs sm:text-sm lg:text-base bg-primary/5 text-primary hover:bg-primary/10 px-2 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2"
-                                  >
-                                    {category}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="mt-4 sm:mt-6 lg:mt-8 flex items-center justify-between gap-2 pt-3 sm:pt-4 lg:pt-5 border-t border-border/50">
-                          <div className="flex gap-1.5 sm:gap-2 lg:gap-3">
+                        </td>
+                        <td className="px-4 py-3 hidden sm:table-cell text-gray-500 text-xs">{user.phone || '—'}</td>
+                        <td className="px-4 py-3 hidden md:table-cell text-gray-500 text-xs">{user.zone || '—'}</td>
+                        <td className="px-4 py-3 hidden lg:table-cell text-gray-400 text-xs">{formatDate(user.createdAt)}</td>
+                        <td className="px-4 py-3">{getStatusBadge(user.status)}</td>
+                        <td className="px-4 py-3 text-right">
+                          <div className="flex items-center justify-end gap-0.5">
                             <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-8 sm:h-9 lg:h-10 px-2 sm:px-3 lg:px-4 text-xs sm:text-sm lg:text-base gap-1.5 sm:gap-2 hover:bg-primary/5 hover:text-primary"
-                              onClick={() => {
-                                setSelectedUser(user);
-                                setIsUserDialogOpen(true);
-                              }}
+                              variant="ghost" size="icon" className="h-7 w-7 text-gray-400 hover:text-primary"
+                              title="Voir le profil"
+                              onClick={() => { setSelectedUser(user); setIsUserDialogOpen(true); }}
                             >
-                              <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5" />
-                              Profil
+                              <Eye className="h-4 w-4" />
                             </Button>
                             {user.phone && (
                               <Button
-                                variant="outline"
-                                size="sm"
-                                className="h-8 sm:h-9 lg:h-10 px-2 sm:px-3 lg:px-4 text-xs sm:text-sm lg:text-base gap-1.5 sm:gap-2 hover:bg-green-50 hover:text-green-600 hover:border-green-200"
-                                onClick={() => handleWhatsAppClick(user.phone!)}
+                                variant="ghost" size="icon" className="h-7 w-7 text-gray-400 hover:text-green-600"
+                                title="WhatsApp"
+                                onClick={() => window.open(`https://wa.me/${user.phone!.replace(/[\s\-\(\)]/g, '')}`, '_blank')}
                               >
-                                <MessageCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5" />
-                                WhatsApp
+                                <MessageCircle className="h-4 w-4" />
                               </Button>
                             )}
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-7 w-7 text-gray-400 hover:text-gray-700">
+                                  <MoreVertical className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-44">
+                                <DropdownMenuItem onClick={() => updateUserStatus(user.uid, 'active')} disabled={user.status === 'active'} className="gap-2 text-green-700">
+                                  <CheckCircle2 className="h-4 w-4" /> Approuver / Activer
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => updateUserStatus(user.uid, 'rejected')} disabled={user.status === 'rejected'} className="gap-2 text-red-600">
+                                  <XCircle className="h-4 w-4" /> Rejeter
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => updateUserStatus(user.uid, 'suspended')} disabled={user.status === 'suspended'} className="gap-2 text-orange-600">
+                                  <AlertCircle className="h-4 w-4" /> Suspendre
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => updateUserStatus(user.uid, 'inactive')} disabled={user.status === 'inactive'} className="gap-2 text-gray-600">
+                                  <XCircle className="h-4 w-4" /> Désactiver
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           </div>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10 hover:bg-primary/5">
-                                <MoreVertical className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48">
-                              <DropdownMenuItem
-                                onClick={() => updateUserStatus(user.uid, 'active')}
-                                disabled={user.status === 'active'}
-                                className="gap-2"
-                              >
-                                <CheckCircle2 className="h-4 w-4" />
-                                Activer
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => updateUserStatus(user.uid, 'inactive')}
-                                disabled={user.status === 'inactive'}
-                                className="gap-2"
-                              >
-                                <XCircle className="h-4 w-4" />
-                                Désactiver
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => updateUserStatus(user.uid, 'suspended')}
-                                disabled={user.status === 'suspended'}
-                                className="gap-2"
-                              >
-                                <AlertCircle className="h-4 w-4" />
-                                Suspendre
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
 
-        {/* Dialog pour afficher les détails de l'utilisateur */}
-        <Dialog open={isUserDialogOpen} onOpenChange={setIsUserDialogOpen}>
-          <DialogContent className="w-[95vw] max-w-[1000px] max-h-[90vh] overflow-y-auto p-0">
-            <div className="sticky top-0 z-10 bg-background border-b">
-              <DialogHeader className="p-4 sm:p-6 lg:p-8">
-                <div className="flex items-center justify-between max-w-[900px] mx-auto">
-                  <div>
-                    <DialogTitle className="text-lg sm:text-xl lg:text-2xl font-semibold">Profil Utilisateur</DialogTitle>
-                    <DialogDescription className="text-sm sm:text-base lg:text-lg mt-1">
-                      Informations détaillées de l'utilisateur
-                    </DialogDescription>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 lg:h-10 lg:w-10"
-                    onClick={() => setIsUserDialogOpen(false)}
-                  >
-                    <XCircle className="h-5 w-5 lg:h-6 lg:w-6" />
+            {/* Pagination */}
+            {!isLoading && filtered.length > PAGE_SIZE && (
+              <div className="flex items-center justify-between px-4 py-3 border-t bg-gray-50/50">
+                <span className="text-xs text-gray-500">
+                  {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} sur {filtered.length}
+                </span>
+                <div className="flex items-center gap-1">
+                  <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setPage(p => p - 1)} disabled={page === 1}>
+                    <ChevronLeft className="h-3.5 w-3.5" />
                   </Button>
-                </div>
-              </DialogHeader>
-            </div>
-
-            {selectedUser && (
-              <div className="divide-y divide-border">
-                {/* En-tête du profil */}
-                <div className="p-4 sm:p-6 lg:p-8 bg-gradient-to-r from-primary/5 to-primary/10">
-                  <div className="max-w-[900px] mx-auto">
-                    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 lg:gap-8">
-                      <div className="relative">
-                        <div className="h-24 w-24 sm:h-28 sm:w-28 lg:h-32 lg:w-32 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center ring-4 ring-primary/5">
-                          <User className="h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16 text-primary" />
-                        </div>
-                        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-0">
-                          {getStatusBadge(selectedUser.status)}
-                        </div>
-                      </div>
-                      <div className="flex-1 text-center sm:text-left">
-                        <h3 className="text-xl sm:text-2xl lg:text-3xl font-semibold">{selectedUser.name}</h3>
-                        <p className="text-sm sm:text-base lg:text-lg text-muted-foreground mt-1">
-                          {selectedUser.role === 'admin' ? 'Administrateur' : 'Démarcheur'}
-                        </p>
-                        <div className="mt-4 lg:mt-6 flex flex-wrap justify-center sm:justify-start gap-3">
-                          {selectedUser.phone && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-9 sm:h-10 px-4 sm:px-5 text-sm sm:text-base gap-2 hover:bg-green-50 hover:text-green-600 hover:border-green-200"
-                              onClick={() => handleWhatsAppClick(selectedUser.phone!)}
-                            >
-                              <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5" />
-                              Contacter sur WhatsApp
-                            </Button>
-                          )}
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-9 sm:h-10 px-4 sm:px-5 text-sm sm:text-base gap-2"
-                            onClick={() => {
-                              // Logique pour éditer le profil
-                              setIsUserDialogOpen(false);
-                            }}
-                          >
-                            <Pencil className="h-4 w-4 sm:h-5 sm:w-5" />
-                            Modifier le profil
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Informations principales */}
-                <div className="p-4 sm:p-6 lg:p-8">
-                  <div className="max-w-[900px] mx-auto">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-                      {/* Colonne de gauche */}
-                      <div className="space-y-8">
-                        <div className="space-y-4">
-                          <h4 className="text-sm sm:text-base lg:text-lg font-medium text-muted-foreground">Informations de contact</h4>
-                          <div className="space-y-4">
-                            <div className="flex items-start gap-4 p-4 bg-muted/50 rounded-lg">
-                              <Mail className="h-5 w-5 sm:h-6 sm:w-6 text-primary/60 mt-0.5" />
-                              <div className="flex-1">
-                                <div className="text-sm sm:text-base font-medium">Email</div>
-                                <div className="text-sm sm:text-base break-all mt-1">{selectedUser.email}</div>
-                              </div>
-                            </div>
-                            {selectedUser.phone && (
-                              <div className="flex items-start gap-4 p-4 bg-muted/50 rounded-lg">
-                                <Phone className="h-5 w-5 sm:h-6 sm:w-6 text-primary/60 mt-0.5" />
-                                <div className="flex-1">
-                                  <div className="text-sm sm:text-base font-medium">Téléphone</div>
-                                  <div className="text-sm sm:text-base mt-1">{selectedUser.phone}</div>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-
-                        {selectedUser.categories && selectedUser.categories.length > 0 && (
-                          <div className="space-y-4">
-                            <h4 className="text-sm sm:text-base lg:text-lg font-medium text-muted-foreground">Catégories</h4>
-                            <div className="flex flex-wrap gap-2 sm:gap-3">
-                              {selectedUser.categories.map((category, index) => (
-                                <Badge 
-                                  key={index}
-                                  variant="secondary"
-                                  className="text-sm sm:text-base bg-primary/5 text-primary hover:bg-primary/10 px-3 py-1.5"
-                                >
-                                  {category}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Colonne de droite */}
-                      <div className="space-y-8">
-                        <div className="space-y-4">
-                          <h4 className="text-sm sm:text-base lg:text-lg font-medium text-muted-foreground">Informations de localisation</h4>
-                          <div className="space-y-4">
-                            {selectedUser.zone && (
-                              <div className="flex items-start gap-4 p-4 bg-muted/50 rounded-lg">
-                                <MapPin className="h-5 w-5 sm:h-6 sm:w-6 text-primary/60 mt-0.5" />
-                                <div className="flex-1">
-                                  <div className="text-sm sm:text-base font-medium">Zone</div>
-                                  <div className="text-sm sm:text-base mt-1">{selectedUser.zone}</div>
-                                </div>
-                              </div>
-                            )}
-                            {selectedUser.country && (
-                              <div className="flex items-start gap-4 p-4 bg-muted/50 rounded-lg">
-                                <Globe className="h-5 w-5 sm:h-6 sm:w-6 text-primary/60 mt-0.5" />
-                                <div className="flex-1">
-                                  <div className="text-sm sm:text-base font-medium">Pays</div>
-                                  <div className="text-sm sm:text-base mt-1">{selectedUser.country}</div>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-
-                        <div className="space-y-4">
-                          <h4 className="text-sm sm:text-base lg:text-lg font-medium text-muted-foreground">Informations de compte</h4>
-                          <div className="space-y-4">
-                            <div className="flex items-start gap-4 p-4 bg-muted/50 rounded-lg">
-                              <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-primary/60 mt-0.5" />
-                              <div className="flex-1">
-                                <div className="text-sm sm:text-base font-medium">Date de création</div>
-                                <div className="text-sm sm:text-base mt-1">{formatDate(selectedUser.createdAt)}</div>
-                              </div>
-                            </div>
-                            <div className="flex items-start gap-4 p-4 bg-muted/50 rounded-lg">
-                              <Clock className="h-5 w-5 sm:h-6 sm:w-6 text-primary/60 mt-0.5" />
-                              <div className="flex-1">
-                                <div className="text-sm sm:text-base font-medium">Dernière connexion</div>
-                                <div className="text-sm sm:text-base mt-1">{formatDate(selectedUser.lastLoginAt)}</div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter(p => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
+                    .reduce<(number | string)[]>((acc, p, i, arr) => {
+                      if (i > 0 && typeof arr[i - 1] === 'number' && (p as number) - (arr[i - 1] as number) > 1) acc.push('…');
+                      acc.push(p);
+                      return acc;
+                    }, [])
+                    .map((p, i) =>
+                      p === '…'
+                        ? <span key={`e${i}`} className="px-1 text-gray-400 text-xs">…</span>
+                        : <Button key={p} variant={page === p ? 'default' : 'outline'} size="icon" className="h-7 w-7 text-xs" onClick={() => setPage(p as number)}>{p}</Button>
+                    )}
+                  <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setPage(p => p + 1)} disabled={page === totalPages}>
+                    <ChevronRight className="h-3.5 w-3.5" />
+                  </Button>
                 </div>
               </div>
             )}
-          </DialogContent>
-        </Dialog>
+          </CardContent>
+        </Card>
       </div>
+
+      {/* Dialog profil */}
+      <Dialog open={isUserDialogOpen} onOpenChange={setIsUserDialogOpen}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Profil utilisateur</DialogTitle>
+            <DialogDescription>Informations détaillées</DialogDescription>
+          </DialogHeader>
+          {selectedUser && (
+            <div className="space-y-4">
+              {/* Avatar + nom */}
+              <div className="flex items-center gap-4 p-4 bg-muted/40 rounded-lg">
+                <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <User className="h-7 w-7 text-primary" />
+                </div>
+                <div>
+                  <div className="font-semibold text-base">{selectedUser.name}</div>
+                  <div className="text-sm text-muted-foreground">{selectedUser.role === 'admin' ? 'Administrateur' : 'Démarcheur'}</div>
+                  <div className="mt-1">{getStatusBadge(selectedUser.status)}</div>
+                </div>
+              </div>
+
+              {/* Infos */}
+              <div className="grid gap-2 text-sm">
+                <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-md">
+                  <Mail className="h-4 w-4 text-primary/60 flex-shrink-0" />
+                  <span className="break-all">{selectedUser.email}</span>
+                </div>
+                {selectedUser.phone && (
+                  <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-md">
+                    <Phone className="h-4 w-4 text-primary/60 flex-shrink-0" />
+                    <span className="flex-1">{selectedUser.phone}</span>
+                    <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-green-600 hover:text-green-700"
+                      onClick={() => window.open(`https://wa.me/${selectedUser.phone!.replace(/[\s\-\(\)]/g, '')}`, '_blank')}>
+                      <MessageCircle className="h-3 w-3 mr-1" /> WhatsApp
+                    </Button>
+                  </div>
+                )}
+                {selectedUser.zone && (
+                  <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-md">
+                    <MapPin className="h-4 w-4 text-primary/60" />
+                    <span>{selectedUser.zone}</span>
+                  </div>
+                )}
+                {selectedUser.country && (
+                  <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-md">
+                    <Globe className="h-4 w-4 text-primary/60" />
+                    <span>{selectedUser.country}</span>
+                  </div>
+                )}
+                <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-md">
+                  <Calendar className="h-4 w-4 text-primary/60" />
+                  <span>Inscrit le {formatDate(selectedUser.createdAt)}</span>
+                </div>
+                <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-md">
+                  <Clock className="h-4 w-4 text-primary/60" />
+                  <span>Dernière connexion : {formatDate(selectedUser.lastLoginAt)}</span>
+                </div>
+              </div>
+
+              {/* Catégories */}
+              {selectedUser.categories && selectedUser.categories.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground mb-2">
+                    <Tag className="h-4 w-4" /> Catégories
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {selectedUser.categories.map((c, i) => (
+                      <Badge key={i} variant="secondary" className="text-xs bg-primary/5 text-primary">{c}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Actions rapides */}
+              <div className="flex gap-2 pt-2 border-t">
+                <Button size="sm" variant="outline" className="gap-1 text-green-700 border-green-200 hover:bg-green-50 flex-1"
+                  onClick={() => updateUserStatus(selectedUser.uid, 'active')}
+                  disabled={selectedUser.status === 'active'}>
+                  <CheckCircle2 className="h-3.5 w-3.5" /> Approuver
+                </Button>
+                <Button size="sm" variant="outline" className="gap-1 text-red-600 border-red-200 hover:bg-red-50 flex-1"
+                  onClick={() => updateUserStatus(selectedUser.uid, 'rejected')}
+                  disabled={selectedUser.status === 'rejected'}>
+                  <XCircle className="h-3.5 w-3.5" /> Rejeter
+                </Button>
+                <Button size="sm" variant="outline" className="gap-1 text-orange-600 border-orange-200 hover:bg-orange-50 flex-1"
+                  onClick={() => updateUserStatus(selectedUser.uid, 'suspended')}
+                  disabled={selectedUser.status === 'suspended'}>
+                  <AlertCircle className="h-3.5 w-3.5" /> Suspendre
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </AdminLayout>
   );
 };
 
-export default UsersManagement; 
+export default UsersManagement;
